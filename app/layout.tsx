@@ -1,12 +1,17 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
+import { config } from '@fortawesome/fontawesome-svg-core';
+import '@fortawesome/fontawesome-svg-core/styles.css';
+
+// FontAwesome Konfiguration
+config.autoAddCss = false;
 
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"], // Erweitert um mittlere Schriftstärken
+  weight: ["400", "500", "600", "700"],
   variable: "--font-poppins",
-  display: "swap", // Für bessere Leistung
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -18,7 +23,7 @@ export const metadata: Metadata = {
   themeColor: "#020617",
   keywords: [
     "AI website builder",
-    "Next.js generator",
+    "Next.js generator", 
     "React code generator",
     "Instant web development",
     "AI web design",
@@ -47,10 +52,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html 
-      lang="en" 
-      className={`${poppins.variable} dark scroll-smooth`} // Dark Mode & Smooth Scroll
-      suppressHydrationWarning // Für Next-Theme bei späterer Erweiterung
+    <html
+      lang="en"
+      className={`${poppins.variable} dark scroll-smooth`}
+      suppressHydrationWarning
     >
       <body className="antialiased bg-[#020617] text-gray-100 font-poppins selection:bg-cyan-400/30">
         {children}
