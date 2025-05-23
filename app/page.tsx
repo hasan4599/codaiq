@@ -94,7 +94,7 @@ export default function Home() {
               className="text-[#CBD5E1] hover:text-[#00FF88] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              <FontAwesomeIcon icon={faXmark as IconProp} className="w-8 h-8" />
+              <FontAwesomeIcon icon={faXmark as unknown as IconProp} className="w-8 h-8" />
             </button>
           </div>
           <nav className="flex flex-col space-y-8 text-center">
