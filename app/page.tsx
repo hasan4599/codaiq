@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React from 'react'; // Expliziter Import hinzugefügt
 
 export default function Home() {
   return (
