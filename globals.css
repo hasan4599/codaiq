@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Glass-Effekt Klassen */
+.glass-layer-1 { @apply bg-white/5 backdrop-blur-sm border border-white/10; }
+.glass-layer-2 { @apply bg-white/10 backdrop-blur-md border border-white/20; }
+.glass-layer-3 { @apply bg-white/15 backdrop-blur-lg border border-white/30; }
+
+/* Text-Gradient */
+.text-gradient-primary { @apply bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent; }
+
+/* Dark Mode Basis */
+:root {
+  --background: #020617; /* slate-950 */
+  --foreground: #f8fafc; /* slate-50 */
+}
+
+body {
+  @apply bg-[var(--background)] text-[var(--foreground)] min-h-screen;
+  font-family: var(--font-poppins), ui-sans-serif, system-ui;
+}
