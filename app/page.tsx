@@ -295,78 +295,80 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f]/50 to-[#020617]/50">
-        <div className="container mx-auto">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true, margin: "-100px" }}
-          >
-            <h2 className="text-4xl lg:text-6xl font-bold text-center mb-20">
-              <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                Everything You Need
-              </span><br />
-              to Build at Lightspeed
-            </h2>
+<section id="features" className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f]/50 to-[#020617]/50">
+  <div className="container mx-auto">
+    <motion.div
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-100px" }}
+    >
+      <h2 className="text-4xl lg:text-6xl font-bold text-center mb-20">
+        <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          Everything You Need
+        </span><br />
+        to Build at Lightspeed
+      </h2>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: faCloud,
-                  title: "Instant Hosting & Domain",
-                  desc: "Free SSL, global CDN & automated deployments",
-                  color: "from-blue-400 to-blue-600"
-                },
-                {
-                  icon: faBox,
-                  title: "Smart Components",
-                  desc: "Drag-and-drop AI-powered components",
-                  color: "from-purple-400 to-purple-600"
-                },
-                {
-                  icon: faMagic,
-                  title: "AI Content Engine",
-                  desc: "Automated copywriting & image generation",
-                  color: "from-pink-400 to-pink-600"
-                },
-                {
-                  icon: faBolt,
-                  title: "Edge Performance",
-                  desc: "99.9% uptime with serverless architecture",
-                  color: "from-yellow-400 to-yellow-600"
-                },
-                {
-                  icon: faShield,
-                  title: "Enterprise Security",
-                  desc: "GDPR, CCPA & SOC2 compliant",
-                  color: "from-green-400 to-green-600"
-                },
-                {
-                  icon: faCube,
-                  title: "3D Integration",
-                  desc: "Built-in Three.js & WebGL support",
-                  color: "from-red-400 to-red-600"
-                }
-              ].map((feature, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ y: 50, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ delay: i * 0.1 }}
-                  className="glass-layer p-8 rounded-3xl border border-transparent hover:border-blue-400/30 transition-all duration-300"
-                >
-                  <div className={`w-16 h-16 rounded-2xl mb-6 bg-gradient-to-r ${feature.color} flex items-center justify-center`}>
-                    <FontAwesomeIcon icon={feature.icon as unknown as IconProp} className="text-white text-2xl" />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
-                  <p className="text-gray-400 leading-relaxed">{feature.desc}</p>
-                </motion.div>
-              ))}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {[
+          {
+            icon: faCloud,
+            title: "Instant Hosting & Domain",
+            desc: "Free SSL, global CDN & automated deployments",
+            color: "from-blue-400 to-blue-600"
+          },
+          {
+            icon: faBox,
+            title: "Smart Components",
+            desc: "Drag-and-drop AI-powered components",
+            color: "from-purple-400 to-purple-600"
+          },
+          {
+            icon: faMagic,
+            title: "AI Content Engine",
+            desc: "Automated copywriting & image generation",
+            color: "from-pink-400 to-pink-600"
+          },
+          {
+            icon: faBolt,
+            title: "Edge Performance",
+            desc: "99.9% uptime with serverless architecture",
+            color: "from-yellow-400 to-yellow-600"
+          },
+          {
+            icon: faShield,
+            title: "Enterprise Security",
+            desc: "GDPR, CCPA & SOC2 compliant",
+            color: "from-green-400 to-green-600"
+          },
+          {
+            icon: faCube,
+            title: "3D Integration",
+            desc: "Built-in Three.js & WebGL support",
+            color: "from-red-400 to-red-600"
+          }
+        ].map((feature, i) => (
+          <motion.div
+            key={i}
+            initial={{ y: 50, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ delay: i * 0.1 }}
+            // Glass-Card: heller Hintergrund, Blur, helle Border/Shadow
+            className="bg-white/40 backdrop-blur-xl border border-white/30 shadow-lg p-8 rounded-3xl transition-all duration-300 hover:border-blue-400/30"
+          >
+            <div className={`w-16 h-16 rounded-2xl mb-6 bg-gradient-to-r ${feature.color} flex items-center justify-center`}>
+              <FontAwesomeIcon icon={feature.icon as unknown as IconProp} className="text-white text-2xl" />
             </div>
+            <h3 className="text-2xl font-bold mb-4 text-gray-900">{feature.title}</h3>
+            <p className="text-gray-700 leading-relaxed">{feature.desc}</p>
           </motion.div>
-        </div>
-      </section>
+        ))}
+      </div>
+    </motion.div>
+  </div>
+</section>
+
 
       {/* How It Works Section */}
       <section id="how-it-works" className="py-32 px-4 lg:px-8 relative">
