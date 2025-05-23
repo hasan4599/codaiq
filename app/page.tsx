@@ -1,7 +1,7 @@
 'use client';
+import type { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 import { useState, useEffect } from 'react';
-import type { IconProp } from '@fortawesome/fontawesome-svg-core';        // ← hier hinzufügen
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faBars, 
@@ -50,7 +50,7 @@ export default function Home() {
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#00F0FF] to-[#0066FF] flex items-center justify-center">
               <FontAwesomeIcon
-                icon={faRocket as IconProp}
+                icon={faRocket as IconProp as unknown as IconProp}
                 className="text-[#020617] w-4 h-4"
               />
             </div>
@@ -77,7 +77,7 @@ export default function Home() {
               className="md:hidden text-[#CBD5E1] hover:text-[#00FF88] transition-colors"
               onClick={() => setIsMenuOpen(true)}
             >
-              <FontAwesomeIcon icon={faBars as IconProp} className="w-6 h-6" />
+              <FontAwesomeIcon icon={faBars as IconProp as unknown as IconProp} className="w-6 h-6" />
             </button>
           </div>
         </div>
@@ -91,7 +91,7 @@ export default function Home() {
               className="text-[#CBD5E1] hover:text-[#00FF88] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              <FontAwesomeIcon icon={faXmark} className="w-8 h-8" />
+              <FontAwesomeIcon icon={faXmark as unknown as IconProp as unknown as IconProp} className="w-8 h-8" />
             </button>
           </div>
           <nav className="flex flex-col space-y-8 text-center">
@@ -119,7 +119,7 @@ export default function Home() {
           <div className="container mx-auto px-6">
             <div className="max-w-4xl mx-auto text-center">
               <div className="inline-flex items-center glass-badge px-4 py-2 rounded-full text-sm font-medium mb-6 animate-pulse">
-                <FontAwesomeIcon icon={faRocket} className="text-[#00FF88] mr-2" />
+                <FontAwesomeIcon icon={faRocket as unknown as IconProp as unknown as IconProp} className="text-[#00FF88] mr-2" />
                 <span>AI-Powered Web Creation</span>
               </div>
               <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
@@ -151,7 +151,7 @@ export default function Home() {
               <div className="p-6">
                 <div className="flex mb-6">
                   <div className="w-10 h-10 rounded-full bg-[#00FF88]/10 flex items-center justify-center mr-4">
-                    <FontAwesomeIcon icon={faMessage} className="text-[#00FF88]" />
+                    <FontAwesomeIcon icon={faMessage as unknown as IconProp as unknown as IconProp} className="text-[#00FF88]" />
                   </div>
                   <div className="glass-message rounded-2xl p-4">
                     <p className="text-[#F8FAFC]">Hi! I'm your AI co-founder. What kind of website would you like to build today?</p>
@@ -164,7 +164,7 @@ export default function Home() {
                     className="flex-1 bg-[#0f172a]/50 border border-[#1e293b] rounded-l-full px-6 py-3 focus:outline-none focus:ring-2 focus:ring-[#00F0FF]/50 text-[#F8FAFC]"
                   />
                   <button className="bg-gradient-to-r from-[#00F0FF] to-[#0066FF] text-[#020617] px-6 rounded-r-full font-medium">
-                    <FontAwesomeIcon icon={faChevronRight} />
+                    <FontAwesomeIcon icon={faChevronRight as unknown as IconProp as unknown as IconProp} />
                   </button>
                 </div>
               </div>
@@ -225,7 +225,7 @@ export default function Home() {
                   className="glass-card rounded-2xl p-8 border border-transparent hover:border-[#00F0FF]/30 transition-all hover:translate-y-[-4px]"
                 >
                   <div className="w-12 h-12 rounded-full bg-[#00F0FF]/10 flex items-center justify-center mb-6">
-                    <FontAwesomeIcon icon={feature.icon} className="text-[#00F0FF] text-xl" />
+                    <FontAwesomeIcon icon={feature.icon as unknown as IconProp as unknown as IconProp} className="text-[#00F0FF] text-xl" />
                   </div>
                   <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
                   <p className="text-[#CBD5E1]">{feature.desc}</p>
@@ -349,14 +349,14 @@ export default function Home() {
                 <div className="flex items-center px-6 py-4 border-b border-[#1e293b]">
                   <div className="flex-1 text-center font-medium">Live Preview</div>
                   <div className="w-8 h-8 rounded-full bg-[#00F0FF]/10 flex items-center justify-center">
-                    <FontAwesomeIcon icon={faPlay} className="text-[#00F0FF]" />
+                    <FontAwesomeIcon icon={faPlay as unknown as IconProp as unknown as IconProp} className="text-[#00F0FF]" />
                   </div>
                 </div>
                 <div className="bg-[#020617]/30 h-[424px] flex items-center justify-center">
                   {isGenerating ? (
                     <div className="animate-pulse text-center">
                       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#00F0FF] to-[#0066FF] flex items-center justify-center">
-                        <FontAwesomeIcon icon={faRocket} className="text-[#020617] w-6 h-6" />
+                        <FontAwesomeIcon icon={faRocket as unknown as IconProp as unknown as IconProp} className="text-[#020617] w-6 h-6" />
                       </div>
                       <h3 className="text-xl font-bold mb-2">Building Your Website</h3>
                       <p className="text-[#CBD5E1]">This usually takes about 15 seconds...</p>
@@ -364,7 +364,7 @@ export default function Home() {
                   ) : prompt ? (
                     <div className="text-center p-6">
                       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#00FF88]/10 flex items-center justify-center">
-                        <FontAwesomeIcon icon={faLightbulb} className="text-[#00FF88] w-6 h-6" />
+                        <FontAwesomeIcon icon={faLightbulb as unknown as IconProp as unknown as IconProp} className="text-[#00FF88] w-6 h-6" />
                       </div>
                       <h3 className="text-xl font-bold mb-2">Ready to Generate</h3>
                       <p className="text-[#CBD5E1] mb-4">Click "Generate Website" to see your creation</p>
@@ -376,7 +376,7 @@ export default function Home() {
                   ) : (
                     <div className="text-center p-6">
                       <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#00F0FF] to-[#0066FF] flex items-center justify-center">
-                        <FontAwesomeIcon icon={faMessage} className="text-[#020617] w-6 h-6" />
+                        <FontAwesomeIcon icon={faMessage as unknown as IconProp as unknown as IconProp} className="text-[#020617] w-6 h-6" />
                       </div>
                       <h3 className="text-xl font-bold mb-2">Your Website Preview</h3>
                       <p className="text-[#CBD5E1] mb-4">Will appear here as you type</p>
@@ -469,7 +469,7 @@ export default function Home() {
                     <ul className="space-y-3 mb-8">
                       {plan.features.map((feature, j) => (
                         <li key={j} className="flex items-center">
-                          <FontAwesomeIcon icon={faCheck} className="text-[#00FF88] mr-2" />
+                          <FontAwesomeIcon icon={faCheck as unknown as IconProp as unknown as IconProp} className="text-[#00FF88] mr-2" />
                           <span>{feature}</span>
                         </li>
                       ))}
@@ -576,7 +576,7 @@ export default function Home() {
                     {[...Array(5)].map((_, j) => (
                       <FontAwesomeIcon 
                         key={j}
-                        icon={faStar}
+                        icon={faStar as unknown as IconProp}
                         className={`w-5 h-5 ${j < testimonial.stars ? 'text-[#FFD700]' : 'text-[#64748B]'}`}
                       />
                     ))}
@@ -607,7 +607,7 @@ export default function Home() {
             <div className="md:col-span-2">
               <div className="flex items-center space-x-2 mb-6">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#00F0FF] to-[#0066FF] flex items-center justify-center">
-                  <FontAwesomeIcon icon={faRocket} className="text-[#020617] w-4 h-4" />
+                  <FontAwesomeIcon icon={faRocket as unknown as IconProp as unknown as IconProp} className="text-[#020617] w-4 h-4" />
                 </div>
                 <span className="text-xl font-bold">Codaiq</span>
               </div>
@@ -624,7 +624,7 @@ export default function Home() {
                     href="#" 
                     className="w-10 h-10 glass-button rounded-full flex items-center justify-center hover:border-[#00F0FF]/40 transition-all"
                   >
-                    <FontAwesomeIcon icon={social.icon} className="text-[#CBD5E1] hover:text-[#00FF88] transition-colors" />
+                    <FontAwesomeIcon icon={social.icon as unknown as IconProp} className="text-[#CBD5E1] hover:text-[#00FF88] transition-colors" />
                     <span className="sr-only">{social.name}</span>
                   </a>
                 ))}
