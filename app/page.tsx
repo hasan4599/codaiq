@@ -1,9 +1,14 @@
 'use client';
 
-import React from 'react'; // Expliziter Import hinzugefügt
+import { Fragment } from 'react';
 
 export default function Home() {
   return (
+    <Fragment>
+      {/* ... */}
+    </Fragment>
+  );
+}
     <React.Fragment>
       {/* Live Demo Section */}
       <section className="py-28 relative">
