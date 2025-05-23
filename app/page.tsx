@@ -1,7 +1,5 @@
 "use client";
 
-import React from "react";
-
 export default function Home() {
   return (
     <>
@@ -56,13 +54,8 @@ export default function Home() {
               <div className="flex items-center px-5 py-3 border-b border-[#1e293b] bg-[#020617]/50">
                 <div className="flex-1 text-center font-medium">Live Preview</div>
                 <div className="w-8 h-8 rounded-full bg-[#00F0FF]/10 flex items-center justify-center">
-                  <svg className="w-4 h-4 text-[#00F0FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"
-                    />
+                  <svg className="w-4 h-4 text-[#00FF88]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                   </svg>
                 </div>
               </div>
@@ -176,70 +169,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <section className="py-28 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-repeat opacity-5 -z-10" />
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl font-bold mb-6">
-              Loved by <span className="text-[#00FF88]">Thousands</span>
-            </h2>
-            <p className="text-xl text-[#CBD5E1] max-w-3xl mx-auto">Don't just take our word for it</p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Sarah K.",
-                role: "Founder, Bloom & Grow",
-                text: "Built our entire e-commerce site in one afternoon. The AI understood our floral aesthetic perfectly!",
-                stars: 5,
-                avatar: "SK",
-              },
-              {
-                name: "Mark T.",
-                role: "CTO, SaaS Startup",
-                text: "Reduced our dev costs by 70%. The generated React code is cleaner than our junior engineers' work.",
-                stars: 5,
-                avatar: "MT",
-              },
-              {
-                name: "Priya L.",
-                role: "Creative Director",
-                text: "I describe designs in metaphors ('make it feel like a jazz solo') and Codaiq just gets it. Mind-blowing.",
-                stars: 4,
-                avatar: "PL",
-              },
-            ].map((testimonial, i) => (
-              <div key={i} className="glass-layer-2 rounded-2xl p-8 hover:border-[#00FF88]/30 border border-transparent transition-all">
-                <div className="flex items-center mb-6">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-400 to-blue-500 flex items-center justify-center text-lg font-bold text-[#020617] mr-4">
-                    {testimonial.avatar}
-                  </div>
-                  <div>
-                    <h4 className="font-bold">{testimonial.name}</h4>
-                    <p className="text-sm text-[#CBD5E1]">{testimonial.role}</p>
-                  </div>
-                </div>
-                <p className="text-[#CBD5E1] mb-6">{testimonial.text}</p>
-                <div className="flex">
-                  {[...Array(5)].map((_, j) => (
-                    <svg
-                      key={j}
-                      className={`w-5 h-5 ${j < testimonial.stars ? "text-[#FFD700]" : "text-[#64748B]"}`}
-                      fill="currentColor"
-                      viewBox="0 0 20 20"
-                    >
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
       <footer className="glass-layer-1 border-t border-[#1e293b]">
         <div className="container mx-auto px-6 py-16">
@@ -248,4 +177,19 @@ export default function Home() {
               <div className="flex items-center space-x-2 mb-6">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 flex items-center justify-center">
                   <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-[#020617]" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" fill="none">
-                    <path d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 00```
+                    <path d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 00"/>
+                  </svg>
+                </div>
+                <h3 className="font-bold text-lg">Badruk Group</h3>
+              </div>
+              <p className="text-sm text-[#CBD5E1]">
+                Comprehensive company formation & consulting in Dubai.
+              </p>
+            </div>
+            {/* … ggf. weitere Footer-Links … */}
+          </div>
+        </div>
+      </footer>
+    </>
+  );
+}
