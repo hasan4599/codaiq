@@ -40,18 +40,21 @@ export default function Home() {
     }, 2000);
   };
 
-  return (
-    <div className="min-h-screen bg-[#020617] text-[#F8FAFC] font-sans">
-      {/* Fixed Glass Header */}
-      <header className="fixed w-full glass-header z-50">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#00F0FF] to-[#0066FF] flex items-center justify-center">
-                <FontAwesomeIcon icon={faRocket} className="text-[#020617] w-4 h-4" />
-              </div>
-              <span className="text-xl font-bold">Codaiq</span>
+ return (
+  <div className="min-h-screen bg-[#020617] text-[#F8FAFC] font-sans">
+    {/* Fixed Glass Header */}
+    <header className="fixed w-full glass-header z-50">
+      <div className="container mx-auto px-6 py-4">
+        <div className="flex justify-between items-center">
+          <div className="flex items-center space-x-2">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#00F0FF] to-[#0066FF] flex items-center justify-center">
+              <FontAwesomeIcon
+                icon={faRocket as IconProp}
+                className="text-[#020617] w-4 h-4"
+              />
             </div>
+            <span className="text-xl font-bold">Codaiq</span>
+          </div>
 
             {/* Desktop Nav */}
             <nav className="hidden md:flex items-center space-x-8">
