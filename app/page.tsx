@@ -124,17 +124,17 @@ export default function Home() {
                 onClick={() => setIsMenuOpen(true)}
                 className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
               >
-                <FontAwesomeIcon icon={faBars} className="w-6 h-6" />
+                <FontAwesomeIcon icon={faBars as unknown as IconProp} className="w-6 h-6" />
               </button>
               <div className="glass-layer px-4 py-2 rounded-xl">
-                <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6" />
+                <FontAwesomeIcon icon={faRocket as unknown as IconProp} className="text-blue-400 w-6 h-6" />
               </div>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-12">
               <div className="glass-layer px-6 py-3 rounded-xl flex items-center gap-2">
-                <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6 animate-pulse" />
+                <FontAwesomeIcon icon={faRocket as unknown as IconProp} className="text-blue-400 w-6 h-6 animate-pulse" />
                 <span className="text-xl font-bold">Codaiq</span>
               </div>
               
@@ -155,7 +155,7 @@ export default function Home() {
             <button className="hidden lg:flex bg-gradient-to-r from-blue-400 to-purple-500 px-8 py-3 rounded-full 
               hover:shadow-2xl hover:shadow-blue-400/30 transition-all duration-300 hover:-translate-y-0.5 items-center gap-2">
               <span>Get Started</span>
-              <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
+              <FontAwesomeIcon icon={faChevronRight as unknown as IconProp} className="w-4 h-4" />
             </button>
           </nav>
         </div>
@@ -166,14 +166,14 @@ export default function Home() {
         <div className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-50 p-8">
           <div className="flex justify-between items-center mb-16">
             <div className="glass-layer px-6 py-3 rounded-xl flex items-center gap-2">
-              <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6" />
+              <FontAwesomeIcon icon={faRocket as unknown as IconProp} className="text-blue-400 w-6 h-6" />
               <span className="text-xl font-bold">Codaiq</span>
             </div>
             <button 
               onClick={() => setIsMenuOpen(false)}
               className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
             >
-              <FontAwesomeIcon icon={faXmark} className="w-8 h-8" />
+              <FontAwesomeIcon icon={faXmark as unknown as IconProp} className="w-8 h-8" />
             </button>
           </div>
           
@@ -219,7 +219,7 @@ export default function Home() {
               
               <div className="flex gap-6 mb-8">
                 <div className="w-16 h-16 rounded-2xl bg-blue-400/10 flex items-center justify-center">
-                  <FontAwesomeIcon icon={faMagic} className="text-blue-400 text-2xl" />
+                  <FontAwesomeIcon icon={faMagic as unknown as IconProp} className="text-blue-400 text-2xl" />
                 </div>
                 <div className="flex-1">
                   <p className="text-lg font-medium">Describe your vision:</p>
@@ -240,7 +240,7 @@ export default function Home() {
                   className="bg-gradient-to-r from-blue-400 to-purple-500 text-gray-900 w-16 h-16 rounded-2xl flex items-center justify-center
                     hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-blue-400/30"
                 >
-                  <FontAwesomeIcon icon={faChevronRight} className="text-2xl" />
+                  <FontAwesomeIcon icon={faChevronRight as unknown as IconProp} className="text-2xl" />
                 </button>
               </div>
             </div>
@@ -264,7 +264,7 @@ export default function Home() {
                 >
                   <div className="mx-auto w-24 h-24 bg-blue-400/10 rounded-2xl flex items-center justify-center">
                     <FontAwesomeIcon 
-                      icon={faRocket} 
+                      icon={faRocket as unknown as IconProp} 
                       className="text-blue-400 text-4xl animate-pulse" 
                     />
                   </div>
@@ -278,7 +278,7 @@ export default function Home() {
                 <div className="text-center space-y-6">
                   <div className="mx-auto w-24 h-24 bg-purple-500/10 rounded-2xl flex items-center justify-center">
                     <FontAwesomeIcon 
-                      icon={faLayerGroup} 
+                      icon={faLayerGroup as unknown as IconProp} 
                       className="text-purple-400 text-4xl" 
                     />
                   </div>
@@ -357,7 +357,7 @@ export default function Home() {
                   className="glass-layer p-8 rounded-3xl border border-transparent hover:border-blue-400/30 transition-all duration-300"
                 >
                   <div className={`w-16 h-16 rounded-2xl mb-6 bg-gradient-to-r ${feature.color} flex items-center justify-center`}>
-                    <FontAwesomeIcon icon={feature.icon} className="text-white text-2xl" />
+                    <FontAwesomeIcon icon={feature.icon as unknown as IconProp} className="text-white text-2xl" />
                   </div>
                   <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
                   <p className="text-gray-400 leading-relaxed">{feature.desc}</p>
@@ -430,7 +430,7 @@ export default function Home() {
                   </div>
                   <div className={`w-16 h-16 ${i === 1 ? 'mt-4' : 'mt-8'} mx-auto mb-6 rounded-2xl 
                     bg-gradient-to-r ${step.color} bg-opacity-20 flex items-center justify-center`}>
-                    <FontAwesomeIcon icon={step.icon} className={`text-2xl ${i === 0 ? 'text-blue-400' : 
+                    <FontAwesomeIcon icon={step.icon as unknown as IconProp} className={`text-2xl ${i === 0 ? 'text-blue-400' : 
                       i === 1 ? 'text-purple-400' : i === 2 ? 'text-pink-400' : 'text-green-400'}`} />
                   </div>
                   <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
@@ -519,7 +519,7 @@ export default function Home() {
                     {plan.features.map((feature, j) => (
                       <li key={j} className="flex items-start gap-3">
                         <FontAwesomeIcon 
-                          icon={faCheck} 
+                          icon={faCheck as unknown as IconProp} 
                           className="text-blue-400 mt-1 flex-shrink-0" 
                         />
                         <span>{feature}</span>
@@ -549,7 +549,7 @@ export default function Home() {
               
               <div className="text-center max-w-2xl mx-auto">
                 <div className="inline-flex items-center bg-purple-400/20 px-6 py-2 rounded-full mb-6">
-                  <FontAwesomeIcon icon={faGem} className="text-purple-400 mr-2" />
+                  <FontAwesomeIcon icon={faGem as unknown as IconProp} className="text-purple-400 mr-2" />
                   <span>Exclusive Lifetime Offer</span>
                 </div>
                 
@@ -650,7 +650,7 @@ export default function Home() {
                 <p className="text-gray-300 mb-6 leading-relaxed">"{testimonial.text}"</p>
                 <div className="flex gap-1 text-yellow-400">
                   {[...Array(5)].map((_, j) => (
-                    <FontAwesomeIcon key={j} icon={faStar} className="w-5 h-5" />
+                    <FontAwesomeIcon key={j} icon={faStar as unknown as IconProp} className="w-5 h-5" />
                   ))}
                 </div>
               </motion.div>
@@ -665,7 +665,7 @@ export default function Home() {
           {/* Column 1 */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <FontAwesomeIcon icon={faRocket} className="text-purple-400 w-8 h-8" />
+              <FontAwesomeIcon icon={faRocket as unknown as IconProp} className="text-purple-400 w-8 h-8" />
               <span className="text-2xl font-bold">Codaiq</span>
             </div>
             <p className="text-gray-400 leading-relaxed">
@@ -677,7 +677,7 @@ export default function Home() {
                   key={i}
                   className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
                 >
-                  <FontAwesomeIcon icon={icon} className="w-6 h-6" />
+                  <FontAwesomeIcon icon={icon as unknown as IconProp} className="w-6 h-6" />
                 </button>
               ))}
             </div>
