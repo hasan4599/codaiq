@@ -73,28 +73,25 @@ export default function Home() {
             </div>
 
             {/* Mobile Menu Button */}
-           <button
-  className="md:hidden text-[#CBD5E1] hover:text-[#00FF88] transition-colors"
-  onClick={() => setIsMenuOpen(true)}
->
-  <FontAwesomeIcon
-    icon={faBars as IconProp}    // ← hier das Casting einfügen
-    className="w-6 h-6"
-  />
-</button>
+            <button 
+              className="md:hidden text-[#CBD5E1] hover:text-[#00FF88] transition-colors"
+              onClick={() => setIsMenuOpen(true)}
+            >
+              <FontAwesomeIcon icon={faBars as IconProp} className="w-6 h-6" />
+            </button>
           </div>
         </div>
       </header>
 
-    {/* Mobile Menu */}
+      {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="fixed inset-0 bg-[#020617]/95 z-50 backdrop-blur-lg p-6">
           <div className="flex justify-end mb-12">
-            <button
+            <button 
               className="text-[#CBD5E1] hover:text-[#00FF88] transition-colors"
               onClick={() => setIsMenuOpen(false)}
             >
-              <FontAwesomeIcon icon={faXmark as unknown as IconProp} className="w-8 h-8" />
+              <FontAwesomeIcon icon={faXmark} className="w-8 h-8" />
             </button>
           </div>
           <nav className="flex flex-col space-y-8 text-center">
