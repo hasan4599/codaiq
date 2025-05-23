@@ -73,12 +73,15 @@ export default function Home() {
             </div>
 
             {/* Mobile Menu Button */}
-            <button 
-              className="md:hidden text-[#CBD5E1] hover:text-[#00FF88] transition-colors"
-              onClick={() => setIsMenuOpen(true)}
-            >
-              <FontAwesomeIcon icon={faBars} className="w-6 h-6" />
-            </button>
+           <button
+  className="md:hidden text-[#CBD5E1] hover:text-[#00FF88] transition-colors"
+  onClick={() => setIsMenuOpen(true)}
+>
+  <FontAwesomeIcon
+    icon={faBars as IconProp}    // ← hier das Casting einfügen
+    className="w-6 h-6"
+  />
+</button>
           </div>
         </div>
       </header>
