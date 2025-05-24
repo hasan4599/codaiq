@@ -21,106 +21,130 @@ import {
   faCube,
   faLayerGroup
 } from '@fortawesome/free-solid-svg-icons';
-import { faTwitter, faLinkedin, faGithub, faDiscord } from '@fortawesome/free-brands-svg-icons';
+import {
+  faTwitter,
+  faLinkedin,
+  faGithub,
+  faDiscord
+} from '@fortawesome/free-brands-svg-icons';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isYearly, setIsYearly] = useState(false);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
+  const pricingPlans = [
+    {
+      name: 'Starter',
+      price: '$19/mo',
+      popular: false,
+      features: ['Up to 3 websites', 'Basic AI builder', 'Community Support']
+    },
+    {
+      name: 'Pro',
+      price: '$49/mo',
+      popular: true,
+      features: ['Unlimited websites', 'Advanced AI customization', 'Priority Support']
+    },
+    {
+      name: 'Enterprise',
+      price: 'Custom',
+      popular: false,
+      features: ['White-labeling', 'Dedicated AI models', '24/7 Enterprise Support']
+    }
+  ];
+
+  const handleGenerate = () => {
+    if (!prompt.trim()) return;
+    setIsGenerating(true);
+    // Simulate delay for demonstration
+    setTimeout(() => {
+      setIsGenerating(false);
+    }, 12000);
+  };
+
   return (
     <div>
-     <div ref={ref} className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden">
-      {/* Parallax Background */}
-      <motion.div 
-        className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-repeat opacity-[3%] -z-10"
-        style={{ y: yBg }}
-      />
+      <div ref={ref} className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden">
+        <motion.div 
+          className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-repeat opacity-[3%] -z-10"
+          style={{ y: yBg }}
+        />
 
-      {/* Sticky Header */}
-      <header className="fixed w-full top-0 z-50 backdrop-blur-xl border-b border-gray-800/30">
-        <div className="container mx-auto px-4 lg:px-8 py-3">
-          <nav className="flex items-center justify-between">
-            {/* Mobile Navigation */}
-            <div className="lg:hidden flex items-center gap-4">
-              <button 
-                onClick={() => setIsMenuOpen(true)}
-                className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
-              >
-                <FontAwesomeIcon icon={faBars} className="w-6 h-6" />
-              </button>
-              <div className="glass-layer px-4 py-2 rounded-xl">
-                <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6" />
+        <header className="fixed w-full top-0 z-50 backdrop-blur-xl border-b border-gray-800/30">
+          <div className="container mx-auto px-4 lg:px-8 py-3">
+            <nav className="flex items-center justify-between">
+              <div className="lg:hidden flex items-center gap-4">
+                <button 
+                  onClick={() => setIsMenuOpen(true)}
+                  className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
+                >
+                  <FontAwesomeIcon icon={faBars} className="w-6 h-6" />
+                </button>
+                <div className="glass-layer px-4 py-2 rounded-xl">
+                  <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6" />
+                </div>
               </div>
-            </div>
 
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center gap-12">
+              <div className="hidden lg:flex items-center gap-12">
+                <div className="glass-layer px-6 py-3 rounded-xl flex items-center gap-2">
+                  <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6 animate-pulse" />
+                  <span className="text-xl font-bold">Codaiq</span>
+                </div>
+                <div className="glass-navbar px-8 py-3 rounded-full flex gap-8">
+                  {['Features', 'How It Works', 'Templates', 'Pricing', 'Academy'].map((item) => (
+                    <a
+                      key={item}
+                      href={`#${item.toLowerCase().replace(' ', '-')}`}
+                      className="hover:text-blue-400 transition-colors duration-300 hover:scale-105"
+                    >
+                      {item}
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <button className="hidden lg:flex bg-gradient-to-r from-blue-400 to-purple-500 px-8 py-3 rounded-full 
+                hover:shadow-2xl hover:shadow-blue-400/30 transition-all duration-300 hover:-translate-y-0.5 items-center gap-2">
+                <span>Get Started</span>
+                <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
+              </button>
+            </nav>
+          </div>
+        </header>
+
+        {isMenuOpen && (
+          <div className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-50 p-8">
+            <div className="flex justify-between items-center mb-16">
               <div className="glass-layer px-6 py-3 rounded-xl flex items-center gap-2">
-                <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6 animate-pulse" />
+                <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6" />
                 <span className="text-xl font-bold">Codaiq</span>
               </div>
-              
-              <div className="glass-navbar px-8 py-3 rounded-full flex gap-8">
-                {['Features', 'How It Works', 'Templates', 'Pricing', 'Academy'].map((item) => (
-                  <a
-                    key={item}
-                    href={`#${item.toLowerCase().replace(' ', '-')}`}
-                    className="hover:text-blue-400 transition-colors duration-300 hover:scale-105"
-                  >
-                    {item}
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            {/* CTA Section */}
-            <button className="hidden lg:flex bg-gradient-to-r from-blue-400 to-purple-500 px-8 py-3 rounded-full 
-              hover:shadow-2xl hover:shadow-blue-400/30 transition-all duration-300 hover:-translate-y-0.5 items-center gap-2">
-              <span>Get Started</span>
-              <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
-            </button>
-          </nav>
-        </div>
-      </header>
-
-      {/* Mobile Menu Overlay */}
-      {isMenuOpen && (
-        <div className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-50 p-8">
-          <div className="flex justify-between items-center mb-16">
-            <div className="glass-layer px-6 py-3 rounded-xl flex items-center gap-2">
-              <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6" />
-              <span className="text-xl font-bold">Codaiq</span>
-            </div>
-            <button 
-              onClick={() => setIsMenuOpen(false)}
-              className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
-            >
-              <FontAwesomeIcon icon={faXmark} className="w-8 h-8" />
-            </button>
-          </div>
-          
-          <nav className="flex flex-col gap-6">
-            {['Features', 'How It Works', 'Templates', 'Pricing', 'Academy'].map((item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase().replace(' ', '-')}`}
-                className="text-3xl py-5 px-6 glass-layer rounded-2xl hover:bg-gray-800/20 transition-colors"
+              <button 
                 onClick={() => setIsMenuOpen(false)}
+                className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
               >
-                {item}
-              </a>
-            ))}
-          </nav>
-        </div>
-      )}
+                <FontAwesomeIcon icon={faXmark} className="w-8 h-8" />
+              </button>
+            </div>
+            <nav className="flex flex-col gap-6">
+              {['Features', 'How It Works', 'Templates', 'Pricing', 'Academy'].map((item) => (
+                <a
+                  key={item}
+                  href={`#${item.toLowerCase().replace(' ', '-')}`}
+                  className="text-3xl py-5 px-6 glass-layer rounded-2xl hover:bg-gray-800/20 transition-colors"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item}
+                </a>
+              ))}
+            </nav>
+          </div>
+        )}
 
       {/* Hero Section */}
       <section className="pt-48 pb-32 px-4 lg:px-8 relative overflow-hidden">
