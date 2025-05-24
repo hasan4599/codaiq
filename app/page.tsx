@@ -325,149 +325,90 @@ export default function Home() {
       {/* How It Works Section */}
       <section id="how-it-works" className="py-32 px-4 lg:px-8 relative">
         <div className="container mx-auto">
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl lg:text-6xl font-bold text-center mb-24">
-              From <span className="text-blue-400">Vision</span> to<br />
-              <span className="text-purple-400">Reality</span> in 4 Steps
+           <h2 className="text-4xl lg:text-6xl font-bold text-center mb-24">
+              Flexible <span className="text-purple-400">Pricing</span><br />
+              For Every Stage
             </h2>
 
-            <div className="grid md:grid-cols-4 gap-8 relative">
-              {/* Timeline */}
-              <div className="hidden md:block absolute top-24 left-0 right-0 h-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 
-                w-3/4 mx-auto rounded-full opacity-50" />
-
-              {[
-                {
-                  step: 1,
-                  title: "Describe Your Vision",
-                  desc: "Natural language or visual input",
-                  icon: faMessage,
-                  color: "from-blue-400 to-blue-600"
-                },
-                {
-                  step: 2,
-                  title: "AI Architecture",
-                  desc: "Automatic tech stack selection",
-                  icon: faRocket,
-                  color: "from-purple-400 to-purple-600"
-                },
-                {
-                  step: 3,
-                  title: "Refine & Customize",
-                  desc: "Real-time visual editor",
-                  icon: faPalette,
-                  color: "from-pink-400 to-pink-600"
-                },
-                {
-                  step: 4,
-                  title: "Launch & Scale",
-                  desc: "Global deployment & analytics",
-                  icon: faCloud,
-                  color: "from-green-400 to-green-600"
-                }
-              ].map((step, i) => (
+            <div className="grid lg:grid-cols-3 gap-8">
+              {pricingPlans.map((plan, i) => (
                 <motion.div
                   key={i}
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  whileInView={{ scale: 1, opacity: 1 }}
-                  viewport={{ once: true, margin: "-100px" }}
-                  transition={{ delay: i * 0.2 }}
-                  className="glass-layer p-8 rounded-3xl text-center relative z-10 hover:-translate-y-2 transition-transform"
+                  initial={{ scale: 0.95 }}
+                  whileInView={{ scale: 1 }}
+                  viewport={{ once: true }}
+                  className="relative group"
                 >
-                  <div className={`absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-2xl 
-                    bg-gradient-to-r ${step.color} flex items-center justify-center text-white font-bold text-xl shadow-xl`}>
-                    {step.step}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-2xl rounded-2xl shadow-xl -z-10" />
+                  <div className={`p-8 rounded-3xl border-2 bg-gradient-to-b from-white/5 to-white/[0.01] ${
+                    plan.popular 
+                      ? 'border-purple-400 group-hover:border-purple-400/80' 
+                      : 'border-white/10 group-hover:border-white/20'
+                  } transition-all`}>
+                    {plan.popular && (
+                      <div className="bg-gradient-to-r from-purple-400 to-blue-400 px-6 py-2 rounded-full text-sm font-bold text-gray-900 mb-6 -mt-4 mx-auto w-fit">
+                        Most Popular
+                      </div>
+                    )}
+                    <h3 className="text-2xl font-bold mb-4">{plan.title}</h3>
+                    <div className="text-4xl font-bold mb-6">
+                      ${plan.price}<span className="text-gray-400 text-lg">/month</span>
+                    </div>
+                    <ul className="space-y-4 mb-8">
+                      {plan.features.map((feature, j) => (
+                        <li key={j} className="flex items-start gap-3">
+                          <FontAwesomeIcon 
+                            icon={faCheck as IconProp}
+                            className="text-blue-400 mt-1 flex-shrink-0" 
+                          />
+                          <span className="text-gray-200">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    <button className="w-full glass-layer py-4 rounded-xl hover:bg-gray-800/30 transition-colors">
+                      Get Started
+                    </button>
                   </div>
-                  <div className={`w-16 h-16 ${i === 1 ? 'mt-4' : 'mt-8'} mx-auto mb-6 rounded-2xl 
-                    bg-gradient-to-r ${step.color} bg-opacity-20 flex items-center justify-center`}>
-                    <FontAwesomeIcon icon={step.icon as unknown as IconProp} className={`text-2xl ${i === 0 ? 'text-blue-400' : 
-                      i === 1 ? 'text-purple-400' : i === 2 ? 'text-pink-400' : 'text-green-400'}`} />
-                  </div>
-                  <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
-                  <p className="text-gray-400">{step.desc}</p>
                 </motion.div>
               ))}
             </div>
+
+            <motion.div
+              initial={{ scale: 0.95 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              className="relative group mt-20"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-400/20 to-blue-400/20 backdrop-blur-3xl rounded-2xl shadow-2xl shadow-purple-500/20 -z-10" />
+              <div className="p-8 rounded-3xl border-2 border-purple-400/30 bg-gradient-to-b from-white/5 to-white/[0.01]">
+                <div className="text-center max-w-2xl mx-auto">
+                  <div className="inline-flex items-center bg-purple-400/20 px-6 py-2 rounded-full mb-6">
+                    <FontAwesomeIcon 
+                      icon={faGem as IconProp}
+                      className="text-purple-400 mr-2" 
+                    />
+                    <span>Exclusive Lifetime Offer</span>
+                  </div>
+                  <h3 className="text-4xl font-bold mb-4">Lifetime Access</h3>
+                  <div className="text-6xl font-bold mb-6">
+                    $999
+                    <span className="text-gray-400 text-lg">/one-time</span>
+                  </div>
+                  <p className="text-gray-400 mb-8">
+                    All Pro features + Priority support forever + Future updates included
+                  </p>
+                  <button className="bg-gradient-to-r from-purple-400 to-blue-400 text-gray-900 px-12 py-4 rounded-xl
+                    hover:shadow-2xl hover:shadow-purple-400/30 transition-all duration-300">
+                    Claim Special Offer
+                  </button>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
 
-    {/* Pricing Section */}
-<section id="pricing" className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f] to-[#020617]">
-  <div className="container mx-auto">
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-    >
-      {/* ... (gleicher Header-Code wie zuvor) */}
-
-      {/* Pricing Grid */}
-      <div className="grid lg:grid-cols-3 gap-8">
-        {pricingPlans.map((plan, i) => (
-          <motion.div
-            key={i}
-            // ... (gleiche motion.props wie zuvor)
-          >
-            {/* ... (gleicher Hintergrund-Code wie zuvor) */}
-            
-            <div className={`p-8 rounded-3xl border-2 bg-gradient-to-b from-white/5 to-white/[0.01] ${
-              plan.popular 
-                ? 'border-purple-400 group-hover:border-purple-400/80' 
-                : 'border-white/10 group-hover:border-white/20'
-            } transition-all`}>
-              {/* ... (gleicher Popular-Badge-Code wie zuvor) */}
-
-              <ul className="space-y-4 mb-8">
-                {plan.features.map((feature, j) => (
-                  <li key={j} className="flex items-start gap-3">
-                    <FontAwesomeIcon 
-                      icon={faCheck as IconProp} // KORREKTUR HIER
-                      className="text-blue-400 mt-1 flex-shrink-0" 
-                    />
-                    <span className="text-gray-200">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* ... (gleicher Button-Code wie zuvor) */}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Lifetime Deal */}
-      <motion.div
-        initial={{ scale: 0.95 }}
-        whileInView={{ scale: 1 }}
-        viewport={{ once: true }}
-        className="relative group mt-20"
-      >
-        {/* ... (gleicher Hintergrund-Code wie zuvor) */}
-        
-        <div className="p-8 rounded-3xl border-2 border-purple-400/30 bg-gradient-to-b from-white/5 to-white/[0.01]">
-          <div className="text-center max-w-2xl mx-auto">
-            <div className="inline-flex items-center bg-purple-400/20 px-6 py-2 rounded-full mb-6">
-              <FontAwesomeIcon 
-                icon={faGem as IconProp} // KORREKTUR HIER
-                className="text-purple-400 mr-2" 
-              />
-              <span>Exclusive Lifetime Offer</span>
-            </div>
-            
-            {/* ... (restlicher Code unverändert) */}
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  </div>
-</section>
-      
-      {/* Testimonials Section */}
+      {/* Testimonials */}
       <section id="testimonials" className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f]/50 to-[#020617]/50">
         <div className="container mx-auto">
           <h2 className="text-4xl lg:text-6xl font-bold text-center mb-20">
@@ -525,7 +466,7 @@ export default function Home() {
                 <p className="text-gray-300 mb-6 leading-relaxed">"{testimonial.text}"</p>
                 <div className="flex gap-1 text-yellow-400">
                   {[...Array(5)].map((_, j) => (
-                    <FontAwesomeIcon key={j} icon={faStar as unknown as IconProp} className="w-5 h-5" />
+                    <FontAwesomeIcon key={j} icon={faStar as IconProp} className="w-5 h-5" />
                   ))}
                 </div>
               </motion.div>
@@ -537,10 +478,9 @@ export default function Home() {
       {/* Footer */}
       <footer className="bg-gray-900/80 py-20 px-4 lg:px-8 border-t border-gray-800/50">
         <div className="container mx-auto grid md:grid-cols-4 gap-12">
-          {/* Column 1 */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <FontAwesomeIcon icon={faRocket as unknown as IconProp} className="text-purple-400 w-8 h-8" />
+              <FontAwesomeIcon icon={faRocket as IconProp} className="text-purple-400 w-8 h-8" />
               <span className="text-2xl font-bold">Codaiq</span>
             </div>
             <p className="text-gray-400 leading-relaxed">
@@ -552,13 +492,12 @@ export default function Home() {
                   key={i}
                   className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
                 >
-                  <FontAwesomeIcon icon={icon as unknown as IconProp} className="w-6 h-6" />
+                  <FontAwesomeIcon icon={icon as IconProp} className="w-6 h-6" />
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Other Columns */}
           {[
             {
               title: "Product",
