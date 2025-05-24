@@ -1,8 +1,9 @@
 'use client';
+import { useState, useRef } from 'react'; // Add missing React hooks
 import { 
   faBars, faXmark, faCommentDots, faRocket, faChevronRight,
   faMagic, faLayerGroup, faCloud, faBox, faBolt, faShield,
-  faCube, faStar, faCheck, faMessage // Added here
+  faCube, faStar, faCheck, faMessage 
 } from '@fortawesome/free-solid-svg-icons';
 import { 
   faTwitter, faLinkedin, faGithub, faDiscord 
@@ -16,7 +17,7 @@ export default function Home() {
   const [aiOutput, setAiOutput] = useState<string>('');
   const [isYearly, setIsYearly] = useState(false);
   const [activeTestimonial, setActiveTestimonial] = useState(0);
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null); // Add proper type annotation
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
