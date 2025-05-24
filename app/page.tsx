@@ -5,7 +5,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faLinkedin, faGithub, faDiscord, faCommentDots, } from '@fortawesome/free-brands-svg-icons';
 import { motion, useScroll, useTransform } from 'framer-motion';
-
+import { faMessage } from '@fortawesome/free-solid-svg-icons';
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [prompt, setPrompt] = useState('');
