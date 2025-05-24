@@ -1,5 +1,5 @@
 'use client';
-import { useState, useRef } from 'react'; // Add missing React hooks
+import { useState, useRef, useEffect } from 'react'; // Add missing React hooks
 import { 
   faBars, faXmark, faCommentDots, faRocket, faChevronRight,
   faMagic, faLayerGroup, faCloud, faBox, faBolt, faShield,
