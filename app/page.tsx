@@ -1,4 +1,5 @@
 'use client';
+
 import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { IconProp } from '@fortawesome/fontawesome-svg-core';
@@ -29,88 +30,14 @@ export default function Home() {
   const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+
   const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
-  const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveTestimonial(prev => (prev + 1) % 4);
-    }, 8000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const handleGenerate = () => {
-    setIsGenerating(true);
-    setTimeout(() => setIsGenerating(false), 3000);
-  };
-
-  const pricingPlans = [
-    {
-      name: "Starter",
-      monthly: 29,
-      yearly: 19,
-      features: [
-        "7-day free trial",
-        "1 Domain (+$15 fee)",
-        "1 User",
-        "SSL Certificate",
-        "Daily Backups",
-        "24/7 Email Support",
-        "1 GB RAM",
-        "5 GB Storage",
-        "10 AI Generations/Month"
-      ],
-      popular: false
-    },
-    {
-      name: "Pro",
-      monthly: 49,
-      yearly: 35,
-      features: [
-        "7-day free trial",
-        "1 Free Domain",
-        "Up to 5 Users",
-        "Automated Staging",
-        "Advanced SEO Tools",
-        "Real-time Analytics",
-        "2 GB RAM",
-        "20 GB Storage",
-        "100 AI Generations/Month",
-        "API Access"
-      ],
-      popular: true
-    },
-    {
-      name: "Enterprise",
-      monthly: 99,
-      yearly: 79,
-      features: [
-        "7-day free trial",
-        "3 Free Domains",
-        "Up to 10 Users",
-        "White-labeling",
-        "SSO Integration",
-        "Dedicated Resources",
-        "Unlimited Backups",
-        "4 GB RAM",
-        "Unlimited Storage",
-        "Unlimited AI Generations",
-        "Premium Support"
-      ],
-      popular: false
-    }
-  ];
-
-  // Parallax-Layers Array korrigiert
-  const parallaxLayers = [
-    { id: 1, speed: 0.1, content: "AI-Powered Development" },
-    { id: 2, speed: 0.2, content: "Real-Time Collaboration" },
-    { id: 3, speed: 0.3, content: "Instant Deployment" }
-  ];
+  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
+  const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
   return (
-    <div ref={ref} className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden">
+    <div>
+     <div ref={ref} className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden">
       {/* Parallax Background */}
       <motion.div 
         className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-repeat opacity-[3%] -z-10"
