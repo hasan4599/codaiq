@@ -1,9 +1,9 @@
 'use client';
 import { 
-  faBars, faXmark, faMessage, faRocket, faChevronRight, faMagic, faLayerGroup,
+  faBars, faXmark, faCommentDots, faRocket, faChevronRight, faMagic, faLayerGroup,
   faCloud, faBox, faBolt, faShield, faCube, faStar, faCheck
 } from '@fortawesome/free-solid-svg-icons';
-import { faTwitter, faLinkedin, faGithub, faDiscord } from '@fortawesome/free-brands-svg-icons';
+import { faTwitter, faLinkedin, faGithub, faDiscord, faCommentDots, } from '@fortawesome/free-brands-svg-icons';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
 export default function Home() {
@@ -246,7 +246,7 @@ export default function Home() {
                   step: 1,
                   title: "Describe Your Vision",
                   desc: "Natural language or visual input",
-                  icon: faMessage,
+                  icon: faCommentDots,
                   color: "from-blue-400 to-blue-600"
                 },
                 {
