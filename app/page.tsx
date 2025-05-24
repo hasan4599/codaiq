@@ -1,7 +1,7 @@
 'use client';
 import { 
-  faBars, faXmark, faRocket, faChevronRight, faMagic, faLayerGroup,
-  faCloud, faBox, faBolt, faShield, faCube, faStar, faCheck, faMessage
+  faBars, faXmark, faMessage, faRocket, faChevronRight, faMagic, faLayerGroup,
+  faCloud, faBox, faBolt, faShield, faCube, faStar, faCheck
 } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faLinkedin, faGithub, faDiscord } from '@fortawesome/free-brands-svg-icons';
 import { motion, useScroll, useTransform } from 'framer-motion';
@@ -148,7 +148,7 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-
+      
     {/* Features Section */}
 <section
   id="features"
