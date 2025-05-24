@@ -566,7 +566,7 @@ export default function Home() {
 
         <div className="border-t border-gray-800/50 mt-16 pt-8 text-center text-gray-400">
           <p>© {new Date().getFullYear()} Codaiq. All rights reserved.</p>
-          <p className="mt-2">Made with ❤️ in Berlin | VAT ID DE345678901</p>
+          <p className="mt-2">By Badruk Group | Dubai</p>
         </div>
       </footer>
     </div>
