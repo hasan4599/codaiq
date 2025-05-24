@@ -54,11 +54,11 @@ export default function Home() {
       {/* Parallax BG */}
       <motion.div className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-repeat opacity-5 -z-10" style={{y:yBg}}/>
 
-      {/* Header */}
-      <header className="fixed w-full top-0 z-50 backdrop-blur-xl border-b border-gray-800/30">
-        <div className="container mx-auto px-4 lg:px-8 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button
+     {/* Header */}
+<header className="fixed w-full top-0 z-50 backdrop-blur-xl border-b border-gray-800/30">
+  <div className="container mx-auto px-4 lg:px-8 py-3 flex items-center justify-between">
+    <div className="flex items-center gap-4">
+      <button
         onClick={() => setIsMenuOpen(true)}
         className="glass-layer p-3 rounded-xl lg:hidden"
       >
@@ -71,19 +71,23 @@ export default function Home() {
         />
         <span className="text-xl font-bold">Codaiq</span>
       </div>
-          </div>
-          <nav className="hidden lg:flex items-center gap-8">
-            {['Features','How It Works','Templates','Pricing','Academy'].map(item=> (
-              <a key={item} href={`#${item.toLowerCase().replace(/ /g,'-')}`} className="glass-navbar px-6 py-3 rounded-full hover:text-blue-400">
-                {item}
-              </a>
-            ))}
-            <button className="bg-gradient-to-r from-blue-400 to-purple-500 px-8 py-3 rounded-full hover:shadow-lg flex items-center gap-2">
-              Get Started <FontAwesomeIcon icon={faChevronRight as IconProp} />
-            </button>
-          </nav>
-        </div>
-      </header>
+    </div>
+    <nav className="hidden lg:flex items-center gap-8">
+      {['Features','How It Works','Templates','Pricing','Academy'].map(item => (
+        <a 
+          key={item} 
+          href={`#${item.toLowerCase().replace(/ /g,'-')}`} 
+          className="glass-navbar px-6 py-3 rounded-full hover:text-blue-400"
+        >
+          {item}
+        </a>
+      ))}
+      <button className="bg-gradient-to-r from-blue-400 to-purple-500 px-8 py-3 rounded-full hover:shadow-lg flex items-center gap-2">
+        Get Started <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
+      </button>
+    </nav>
+  </div>
+</header>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
