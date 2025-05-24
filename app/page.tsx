@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // ✅ FEHLT NOCH
+import { IconProp } from '@fortawesome/fontawesome-svg-core';     // Optional
 import {
   faBars, faXmark, faCommentDots, faRocket, faChevronRight,
   faMagic, faLayerGroup, faCloud, faBox, faBolt, faShield,
