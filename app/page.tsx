@@ -12,6 +12,7 @@ import {
   faTwitter, faLinkedin, faGithub, faDiscord
 } from '@fortawesome/free-brands-svg-icons';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 export default function Home() {
@@ -59,13 +60,19 @@ export default function Home() {
       <header className="fixed w-full top-0 z-50 backdrop-blur-xl border-b border-gray-800/30">
         <div className="container mx-auto px-4 lg:px-8 py-3 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button onClick={()=>setIsMenuOpen(true)} className="glass-layer p-3 rounded-xl lg:hidden">
-              <FontAwesomeIcon icon={faBars as IconProp} className="w-6 h-6" />
-            </button>
-            <div className="glass-layer px-6 py-3 rounded-xl flex items-center gap-2">
-              <FontAwesomeIcon icon={faRocket as IconProp} className="text-blue-400 w-6 h-6 animate-pulse" />
-              <span className="text-xl font-bold">Codaiq</span>
-            </div>
+            <button
+        onClick={() => setIsMenuOpen(true)}
+        className="glass-layer p-3 rounded-xl lg:hidden"
+      >
+        <FontAwesomeIcon icon={faBars} className="w-6 h-6" />
+      </button>
+      <div className="glass-layer px-6 py-3 rounded-xl flex items-center gap-2">
+        <FontAwesomeIcon
+          icon={faRocket}
+          className="text-blue-400 w-6 h-6 animate-pulse"
+        />
+        <span className="text-xl font-bold">Codaiq</span>
+      </div>
           </div>
           <nav className="hidden lg:flex items-center gap-8">
             {['Features','How It Works','Templates','Pricing','Academy'].map(item=> (
