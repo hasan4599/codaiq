@@ -1,10 +1,7 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { 
   faBars, faXmark, faRocket, faChevronRight, faMagic, faLayerGroup,
-  faCloud, faBox, faBolt, faShield, faCube, faStar, faCheck
+  faCloud, faBox, faBolt, faShield, faCube, faStar, faCheck, faMessage
 } from '@fortawesome/free-solid-svg-icons';
 import { faTwitter, faLinkedin, faGithub, faDiscord } from '@fortawesome/free-brands-svg-icons';
 import { motion, useScroll, useTransform } from 'framer-motion';
