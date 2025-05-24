@@ -294,7 +294,7 @@ export default function Home() {
         </div>
       </section>
 
-     {/* Features Section */}
+    {/* Features Section */}
 <section
   id="features"
   className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f]/60 to-[#020617]/80"
@@ -348,15 +348,18 @@ export default function Home() {
       ].map((feature, i) => (
         <div
           key={i}
-          className="glass-feature p-10 flex flex-col items-start hover:scale-105 transition-transform duration-300"
+          className="relative group"
         >
-          <div
-            className={`w-16 h-16 rounded-2xl mb-6 bg-gradient-to-r ${feature.color} flex items-center justify-center shadow-lg`}
-          >
-            <FontAwesomeIcon icon={feature.icon as any} className="text-white text-2xl drop-shadow-xl" />
+          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all duration-300 -z-10" />
+          <div className="glass-feature p-10 flex flex-col items-start border border-white/10 rounded-2xl bg-gradient-to-b from-white/5 to-white/[0.01] group-hover:border-white/20 transition-all duration-300">
+            <div
+              className={`w-16 h-16 rounded-2xl mb-6 bg-gradient-to-r ${feature.color} flex items-center justify-center shadow-lg`}
+            >
+              <FontAwesomeIcon icon={feature.icon as IconProp} className="text-white text-2xl drop-shadow-xl" />
+            </div>
+            <h3 className="text-2xl font-bold mb-2 text-white">{feature.title}</h3>
+            <p className="text-gray-200 leading-relaxed opacity-80">{feature.desc}</p>
           </div>
-          <h3 className="text-2xl font-bold mb-2">{feature.title}</h3>
-          <p className="text-gray-200 leading-relaxed opacity-80">{feature.desc}</p>
         </div>
       ))}
     </div>
