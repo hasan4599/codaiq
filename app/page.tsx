@@ -49,6 +49,14 @@ export default function Home() {
     setTimeout(() => setIsGenerating(false), 3000);
   };
 
+  return (
+    <div ref={ref} className="min-h-screen bg-[#020617] text-[#F8FAFC] font-sans">
+      <h1 className="text-3xl font-bold">Codaiq</h1>
+    </div>
+  );
+}
+
+
   const pricingPlans = [
     {
       name: "Starter",
