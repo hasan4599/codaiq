@@ -14,11 +14,8 @@ import {
   faBox,
   faBolt,
   faShield,
-  faServer,
   faGem,
   faPalette,
-  faDatabase,
-  faInfinity,
   faMagic,
   faCube,
   faLayerGroup
@@ -105,13 +102,21 @@ export default function Home() {
     }
   ];
 
+  // Parallax-Layers Array korrigiert
+  const parallaxLayers = [
+    { id: 1, speed: 0.1, content: "AI-Powered Development" },
+    { id: 2, speed: 0.2, content: "Real-Time Collaboration" },
+    { id: 3, speed: 0.3, content: "Instant Deployment" }
+  ];
+
   return (
-    <div ref={ref} className="min-h-screen bg-[#020617] text-[#F8FAFC] font-sans">
-      {/* Hier kommt dein gesamtes JSX rein – bereits eingebaut oben */}
-      <h1 className="text-3xl font-bold">Codaiq</h1>
-    </div>
-  );
-}
+    <div ref={ref} className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden">
+      {/* Parallax Background */}
+      <motion.div 
+        className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-repeat opacity-[3%] -z-10"
+        style={{ y: yBg }}
+      />
+
       {/* Sticky Header */}
       <header className="fixed w-full top-0 z-50 backdrop-blur-xl border-b border-gray-800/30">
         <div className="container mx-auto px-4 lg:px-8 py-3">
@@ -122,17 +127,17 @@ export default function Home() {
                 onClick={() => setIsMenuOpen(true)}
                 className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
               >
-                <FontAwesomeIcon icon={faBars as unknown as IconProp} className="w-6 h-6" />
+                <FontAwesomeIcon icon={faBars} className="w-6 h-6" />
               </button>
               <div className="glass-layer px-4 py-2 rounded-xl">
-                <FontAwesomeIcon icon={faRocket as unknown as IconProp} className="text-blue-400 w-6 h-6" />
+                <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6" />
               </div>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-12">
               <div className="glass-layer px-6 py-3 rounded-xl flex items-center gap-2">
-                <FontAwesomeIcon icon={faRocket as unknown as IconProp} className="text-blue-400 w-6 h-6 animate-pulse" />
+                <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6 animate-pulse" />
                 <span className="text-xl font-bold">Codaiq</span>
               </div>
               
@@ -153,7 +158,7 @@ export default function Home() {
             <button className="hidden lg:flex bg-gradient-to-r from-blue-400 to-purple-500 px-8 py-3 rounded-full 
               hover:shadow-2xl hover:shadow-blue-400/30 transition-all duration-300 hover:-translate-y-0.5 items-center gap-2">
               <span>Get Started</span>
-              <FontAwesomeIcon icon={faChevronRight as unknown as IconProp} className="w-4 h-4" />
+              <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
             </button>
           </nav>
         </div>
@@ -164,14 +169,14 @@ export default function Home() {
         <div className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-50 p-8">
           <div className="flex justify-between items-center mb-16">
             <div className="glass-layer px-6 py-3 rounded-xl flex items-center gap-2">
-              <FontAwesomeIcon icon={faRocket as unknown as IconProp} className="text-blue-400 w-6 h-6" />
+              <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6" />
               <span className="text-xl font-bold">Codaiq</span>
             </div>
             <button 
               onClick={() => setIsMenuOpen(false)}
               className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
             >
-              <FontAwesomeIcon icon={faXmark as unknown as IconProp} className="w-8 h-8" />
+              <FontAwesomeIcon icon={faXmark} className="w-8 h-8" />
             </button>
           </div>
           
@@ -217,7 +222,7 @@ export default function Home() {
               
               <div className="flex gap-6 mb-8">
                 <div className="w-16 h-16 rounded-2xl bg-blue-400/10 flex items-center justify-center">
-                  <FontAwesomeIcon icon={faMagic as unknown as IconProp} className="text-blue-400 text-2xl" />
+                  <FontAwesomeIcon icon={faMagic} className="text-blue-400 text-2xl" />
                 </div>
                 <div className="flex-1">
                   <p className="text-lg font-medium">Describe your vision:</p>
@@ -238,7 +243,7 @@ export default function Home() {
                   className="bg-gradient-to-r from-blue-400 to-purple-500 text-gray-900 w-16 h-16 rounded-2xl flex items-center justify-center
                     hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-blue-400/30"
                 >
-                  <FontAwesomeIcon icon={faChevronRight as unknown as IconProp} className="text-2xl" />
+                  <FontAwesomeIcon icon={faChevronRight} className="text-2xl" />
                 </button>
               </div>
             </div>
@@ -262,7 +267,7 @@ export default function Home() {
                 >
                   <div className="mx-auto w-24 h-24 bg-blue-400/10 rounded-2xl flex items-center justify-center">
                     <FontAwesomeIcon 
-                      icon={faRocket as unknown as IconProp} 
+                      icon={faRocket} 
                       className="text-blue-400 text-4xl animate-pulse" 
                     />
                   </div>
@@ -276,7 +281,7 @@ export default function Home() {
                 <div className="text-center space-y-6">
                   <div className="mx-auto w-24 h-24 bg-purple-500/10 rounded-2xl flex items-center justify-center">
                     <FontAwesomeIcon 
-                      icon={faLayerGroup as unknown as IconProp} 
+                      icon={faLayerGroup} 
                       className="text-purple-400 text-4xl" 
                     />
                   </div>
