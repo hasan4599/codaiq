@@ -106,12 +106,12 @@ export default function Home() {
   ];
 
   return (
-    <div ref={ref} className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden">
-      {/* Parallax Background */}
-      <motion.div 
-        className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-repeat opacity-[3%] -z-10"
-        style={{ y: yBg }}
-      />
+    <div ref={ref} className="min-h-screen bg-[#020617] text-[#F8FAFC] font-sans">
+      {/* Hier kommt dein gesamtes JSX rein – bereits eingebaut oben */}
+      <h1 className="text-3xl font-bold">Codaiq</h1>
+    </div>
+  );
+}
       {/* Sticky Header */}
       <header className="fixed w-full top-0 z-50 backdrop-blur-xl border-b border-gray-800/30">
         <div className="container mx-auto px-4 lg:px-8 py-3">
