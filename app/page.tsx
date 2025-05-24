@@ -521,7 +521,7 @@ export default function Home() {
                 {plan.features.map((feature, j) => (
                   <li key={j} className="flex items-start gap-3">
                     <FontAwesomeIcon 
-                      icon={faCheck} 
+                      icon={faCheck as IconProp} 
                       className="text-blue-400 mt-1 flex-shrink-0" 
                     />
                     <span className="text-gray-200">{feature}</span>
@@ -552,7 +552,7 @@ export default function Home() {
         <div className="p-8 rounded-3xl border-2 border-purple-400/30 bg-gradient-to-b from-white/5 to-white/[0.01]">
           <div className="text-center max-w-2xl mx-auto">
             <div className="inline-flex items-center bg-purple-400/20 px-6 py-2 rounded-full mb-6">
-              <FontAwesomeIcon icon={faGem} className="text-purple-400 mr-2" />
+              <FontAwesomeIcon icon={faGem as IconProp} className="text-purple-400 mr-2" />
               <span>Exclusive Lifetime Offer</span>
             </div>
             
@@ -595,7 +595,7 @@ export default function Home() {
     </motion.div>
   </div>
 </section>
-
+      
       {/* Testimonials Section */}
       <section id="testimonials" className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f]/50 to-[#020617]/50">
         <div className="container mx-auto">
