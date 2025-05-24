@@ -1,8 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'; // ✅ FEHLT NOCH
-import { IconProp } from '@fortawesome/fontawesome-svg-core';     // Optional
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faBars, faXmark, faCommentDots, faRocket, faChevronRight,
   faMagic, faLayerGroup, faCloud, faBox, faBolt, faShield,
@@ -12,7 +11,6 @@ import {
   faTwitter, faLinkedin, faGithub, faDiscord
 } from '@fortawesome/free-brands-svg-icons';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 
 export default function Home() {
