@@ -1,9 +1,12 @@
 'use client';
 import { 
-  faBars, faXmark, faCommentDots, faRocket, faChevronRight, faMagic, faLayerGroup,
-  faCloud, faBox, faBolt, faShield, faCube, faStar, faCheck
+  faBars, faXmark, faCommentDots, faRocket, faChevronRight,
+  faMagic, faLayerGroup, faCloud, faBox, faBolt, faShield,
+  faCube, faStar, faCheck, faMessage // Added here
 } from '@fortawesome/free-solid-svg-icons';
-import { faTwitter, faLinkedin, faGithub, faDiscord, faCommentDots, } from '@fortawesome/free-brands-svg-icons';
+import { 
+  faTwitter, faLinkedin, faGithub, faDiscord 
+} from '@fortawesome/free-brands-svg-icons';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { faMessage } from '@fortawesome/free-solid-svg-icons';
 export default function Home() {
