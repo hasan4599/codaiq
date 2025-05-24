@@ -2,59 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer utilities {
-  /* Glas-Effekt Stufen */
-  .glass-layer-1 {
-    @apply bg-white/5 backdrop-blur-sm border border-white/10;
-  }
-  .glass-layer-2 {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
-  }
-  .glass-layer-3 {
-    @apply bg-white/15 backdrop-blur-lg border border-white/30;
-  }
+/* Glass-Effekt Klassen */
+.glass-layer-1 {
+  @apply bg-white/5 backdrop-blur-sm border border-white/10;
+}
+.glass-layer-2 {
+  @apply bg-white/10 backdrop-blur-md border border-white/20;
+}
+.glass-layer-3 {
+  @apply bg-white/15 backdrop-blur-lg border border-white/30;
+}
 
-  /* Heller Glassmorphism Effekt */
-  .glass-light {
-    @apply bg-white/40 backdrop-blur-xl border border-white/30 shadow-lg;
-  }
-
-  /* Bestehende Animationen */
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  /* Text Gradient */
-  .text-gradient-primary {
-    @apply bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent;
-  }
-
-  /* Erweiterte Animationen */
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
-  }
-
-  @keyframes launch {
-    0% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-40px) rotate(-45deg); }
-    100% { transform: translateY(0) rotate(0deg); }
-  }
-
-  @keyframes gradient-pulse {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-
-  .animate-launch {
-    animation: launch 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
-  }
-
-  .gradient-animate {
-    background-size: 200% auto;
-    animation: gradient-pulse 8s ease infinite;
-  }
+/* Text-Gradient */
+.text-gradient-primary {
+  @apply bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent;
 }
 
 /* Dark Mode Basis */
@@ -65,45 +26,5 @@
 
 body {
   @apply bg-[var(--background)] text-[var(--foreground)] min-h-screen;
-  font-family: var(--font-poppins); /* Angepasst an Ihre Layout-Konfiguration */
-}
-
-/* Komponenten-spezifische Styles */
-@layer components {
-  /* Bestehende Navbar-Styles */
-  .glass-navbar {
-    @apply bg-gray-900/20 backdrop-blur-md border border-gray-800/30;
-  }
-
-  /* Erweiterte Card-Varianten */
-  .glass-card-primary {
-    @apply glass-layer-1 hover:glass-layer-2 transition-all duration-300;
-  }
-
-  .glass-card-premium {
-    @apply glass-layer-3 border-cyan-400/20 hover:shadow-cyan-400/10;
-  }
-
-  /* Neue Glass Card für helle Features-Boxen */
-  .glass-light {
-    @apply bg-white/40 backdrop-blur-xl border border-white/30 shadow-lg;
-  }
-}
-
-/* Scrollbar Styling */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-gray-900/50;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-gradient-to-b from-cyan-400 to-blue-500 rounded-full;
-}
-
-/* Selection Styling */
-::selection {
-  @apply bg-cyan-400/30 text-cyan-100;
+  font-family: var(--font-geist-sans);
 }
