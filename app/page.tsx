@@ -110,7 +110,7 @@ export default function Home() {
         "Unlimited AI Generations",
         "Premium Support"
       ],
-      popular: false
+  popular: false
     }
   ];
 
