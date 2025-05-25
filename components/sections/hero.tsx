@@ -23,7 +23,7 @@ export default function HeroSection() {
   };
 
   return (
-    <section className="pt-20 sm:pt-28 md:pt-36 lg:pt-48 pb-16 sm:pb-20 md:pb-24 lg:pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section className="pt-20  sm:pt-28 md:pt-36 lg:pt-48 pb-16 sm:pb-20 md:pb-24 lg:pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="container mx-auto max-w-7xl">
         {/* Mobile-first single column, then desktop grid */}
         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16 items-center">
@@ -32,7 +32,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="w-full space-y-6 sm:space-y-8 lg:space-y-10 text-center lg:text-left"
+            className="w-full pt-20 space-y-6 sm:space-y-8 lg:space-y-10 text-center lg:text-left"
           >
             {/* Main Heading */}
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
@@ -102,7 +102,7 @@ export default function HeroSection() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="w-full order-first lg:order-last"
+            className="w-full"
           >
             <div className="glass-layer rounded-2xl sm:rounded-3xl border border-purple-500/20 h-80 sm:h-96 md:h-[500px] lg:h-[600px] xl:h-[700px] overflow-hidden relative">
               <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-purple-500/10" />

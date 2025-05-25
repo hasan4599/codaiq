@@ -100,22 +100,43 @@ export default function Home() {
               },
             ].map((feature, i) => (
               <div key={i} className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all duration-300 -z-10" />
-                <div className="glass-feature p-10 flex flex-col items-start border border-white/10 rounded-2xl bg-gradient-to-b from-white/5 to-white/[0.01] group-hover:border-white/20 transition-all duration-300">
-                  <div
-                    className={`w-16 h-16 rounded-2xl mb-6 bg-gradient-to-r ${feature.color} flex items-center justify-center shadow-lg`}
-                  >
-                    <FontAwesomeIcon
-                      icon={feature.icon as IconProp}
-                      className="text-white text-2xl drop-shadow-xl"
-                    />
+                {/* Enhanced glassmorphism container */}
+                <div className="glass-card relative overflow-hidden rounded-3xl border border-white/20 bg-white/10 backdrop-blur-xl shadow-2xl shadow-black/20 transition-all duration-500 group-hover:bg-white/15 group-hover:border-white/30 group-hover:shadow-3xl group-hover:shadow-black/30 group-hover:-translate-y-2">
+                  {/* Subtle gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-black/[0.05] pointer-events-none" />
+
+                  {/* Animated border glow */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 blur-xl -z-10" />
+
+                  {/* Card content */}
+                  <div className="relative p-8 lg:p-10 z-10">
+                    {/* Icon with enhanced glassmorphism */}
+                    <div className="relative mb-6">
+                      <div
+                        className={`w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} flex items-center justify-center shadow-lg backdrop-blur-sm border border-white/20 transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl`}
+                      >
+                        <FontAwesomeIcon
+                          icon={feature.icon as IconProp}
+                          className="text-white text-2xl drop-shadow-xl"
+                        />
+                      </div>
+                      {/* Icon glow effect */}
+                      <div
+                        className={`absolute inset-0 w-16 h-16 rounded-2xl bg-gradient-to-r ${feature.color} opacity-20 blur-lg transition-all duration-300 group-hover:opacity-40 group-hover:scale-125`}
+                      />
+                    </div>
+
+                    {/* Text content */}
+                    <h3 className="text-2xl font-bold mb-4 text-white drop-shadow-sm transition-all duration-300 group-hover:text-white/95">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-200/90 leading-relaxed text-base ">
+                      {feature.desc}
+                    </p>
                   </div>
-                  <h3 className="text-2xl font-bold mb-2 text-white">
-                    {feature.title}
-                  </h3>
-                  <p className="text-gray-200 leading-relaxed opacity-80">
-                    {feature.desc}
-                  </p>
+
+                  {/* Subtle inner shadow for depth */}
+                  <div className="absolute inset-0 rounded-3xl shadow-inner shadow-black/10 pointer-events-none" />
                 </div>
               </div>
             ))}
