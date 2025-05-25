@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -24,10 +24,29 @@ import {
 import { faTwitter, faLinkedin, faGithub, faDiscord } from '@fortawesome/free-brands-svg-icons';
 import { motion, useScroll, useTransform } from 'framer-motion';
 
+const pricingPlans = [
+  {
+    title: "Starter",
+    price: "29",
+    features: ["Basic AI Generation", "5 Projects", "10GB Storage", "Community Support"],
+    popular: false
+  },
+  {
+    title: "Pro",
+    price: "99",
+    features: ["Advanced AI", "Unlimited Projects", "Priority Support", "Team Collaboration"],
+    popular: true
+  },
+  {
+    title: "Enterprise",
+    price: "Custom",
+    features: ["Dedicated Engineer", "SLA", "Custom Workflows", "Security Audit"],
+    popular: false
+  }
+];
+
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isYearly, setIsYearly] = useState(false);
-  const [activeTestimonial, setActiveTestimonial] = useState(0);
   const [prompt, setPrompt] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
@@ -35,9 +54,17 @@ export default function Home() {
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
+  const handleGenerate = async () => {
+    try {
+      setIsGenerating(true);
+      await new Promise(resolve => setTimeout(resolve, 12000));
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
-    <div>
-     <div ref={ref} className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden">
+    <div ref={ref} className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden">
       {/* Parallax Background */}
       <motion.div 
         className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-repeat opacity-[3%] -z-10"
@@ -224,79 +251,74 @@ export default function Home() {
         </div>
       </section>
 
-    {/* Features Section */}
-<section
-  id="features"
-  className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f]/60 to-[#020617]/80"
->
-  <div className="container mx-auto">
-    <h2 className="text-4xl lg:text-6xl font-bold text-center mb-20">
-      <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-        Everything You Need
-      </span>
-      <br />
-      to Build at Lightspeed
-    </h2>
-    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-      {[
-        {
-          icon: faCloud,
-          title: "Instant Hosting & Domain",
-          desc: "Free SSL, global CDN & automated deployments",
-          color: "from-blue-400 to-blue-600",
-        },
-        {
-          icon: faBox,
-          title: "Smart Components",
-          desc: "Drag-and-drop AI-powered components",
-          color: "from-purple-400 to-purple-600",
-        },
-        {
-          icon: faMagic,
-          title: "AI Content Engine",
-          desc: "Automated copywriting & image generation",
-          color: "from-pink-400 to-pink-600",
-        },
-        {
-          icon: faBolt,
-          title: "Edge Performance",
-          desc: "99.9% uptime with serverless architecture",
-          color: "from-yellow-400 to-yellow-600",
-        },
-        {
-          icon: faShield,
-          title: "Enterprise Security",
-          desc: "GDPR, CCPA & SOC2 compliant",
-          color: "from-green-400 to-green-600",
-        },
-        {
-          icon: faCube,
-          title: "3D Integration",
-          desc: "Built-in Three.js & WebGL support",
-          color: "from-red-400 to-red-600",
-        },
-      ].map((feature, i) => (
-        <div
-          key={i}
-          className="relative group"
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all duration-300 -z-10" />
-          <div className="glass-feature p-10 flex flex-col items-start border border-white/10 rounded-2xl bg-gradient-to-b from-white/5 to-white/[0.01] group-hover:border-white/20 transition-all duration-300">
-            <div
-              className={`w-16 h-16 rounded-2xl mb-6 bg-gradient-to-r ${feature.color} flex items-center justify-center shadow-lg`}
-            >
-              <FontAwesomeIcon icon={feature.icon as IconProp} className="text-white text-2xl drop-shadow-xl" />
-            </div>
-            <h3 className="text-2xl font-bold mb-2 text-white">{feature.title}</h3>
-            <p className="text-gray-200 leading-relaxed opacity-80">{feature.desc}</p>
+      {/* Features Section */}
+      <section
+        id="features"
+        className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f]/60 to-[#020617]/80"
+      >
+        <div className="container mx-auto">
+          <h2 className="text-4xl lg:text-6xl font-bold text-center mb-20">
+            <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+              Everything You Need
+            </span>
+            <br />
+            to Build at Lightspeed
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            {[
+              {
+                icon: faCloud,
+                title: "Instant Hosting & Domain",
+                desc: "Free SSL, global CDN & automated deployments",
+                color: "from-blue-400 to-blue-600",
+              },
+              {
+                icon: faBox,
+                title: "Smart Components",
+                desc: "Drag-and-drop AI-powered components",
+                color: "from-purple-400 to-purple-600",
+              },
+              {
+                icon: faMagic,
+                title: "AI Content Engine",
+                desc: "Automated copywriting & image generation",
+                color: "from-pink-400 to-pink-600",
+              },
+              {
+                icon: faBolt,
+                title: "Edge Performance",
+                desc: "99.9% uptime with serverless architecture",
+                color: "from-yellow-400 to-yellow-600",
+              },
+              {
+                icon: faShield,
+                title: "Enterprise Security",
+                desc: "GDPR, CCPA & SOC2 compliant",
+                color: "from-green-400 to-green-600",
+              },
+              {
+                icon: faCube,
+                title: "3D Integration",
+                desc: "Built-in Three.js & WebGL support",
+                color: "from-red-400 to-red-600",
+              },
+            ].map((feature, i) => (
+              <div key={i} className="relative group">
+                <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-2xl rounded-2xl shadow-2xl shadow-blue-500/20 group-hover:shadow-blue-500/30 transition-all duration-300 -z-10" />
+                <div className="glass-feature p-10 flex flex-col items-start border border-white/10 rounded-2xl bg-gradient-to-b from-white/5 to-white/[0.01] group-hover:border-white/20 transition-all duration-300">
+                  <div
+                    className={`w-16 h-16 rounded-2xl mb-6 bg-gradient-to-r ${feature.color} flex items-center justify-center shadow-lg`}
+                  >
+                    <FontAwesomeIcon icon={feature.icon as IconProp} className="text-white text-2xl drop-shadow-xl" />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2 text-white">{feature.title}</h3>
+                  <p className="text-gray-200 leading-relaxed opacity-80">{feature.desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
-    </div>
-  </div>
-</section>
-
-
+      </section>
 
       {/* How It Works Section */}
       <section id="how-it-works" className="py-32 px-4 lg:px-8 relative">
@@ -360,7 +382,7 @@ export default function Home() {
                   </div>
                   <div className={`w-16 h-16 ${i === 1 ? 'mt-4' : 'mt-8'} mx-auto mb-6 rounded-2xl 
                     bg-gradient-to-r ${step.color} bg-opacity-20 flex items-center justify-center`}>
-                    <FontAwesomeIcon icon={step.icon as unknown as IconProp} className={`text-2xl ${i === 0 ? 'text-blue-400' : 
+                    <FontAwesomeIcon icon={step.icon as IconProp} className={`text-2xl ${i === 0 ? 'text-blue-400' : 
                       i === 1 ? 'text-purple-400' : i === 2 ? 'text-pink-400' : 'text-green-400'}`} />
                   </div>
                   <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
@@ -371,7 +393,6 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-
     {/* Pricing Section */}
 <section id="pricing" className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f] to-[#020617]">
   <div className="container mx-auto">
