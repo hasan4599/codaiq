@@ -1,28 +1,26 @@
-import "./globals.css"
-import type { Metadata } from "next"
-import { Poppins } from "next/font/google"
+import type { Metadata } from "next";
+import { Poppins } from "next/font/google";
+import "./globals.css";
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "700"],
-  variable: "--font-poppins"
-})
+  variable: "--font-poppins",
+});
 
 export const metadata: Metadata = {
   title: "Codaiq | AI-Powered Website Builder",
-  themeColor: "#020617"
-}
+  themeColor: "#020617",
+};
 
 export default function RootLayout({
-  children
+  children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={poppins.variable}>
-      <body className="bg-[#020617] font-sans">
-        {children}
-      </body>
+    <html lang="en" className={poppins.variable} suppressHydrationWarning>
+      <body className="bg-[#020617] font-sans">{children}</body>
     </html>
-  )
+  );
 }
