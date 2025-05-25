@@ -1,8 +1,11 @@
 "use client";
 
+import { FAQSection } from "@/components/sections/faq-section";
 import Header from "@/components/sections/header";
 import HeroSection from "@/components/sections/hero";
 import HowItWorks from "@/components/sections/how-it-works";
+import MarqueeSamples from "@/components/sections/marqee-samples";
+import ModernBanner from "@/components/sections/modern-banner";
 import PricingSection from "@/components/sections/pricing-section";
 import Testimonials from "@/components/sections/testimonials";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
@@ -46,6 +49,7 @@ export default function Home() {
 
       <Header />
       <HeroSection />
+      <MarqueeSamples />
 
       {/* Features Section */}
       <section
@@ -151,6 +155,11 @@ export default function Home() {
 
       {/* Testimonials Section */}
       <Testimonials />
+
+      {/* FAQ */}
+
+      <FAQSection />
+      <ModernBanner />
       {/* Footer */}
       <footer className="bg-gray-900/80 py-20 px-4 lg:px-8 border-t border-gray-800/50">
         <div className="container mx-auto grid md:grid-cols-4 gap-12">

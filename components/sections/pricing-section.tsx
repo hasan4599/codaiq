@@ -7,12 +7,14 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 
 export default function PricingSection() {
-  const [isYearly, setIsYearly] = useState(false);
+  const [isYearly, setIsYearly] = useState(true); // Annual plan shown first
   const pricingPlans = [
     {
       name: "Starter",
       monthly: 29,
       yearly: 19,
+      firstMonth: 9.99,
+      originalFirstMonth: 19.99,
       features: [
         "7-day free trial",
         "1 Domain (+$15 fee)",
@@ -30,6 +32,8 @@ export default function PricingSection() {
       name: "Pro",
       monthly: 49,
       yearly: 35,
+      firstMonth: 9.99,
+      originalFirstMonth: 19.99,
       features: [
         "7-day free trial",
         "1 Free Domain",
@@ -48,6 +52,8 @@ export default function PricingSection() {
       name: "Enterprise",
       monthly: 99,
       yearly: 79,
+      firstMonth: 9.99,
+      originalFirstMonth: 19.99,
       features: [
         "7-day free trial",
         "3 Free Domains",
@@ -88,16 +94,6 @@ export default function PricingSection() {
           <div className="flex justify-center mb-20">
             <div className="bg-white/5 backdrop-blur-lg p-2 rounded-full inline-flex gap-2 border border-white/10 shadow-lg shadow-blue-500/10">
               <button
-                onClick={() => setIsYearly(false)}
-                className={`px-8 py-3 rounded-full text-lg font-medium ${
-                  !isYearly
-                    ? "bg-gradient-to-r from-blue-400 to-purple-500 text-gray-900 shadow-lg"
-                    : "bg-transparent text-gray-300 hover:bg-white/5"
-                } transition-all`}
-              >
-                Monthly Billing
-              </button>
-              <button
                 onClick={() => setIsYearly(true)}
                 className={`px-8 py-3 rounded-full text-lg font-medium ${
                   isYearly
@@ -106,6 +102,16 @@ export default function PricingSection() {
                 } transition-all`}
               >
                 Yearly Billing (Save 35%)
+              </button>
+              <button
+                onClick={() => setIsYearly(false)}
+                className={`px-8 py-3 rounded-full text-lg font-medium ${
+                  !isYearly
+                    ? "bg-gradient-to-r from-blue-400 to-purple-500 text-gray-900 shadow-lg"
+                    : "bg-transparent text-gray-300 hover:bg-white/5"
+                } transition-all`}
+              >
+                Monthly Billing
               </button>
             </div>
           </div>
@@ -141,14 +147,25 @@ export default function PricingSection() {
                     </h3>
                     <div className="text-5xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                       ${isYearly ? plan.yearly : plan.monthly}
-                      <span className="text-lg text-gray-400">
-                        /{isYearly ? "month" : "month"}
-                      </span>
+                      <span className="text-lg text-gray-400">/month</span>
                     </div>
                     {isYearly && (
                       <p className="text-gray-400">
                         Billed annually at ${plan.yearly * 12}
                       </p>
+                    )}
+                    {!isYearly && (
+                      <div className="mt-2">
+                        <p className="text-sm text-gray-400">First month</p>
+                        <div className="flex items-center gap-2">
+                          <span className="text-gray-400 line-through text-sm">
+                            ${plan.originalFirstMonth}
+                          </span>
+                          <span className="text-green-400 font-bold text-lg">
+                            ${plan.firstMonth}
+                          </span>
+                        </div>
+                      </div>
                     )}
                   </div>
 
@@ -164,15 +181,22 @@ export default function PricingSection() {
                     ))}
                   </ul>
 
-                  <button
-                    className={`w-full py-4 rounded-xl font-bold transition-all ${
-                      plan.popular
-                        ? "bg-gradient-to-r from-purple-400 to-blue-400 hover:shadow-purple-400/30 hover:shadow-xl"
-                        : "bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20"
-                    }`}
-                  >
-                    Start Free Trial
-                  </button>
+                  <div className="space-y-3">
+                    <button
+                      className={`w-full py-4 rounded-xl font-bold transition-all ${
+                        plan.popular
+                          ? "bg-gradient-to-r from-purple-400 to-blue-400 hover:shadow-purple-400/30 hover:shadow-xl text-gray-900"
+                          : "bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 text-white"
+                      }`}
+                    >
+                      Start Free Trial
+                    </button>
+                    <p className="text-center text-sm text-gray-400 font-medium">
+                      <strong className="text-green-400">
+                        14-Day Money-Back Guarantee
+                      </strong>
+                    </p>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -233,12 +257,16 @@ export default function PricingSection() {
                   </div>
                 </div>
 
-                <button
-                  className="bg-gradient-to-r from-purple-400 to-blue-400 text-gray-900 px-12 py-4 rounded-xl
-              hover:shadow-2xl hover:shadow-purple-400/30 transition-all"
-                >
-                  Claim Lifetime Access
-                </button>
+                <div className="space-y-3">
+                  <button className="bg-gradient-to-r from-purple-400 to-blue-400 text-gray-900 px-12 py-4 rounded-xl hover:shadow-2xl hover:shadow-purple-400/30 transition-all font-bold">
+                    Claim Lifetime Access
+                  </button>
+                  <p className="text-sm text-gray-400 font-medium">
+                    <strong className="text-green-400">
+                      14-Day Money-Back Guarantee
+                    </strong>
+                  </p>
+                </div>
               </div>
             </div>
           </motion.div>
