@@ -1,72 +1,98 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import type { IconProp } from '@fortawesome/fontawesome-svg-core';
+import type { IconProp } from "@fortawesome/fontawesome-svg-core";
+import {
+  faDiscord,
+  faGithub,
+  faLinkedin,
+  faTwitter,
+} from "@fortawesome/free-brands-svg-icons";
 import {
   faBars,
-  faXmark,
-  faMessage,
-  faRocket,
-  faChevronRight,
-  faStar,
-  faCheck,
-  faCloud,
-  faBox,
   faBolt,
-  faShield,
-  faGem,
-  faPalette,
-  faMagic,
+  faBox,
+  faCheck,
+  faChevronRight,
+  faCloud,
   faCube,
-  faLayerGroup
-} from '@fortawesome/free-solid-svg-icons';
-import { faTwitter, faLinkedin, faGithub, faDiscord } from '@fortawesome/free-brands-svg-icons';
-import { motion, useScroll, useTransform } from 'framer-motion';
+  faGem,
+  faLayerGroup,
+  faMagic,
+  faMessage,
+  faPalette,
+  faRocket,
+  faShield,
+  faStar,
+  faXmark,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef, useState } from "react";
 
 const pricingPlans = [
   {
     title: "Starter",
     price: "29",
-    features: ["Basic AI Generation", "5 Projects", "10GB Storage", "Community Support"],
-    popular: false
+    features: [
+      "Basic AI Generation",
+      "5 Projects",
+      "10GB Storage",
+      "Community Support",
+    ],
+    popular: false,
   },
   {
     title: "Pro",
     price: "99",
-    features: ["Advanced AI", "Unlimited Projects", "Priority Support", "Team Collaboration"],
-    popular: true
+    features: [
+      "Advanced AI",
+      "Unlimited Projects",
+      "Priority Support",
+      "Team Collaboration",
+    ],
+    popular: true,
   },
   {
     title: "Enterprise",
     price: "Custom",
-    features: ["Dedicated Engineer", "SLA", "Custom Workflows", "Security Audit"],
-    popular: false
-  }
+    features: [
+      "Dedicated Engineer",
+      "SLA",
+      "Custom Workflows",
+      "Security Audit",
+    ],
+    popular: false,
+  },
 ];
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [prompt, setPrompt] = useState('');
+  const [prompt, setPrompt] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
 
   const ref = useRef(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const yBg = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+  const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   const handleGenerate = async () => {
     try {
       setIsGenerating(true);
-      await new Promise(resolve => setTimeout(resolve, 12000));
+      await new Promise((resolve) => setTimeout(resolve, 12000));
     } finally {
       setIsGenerating(false);
     }
   };
 
   return (
-    <div ref={ref} className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden">
+    <div
+      ref={ref}
+      className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden"
+    >
       {/* Parallax Background */}
-      <motion.div 
+      <motion.div
         className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-repeat opacity-[3%] -z-10"
         style={{ y: yBg }}
       />
@@ -77,29 +103,44 @@ export default function Home() {
           <nav className="flex items-center justify-between">
             {/* Mobile Navigation */}
             <div className="lg:hidden flex items-center gap-4">
-              <button 
+              <button
                 onClick={() => setIsMenuOpen(true)}
                 className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
               >
-                <FontAwesomeIcon icon={faBars} className="w-6 h-6" />
+                <FontAwesomeIcon
+                  icon={faBars as IconProp}
+                  className="w-6 h-6"
+                />
               </button>
               <div className="glass-layer px-4 py-2 rounded-xl">
-                <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6" />
+                <FontAwesomeIcon
+                  icon={faRocket as IconProp}
+                  className="text-blue-400 w-6 h-6"
+                />
               </div>
             </div>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-12">
               <div className="glass-layer px-6 py-3 rounded-xl flex items-center gap-2">
-                <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6 animate-pulse" />
+                <FontAwesomeIcon
+                  icon={faRocket as IconProp}
+                  className="text-blue-400 w-6 h-6 animate-pulse"
+                />
                 <span className="text-xl font-bold">Codaiq</span>
               </div>
-              
+
               <div className="glass-navbar px-8 py-3 rounded-full flex gap-8">
-                {['Features', 'How It Works', 'Templates', 'Pricing', 'Academy'].map((item) => (
+                {[
+                  "Features",
+                  "How It Works",
+                  "Templates",
+                  "Pricing",
+                  "Academy",
+                ].map((item) => (
                   <a
                     key={item}
-                    href={`#${item.toLowerCase().replace(' ', '-')}`}
+                    href={`#${item.toLowerCase().replace(" ", "-")}`}
                     className="hover:text-blue-400 transition-colors duration-300 hover:scale-105"
                   >
                     {item}
@@ -109,10 +150,15 @@ export default function Home() {
             </div>
 
             {/* CTA Section */}
-            <button className="hidden lg:flex bg-gradient-to-r from-blue-400 to-purple-500 px-8 py-3 rounded-full 
-              hover:shadow-2xl hover:shadow-blue-400/30 transition-all duration-300 hover:-translate-y-0.5 items-center gap-2">
+            <button
+              className="hidden lg:flex bg-gradient-to-r from-blue-400 to-purple-500 px-8 py-3 rounded-full 
+              hover:shadow-2xl hover:shadow-blue-400/30 transition-all duration-300 hover:-translate-y-0.5 items-center gap-2"
+            >
               <span>Get Started</span>
-              <FontAwesomeIcon icon={faChevronRight} className="w-4 h-4" />
+              <FontAwesomeIcon
+                icon={faChevronRight as IconProp}
+                className="w-4 h-4"
+              />
             </button>
           </nav>
         </div>
@@ -123,22 +169,31 @@ export default function Home() {
         <div className="fixed inset-0 bg-black/95 backdrop-blur-2xl z-50 p-8">
           <div className="flex justify-between items-center mb-16">
             <div className="glass-layer px-6 py-3 rounded-xl flex items-center gap-2">
-              <FontAwesomeIcon icon={faRocket} className="text-blue-400 w-6 h-6" />
+              <FontAwesomeIcon
+                icon={faRocket as IconProp}
+                className="text-blue-400 w-6 h-6"
+              />
               <span className="text-xl font-bold">Codaiq</span>
             </div>
-            <button 
+            <button
               onClick={() => setIsMenuOpen(false)}
               className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
             >
-              <FontAwesomeIcon icon={faXmark} className="w-8 h-8" />
+              <FontAwesomeIcon icon={faXmark as IconProp} className="w-8 h-8" />
             </button>
           </div>
-          
+
           <nav className="flex flex-col gap-6">
-            {['Features', 'How It Works', 'Templates', 'Pricing', 'Academy'].map((item) => (
+            {[
+              "Features",
+              "How It Works",
+              "Templates",
+              "Pricing",
+              "Academy",
+            ].map((item) => (
               <a
                 key={item}
-                href={`#${item.toLowerCase().replace(' ', '-')}`}
+                href={`#${item.toLowerCase().replace(" ", "-")}`}
                 className="text-3xl py-5 px-6 glass-layer rounded-2xl hover:bg-gray-800/20 transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
@@ -152,7 +207,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="pt-48 pb-32 px-4 lg:px-8 relative overflow-hidden">
         <div className="container mx-auto grid lg:grid-cols-2 gap-16 items-center">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -161,26 +216,33 @@ export default function Home() {
             <h1 className="text-5xl lg:text-7xl font-bold leading-tight">
               <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                 Build Websites
-              </span><br />
+              </span>
+              <br />
               With Just Words
             </h1>
-            
+
             <p className="text-xl text-gray-400 max-w-2xl leading-relaxed">
-              From logo design, content generation, and full-page architecture to seamless domain hosting — 
-              experience the future of web development powered by AI.
+              From logo design, content generation, and full-page architecture
+              to seamless domain hosting — experience the future of web
+              development powered by AI.
             </p>
 
             {/* AI Prompt Interface */}
             <div className="glass-layer p-8 rounded-3xl border border-blue-400/20 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-400/5 to-purple-500/5 -z-10" />
-              
+
               <div className="flex gap-6 mb-8">
                 <div className="w-16 h-16 rounded-2xl bg-blue-400/10 flex items-center justify-center">
-                  <FontAwesomeIcon icon={faMagic} className="text-blue-400 text-2xl" />
+                  <FontAwesomeIcon
+                    icon={faMagic as IconProp}
+                    className="text-blue-400 text-2xl"
+                  />
                 </div>
                 <div className="flex-1">
                   <p className="text-lg font-medium">Describe your vision:</p>
-                  <p className="text-gray-400 mt-2">e.g. "Modern SaaS dashboard with analytics and dark mode"</p>
+                  <p className="text-gray-400 mt-2">
+                    e.g. "Modern SaaS dashboard with analytics and dark mode"
+                  </p>
                 </div>
               </div>
 
@@ -197,21 +259,24 @@ export default function Home() {
                   className="bg-gradient-to-r from-blue-400 to-purple-500 text-gray-900 w-16 h-16 rounded-2xl flex items-center justify-center
                     hover:scale-105 transition-transform duration-300 shadow-lg hover:shadow-blue-400/30"
                 >
-                  <FontAwesomeIcon icon={faChevronRight} className="text-2xl" />
+                  <FontAwesomeIcon
+                    icon={faChevronRight as IconProp}
+                    className="text-2xl"
+                  />
                 </button>
               </div>
             </div>
           </motion.div>
 
           {/* Live Preview */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             className="glass-layer rounded-3xl border border-purple-500/20 h-[700px] overflow-hidden relative"
           >
             <div className="absolute inset-0 bg-gradient-to-br from-blue-400/10 to-purple-500/10" />
-            
+
             <div className="relative h-full flex items-center justify-center p-8">
               {isGenerating ? (
                 <motion.div
@@ -220,13 +285,17 @@ export default function Home() {
                   className="text-center space-y-6"
                 >
                   <div className="mx-auto w-24 h-24 bg-blue-400/10 rounded-2xl flex items-center justify-center">
-                    <FontAwesomeIcon 
-                      icon={faRocket} 
-                      className="text-blue-400 text-4xl animate-pulse" 
+                    <FontAwesomeIcon
+                      icon={faRocket as IconProp}
+                      className="text-blue-400 text-4xl animate-pulse"
                     />
                   </div>
-                  <h3 className="text-2xl font-bold">Crafting Your Masterpiece</h3>
-                  <p className="text-gray-400">Generating layout, content, and assets...</p>
+                  <h3 className="text-2xl font-bold">
+                    Crafting Your Masterpiece
+                  </h3>
+                  <p className="text-gray-400">
+                    Generating layout, content, and assets...
+                  </p>
                   <div className="inline-block glass-layer px-6 py-2 rounded-full text-sm">
                     Estimated time: 12 seconds
                   </div>
@@ -234,13 +303,15 @@ export default function Home() {
               ) : (
                 <div className="text-center space-y-6">
                   <div className="mx-auto w-24 h-24 bg-purple-500/10 rounded-2xl flex items-center justify-center">
-                    <FontAwesomeIcon 
-                      icon={faLayerGroup} 
-                      className="text-purple-400 text-4xl" 
+                    <FontAwesomeIcon
+                      icon={faLayerGroup as IconProp}
+                      className="text-purple-400 text-4xl"
                     />
                   </div>
                   <h3 className="text-2xl font-bold">Interactive Preview</h3>
-                  <p className="text-gray-400">Your generated website will appear here</p>
+                  <p className="text-gray-400">
+                    Your generated website will appear here
+                  </p>
                   <div className="glass-layer p-4 rounded-xl text-sm">
                     Try: "Minimal portfolio with 3D animations"
                   </div>
@@ -309,10 +380,17 @@ export default function Home() {
                   <div
                     className={`w-16 h-16 rounded-2xl mb-6 bg-gradient-to-r ${feature.color} flex items-center justify-center shadow-lg`}
                   >
-                    <FontAwesomeIcon icon={feature.icon as IconProp} className="text-white text-2xl drop-shadow-xl" />
+                    <FontAwesomeIcon
+                      icon={feature.icon as IconProp}
+                      className="text-white text-2xl drop-shadow-xl"
+                    />
                   </div>
-                  <h3 className="text-2xl font-bold mb-2 text-white">{feature.title}</h3>
-                  <p className="text-gray-200 leading-relaxed opacity-80">{feature.desc}</p>
+                  <h3 className="text-2xl font-bold mb-2 text-white">
+                    {feature.title}
+                  </h3>
+                  <p className="text-gray-200 leading-relaxed opacity-80">
+                    {feature.desc}
+                  </p>
                 </div>
               </div>
             ))}
@@ -329,14 +407,17 @@ export default function Home() {
             viewport={{ once: true }}
           >
             <h2 className="text-4xl lg:text-6xl font-bold text-center mb-24">
-              From <span className="text-blue-400">Vision</span> to<br />
+              From <span className="text-blue-400">Vision</span> to
+              <br />
               <span className="text-purple-400">Reality</span> in 4 Steps
             </h2>
 
             <div className="grid md:grid-cols-4 gap-8 relative">
               {/* Timeline */}
-              <div className="hidden md:block absolute top-24 left-0 right-0 h-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 
-                w-3/4 mx-auto rounded-full opacity-50" />
+              <div
+                className="hidden md:block absolute top-24 left-0 right-0 h-2 bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 
+                w-3/4 mx-auto rounded-full opacity-50"
+              />
 
               {[
                 {
@@ -344,29 +425,29 @@ export default function Home() {
                   title: "Describe Your Vision",
                   desc: "Natural language or visual input",
                   icon: faMessage,
-                  color: "from-blue-400 to-blue-600"
+                  color: "from-blue-400 to-blue-600",
                 },
                 {
                   step: 2,
                   title: "AI Architecture",
                   desc: "Automatic tech stack selection",
                   icon: faRocket,
-                  color: "from-purple-400 to-purple-600"
+                  color: "from-purple-400 to-purple-600",
                 },
                 {
                   step: 3,
                   title: "Refine & Customize",
                   desc: "Real-time visual editor",
                   icon: faPalette,
-                  color: "from-pink-400 to-pink-600"
+                  color: "from-pink-400 to-pink-600",
                 },
                 {
                   step: 4,
                   title: "Launch & Scale",
                   desc: "Global deployment & analytics",
                   icon: faCloud,
-                  color: "from-green-400 to-green-600"
-                }
+                  color: "from-green-400 to-green-600",
+                },
               ].map((step, i) => (
                 <motion.div
                   key={i}
@@ -376,14 +457,32 @@ export default function Home() {
                   transition={{ delay: i * 0.2 }}
                   className="glass-layer p-8 rounded-3xl text-center relative z-10 hover:-translate-y-2 transition-transform"
                 >
-                  <div className={`absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-2xl 
-                    bg-gradient-to-r ${step.color} flex items-center justify-center text-white font-bold text-xl shadow-xl`}>
+                  <div
+                    className={`absolute -top-6 left-1/2 -translate-x-1/2 w-12 h-12 rounded-2xl 
+                    bg-gradient-to-r ${step.color} flex items-center justify-center text-white font-bold text-xl shadow-xl`}
+                  >
                     {step.step}
                   </div>
-                  <div className={`w-16 h-16 ${i === 1 ? 'mt-4' : 'mt-8'} mx-auto mb-6 rounded-2xl 
-                    bg-gradient-to-r ${step.color} bg-opacity-20 flex items-center justify-center`}>
-                    <FontAwesomeIcon icon={step.icon as IconProp} className={`text-2xl ${i === 0 ? 'text-blue-400' : 
-                      i === 1 ? 'text-purple-400' : i === 2 ? 'text-pink-400' : 'text-green-400'}`} />
+                  <div
+                    className={`w-16 h-16 ${
+                      i === 1 ? "mt-4" : "mt-8"
+                    } mx-auto mb-6 rounded-2xl 
+                    bg-gradient-to-r ${
+                      step.color
+                    } bg-opacity-20 flex items-center justify-center`}
+                  >
+                    <FontAwesomeIcon
+                      icon={step.icon as IconProp}
+                      className={`text-2xl ${
+                        i === 0
+                          ? "text-blue-400"
+                          : i === 1
+                          ? "text-purple-400"
+                          : i === 2
+                          ? "text-pink-400"
+                          : "text-green-400"
+                      }`}
+                    />
                   </div>
                   <h3 className="text-2xl font-bold mb-4">{step.title}</h3>
                   <p className="text-gray-400">{step.desc}</p>
@@ -393,79 +492,87 @@ export default function Home() {
           </motion.div>
         </div>
       </section>
-    {/* Pricing Section */}
-<section id="pricing" className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f] to-[#020617]">
-  <div className="container mx-auto">
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true }}
-    >
-      {/* ... (gleicher Header-Code wie zuvor) */}
-
-      {/* Pricing Grid */}
-      <div className="grid lg:grid-cols-3 gap-8">
-        {pricingPlans.map((plan, i) => (
-          <motion.div
-            key={i}
-            // ... (gleiche motion.props wie zuvor)
-          >
-            {/* ... (gleicher Hintergrund-Code wie zuvor) */}
-            
-            <div className={`p-8 rounded-3xl border-2 bg-gradient-to-b from-white/5 to-white/[0.01] ${
-              plan.popular 
-                ? 'border-purple-400 group-hover:border-purple-400/80' 
-                : 'border-white/10 group-hover:border-white/20'
-            } transition-all`}>
-              {/* ... (gleicher Popular-Badge-Code wie zuvor) */}
-
-              <ul className="space-y-4 mb-8">
-                {plan.features.map((feature, j) => (
-                  <li key={j} className="flex items-start gap-3">
-                    <FontAwesomeIcon 
-                      icon={faCheck as IconProp} // KORREKTUR HIER
-                      className="text-blue-400 mt-1 flex-shrink-0" 
-                    />
-                    <span className="text-gray-200">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-
-              {/* ... (gleicher Button-Code wie zuvor) */}
-            </div>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Lifetime Deal */}
-      <motion.div
-        initial={{ scale: 0.95 }}
-        whileInView={{ scale: 1 }}
-        viewport={{ once: true }}
-        className="relative group mt-20"
+      {/* Pricing Section */}
+      <section
+        id="pricing"
+        className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f] to-[#020617]"
       >
-        {/* ... (gleicher Hintergrund-Code wie zuvor) */}
-        
-        <div className="p-8 rounded-3xl border-2 border-purple-400/30 bg-gradient-to-b from-white/5 to-white/[0.01]">
-          <div className="text-center max-w-2xl mx-auto">
-            <div className="inline-flex items-center bg-purple-400/20 px-6 py-2 rounded-full mb-6">
-              <FontAwesomeIcon 
-                icon={faGem as IconProp} // KORREKTUR HIER
-                className="text-purple-400 mr-2" 
-              />
-              <span>Exclusive Lifetime Offer</span>
+        <div className="container mx-auto">
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+          >
+            {/* ... (gleicher Header-Code wie zuvor) */}
+
+            {/* Pricing Grid */}
+            <div className="grid lg:grid-cols-3 gap-8">
+              {pricingPlans.map((plan, i) => (
+                <motion.div
+                  key={i}
+                  // ... (gleiche motion.props wie zuvor)
+                >
+                  {/* ... (gleicher Hintergrund-Code wie zuvor) */}
+
+                  <div
+                    className={`p-8 rounded-3xl border-2 bg-gradient-to-b from-white/5 to-white/[0.01] ${
+                      plan.popular
+                        ? "border-purple-400 group-hover:border-purple-400/80"
+                        : "border-white/10 group-hover:border-white/20"
+                    } transition-all`}
+                  >
+                    {/* ... (gleicher Popular-Badge-Code wie zuvor) */}
+
+                    <ul className="space-y-4 mb-8">
+                      {plan.features.map((feature, j) => (
+                        <li key={j} className="flex items-start gap-3">
+                          <FontAwesomeIcon
+                            icon={faCheck as IconProp} // KORREKTUR HIER
+                            className="text-blue-400 mt-1 flex-shrink-0"
+                          />
+                          <span className="text-gray-200">{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* ... (gleicher Button-Code wie zuvor) */}
+                  </div>
+                </motion.div>
+              ))}
             </div>
-            
-            {/* ... (restlicher Code unverändert) */}
-          </div>
+
+            {/* Lifetime Deal */}
+            <motion.div
+              initial={{ scale: 0.95 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              className="relative group mt-20"
+            >
+              {/* ... (gleicher Hintergrund-Code wie zuvor) */}
+
+              <div className="p-8 rounded-3xl border-2 border-purple-400/30 bg-gradient-to-b from-white/5 to-white/[0.01]">
+                <div className="text-center max-w-2xl mx-auto">
+                  <div className="inline-flex items-center bg-purple-400/20 px-6 py-2 rounded-full mb-6">
+                    <FontAwesomeIcon
+                      icon={faGem as IconProp} // KORREKTUR HIER
+                      className="text-purple-400 mr-2"
+                    />
+                    <span>Exclusive Lifetime Offer</span>
+                  </div>
+
+                  {/* ... (restlicher Code unverändert) */}
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
-      </motion.div>
-    </motion.div>
-  </div>
-</section>
-      
+      </section>
+
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f]/50 to-[#020617]/50">
+      <section
+        id="testimonials"
+        className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f]/50 to-[#020617]/50"
+      >
         <div className="container mx-auto">
           <h2 className="text-4xl lg:text-6xl font-bold text-center mb-20">
             Trusted by<span className="text-purple-400"> Industry Leaders</span>
@@ -478,29 +585,29 @@ export default function Home() {
                 role: "CTO @ TechInnovate",
                 text: "Codaiq revolutionized our development process. We reduced website launch time from 6 weeks to 2 hours while maintaining enterprise-grade quality.",
                 stars: 5,
-                image: "SJ"
+                image: "SJ",
               },
               {
                 name: "Michael Chen",
                 role: "Founder @ StartUpAI",
                 text: "The AI-generated code is cleaner than most junior developers. It's like having a senior engineer available 24/7.",
                 stars: 5,
-                image: "MC"
+                image: "MC",
               },
               {
                 name: "Emma Wilson",
                 role: "Creative Director @ DesignHub",
                 text: "Finally a tool that understands creative direction. The AI interprets abstract concepts better than some humans!",
                 stars: 5,
-                image: "EW"
+                image: "EW",
               },
               {
                 name: "David Martinez",
                 role: "Head of Product @ FinTech Corp",
                 text: "Cut our development costs by 70% while improving site performance. The ROI was immediate and substantial.",
                 stars: 5,
-                image: "DM"
-              }
+                image: "DM",
+              },
             ].map((testimonial, i) => (
               <motion.div
                 key={i}
@@ -510,8 +617,10 @@ export default function Home() {
                 className="glass-layer p-8 rounded-3xl border border-purple-400/20"
               >
                 <div className="flex items-center gap-6 mb-6">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-r from-purple-400 to-blue-400 flex items-center justify-center
-                    text-xl font-bold text-gray-900">
+                  <div
+                    className="w-16 h-16 rounded-2xl bg-gradient-to-r from-purple-400 to-blue-400 flex items-center justify-center
+                    text-xl font-bold text-gray-900"
+                  >
                     {testimonial.image}
                   </div>
                   <div>
@@ -519,10 +628,16 @@ export default function Home() {
                     <p className="text-gray-400">{testimonial.role}</p>
                   </div>
                 </div>
-                <p className="text-gray-300 mb-6 leading-relaxed">"{testimonial.text}"</p>
+                <p className="text-gray-300 mb-6 leading-relaxed">
+                  "{testimonial.text}"
+                </p>
                 <div className="flex gap-1 text-yellow-400">
                   {[...Array(5)].map((_, j) => (
-                    <FontAwesomeIcon key={j} icon={faStar as unknown as IconProp} className="w-5 h-5" />
+                    <FontAwesomeIcon
+                      key={j}
+                      icon={faStar as unknown as IconProp}
+                      className="w-5 h-5"
+                    />
                   ))}
                 </div>
               </motion.div>
@@ -537,11 +652,15 @@ export default function Home() {
           {/* Column 1 */}
           <div className="space-y-6">
             <div className="flex items-center gap-3">
-              <FontAwesomeIcon icon={faRocket as unknown as IconProp} className="text-purple-400 w-8 h-8" />
+              <FontAwesomeIcon
+                icon={faRocket as unknown as IconProp}
+                className="text-purple-400 w-8 h-8"
+              />
               <span className="text-2xl font-bold">Codaiq</span>
             </div>
             <p className="text-gray-400 leading-relaxed">
-              Empowering the next generation of web creation through AI innovation.
+              Empowering the next generation of web creation through AI
+              innovation.
             </p>
             <div className="flex gap-4">
               {[faTwitter, faLinkedin, faGithub, faDiscord].map((icon, i) => (
@@ -549,7 +668,10 @@ export default function Home() {
                   key={i}
                   className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
                 >
-                  <FontAwesomeIcon icon={icon as unknown as IconProp} className="w-6 h-6" />
+                  <FontAwesomeIcon
+                    icon={icon as unknown as IconProp}
+                    className="w-6 h-6"
+                  />
                 </button>
               ))}
             </div>
@@ -559,23 +681,44 @@ export default function Home() {
           {[
             {
               title: "Product",
-              links: ["Features", "Pricing", "Templates", "Integrations", "Roadmap"]
+              links: [
+                "Features",
+                "Pricing",
+                "Templates",
+                "Integrations",
+                "Roadmap",
+              ],
             },
             {
               title: "Resources",
-              links: ["Documentation", "Academy", "Blog", "Community", "Status"]
+              links: [
+                "Documentation",
+                "Academy",
+                "Blog",
+                "Community",
+                "Status",
+              ],
             },
             {
               title: "Legal",
-              links: ["Privacy Policy", "Terms of Service", "Security", "GDPR", "Cookie Settings"]
-            }
+              links: [
+                "Privacy Policy",
+                "Terms of Service",
+                "Security",
+                "GDPR",
+                "Cookie Settings",
+              ],
+            },
           ].map((column, i) => (
             <div key={i} className="space-y-4">
               <h3 className="text-lg font-bold mb-4">{column.title}</h3>
               <ul className="space-y-3">
                 {column.links.map((link, j) => (
                   <li key={j}>
-                    <a href="#" className="text-gray-400 hover:text-purple-400 transition-colors">
+                    <a
+                      href="#"
+                      className="text-gray-400 hover:text-purple-400 transition-colors"
+                    >
                       {link}
                     </a>
                   </li>
