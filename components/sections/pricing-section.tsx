@@ -11,10 +11,15 @@ export default function PricingSection() {
   const pricingPlans = [
     {
       name: "Starter",
-      monthly: 29,
+      monthly: 19.99,
       yearly: 19,
       firstMonth: 9.99,
       originalFirstMonth: 19.99,
+      displayPrice: {
+        current: "$9.99",
+        original: "$19.99",
+        afterTrial: "$19.99/mo after 1 month",
+      },
       features: [
         "7-day free trial",
         "1 Domain (+$15 fee)",
@@ -34,6 +39,11 @@ export default function PricingSection() {
       yearly: 35,
       firstMonth: 9.99,
       originalFirstMonth: 19.99,
+      displayPrice: {
+        current: "$9.99",
+        original: "$19.99",
+        afterTrial: "$49/mo after 1 month",
+      },
       features: [
         "7-day free trial",
         "1 Free Domain",
@@ -54,6 +64,11 @@ export default function PricingSection() {
       yearly: 79,
       firstMonth: 9.99,
       originalFirstMonth: 19.99,
+      displayPrice: {
+        current: "$9.99",
+        original: "$19.99",
+        afterTrial: "$99/mo after 1 month",
+      },
       features: [
         "7-day free trial",
         "3 Free Domains",

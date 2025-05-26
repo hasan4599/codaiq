@@ -46,10 +46,15 @@ export default function MobileMenu({ onClose }: { onClose: () => void }) {
               "Templates",
               "Pricing",
               "Academy",
+              "Careers",
             ].map((item, index) => (
               <Link
                 key={item}
-                href={`#${item.toLowerCase().replace(" ", "-")}`}
+                href={
+                  item.toLowerCase() === "careers"
+                    ? "/careers"
+                    : `/#${item.toLowerCase().replace(/\s+/g, "-")}`
+                }
                 className="text-2xl sm:text-3xl py-4 sm:py-6 px-6 sm:px-8 text-white font-medium hover:text-blue-400 hover:bg-white/5 rounded-2xl transition-all duration-300 hover:scale-105 hover:translate-x-2"
                 onClick={onClose}
                 style={{
