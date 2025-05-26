@@ -6,6 +6,7 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Link from "next/link";
 import { useState } from "react";
 import MobileMenu from "../mobile-menu";
 
@@ -19,13 +20,16 @@ export default function Header() {
         <div className="container mx-auto px-4 lg:px-8 py-3">
           <nav className="flex items-center justify-between">
             {/* Logo - Always Left */}
-            <div className="glass-layer px-4 py-2 rounded-xl flex items-center gap-2">
+            <Link
+              href="/"
+              className="glass-layer px-4 py-2 rounded-xl flex items-center gap-2"
+            >
               <FontAwesomeIcon
                 icon={faRocket as unknown as IconProp}
                 className="text-blue-400 w-6 h-6 animate-pulse"
               />
               <span className="text-xl font-bold">Codaiq</span>
-            </div>
+            </Link>
 
             {/* Desktop Navigation */}
             <div className="hidden lg:flex items-center gap-8">
@@ -36,14 +40,19 @@ export default function Header() {
                   "Templates",
                   "Pricing",
                   "Academy",
+                  "Careers",
                 ].map((item) => (
-                  <a
+                  <Link
                     key={item}
-                    href={`#${item.toLowerCase().replace(" ", "-")}`}
+                    href={
+                      item.toLowerCase() === "careers"
+                        ? "/careers"
+                        : `/#${item.toLowerCase().replace(/\s+/g, "-")}`
+                    }
                     className="hover:text-blue-400 transition-colors duration-300 hover:scale-105"
                   >
                     {item}
-                  </a>
+                  </Link>
                 ))}
               </div>
 

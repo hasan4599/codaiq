@@ -1,6 +1,7 @@
 "use client";
 
 import { FAQSection } from "@/components/sections/faq-section";
+import Footer from "@/components/sections/footer";
 import Header from "@/components/sections/header";
 import HeroSection from "@/components/sections/hero";
 import HowItWorks from "@/components/sections/how-it-works";
@@ -10,18 +11,11 @@ import PricingSection from "@/components/sections/pricing-section";
 import Testimonials from "@/components/sections/testimonials";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
-  faDiscord,
-  faGithub,
-  faLinkedin,
-  faTwitter,
-} from "@fortawesome/free-brands-svg-icons";
-import {
   faBolt,
   faBox,
   faCloud,
   faCube,
   faMagic,
-  faRocket,
   faShield,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -161,92 +155,7 @@ export default function Home() {
       <FAQSection />
       <ModernBanner />
       {/* Footer */}
-      <footer className="bg-gray-900/80 py-20 px-4 lg:px-8 border-t border-gray-800/50">
-        <div className="container mx-auto grid md:grid-cols-4 gap-12">
-          {/* Column 1 */}
-          <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <FontAwesomeIcon
-                icon={faRocket as unknown as IconProp}
-                className="text-purple-400 w-8 h-8"
-              />
-              <span className="text-2xl font-bold">Codaiq</span>
-            </div>
-            <p className="text-gray-400 leading-relaxed">
-              Empowering the next generation of web creation through AI
-              innovation.
-            </p>
-            <div className="flex gap-4">
-              {[faTwitter, faLinkedin, faGithub, faDiscord].map((icon, i) => (
-                <button
-                  key={i}
-                  className="glass-layer p-3 rounded-xl hover:bg-gray-800/30 transition-colors"
-                >
-                  <FontAwesomeIcon
-                    icon={icon as unknown as IconProp}
-                    className="w-6 h-6"
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Other Columns */}
-          {[
-            {
-              title: "Product",
-              links: [
-                "Features",
-                "Pricing",
-                "Templates",
-                "Integrations",
-                "Roadmap",
-              ],
-            },
-            {
-              title: "Resources",
-              links: [
-                "Documentation",
-                "Academy",
-                "Blog",
-                "Community",
-                "Status",
-              ],
-            },
-            {
-              title: "Legal",
-              links: [
-                "Privacy Policy",
-                "Terms of Service",
-                "Security",
-                "GDPR",
-                "Cookie Settings",
-              ],
-            },
-          ].map((column, i) => (
-            <div key={i} className="space-y-4">
-              <h3 className="text-lg font-bold mb-4">{column.title}</h3>
-              <ul className="space-y-3">
-                {column.links.map((link, j) => (
-                  <li key={j}>
-                    <a
-                      href="#"
-                      className="text-gray-400 hover:text-purple-400 transition-colors"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-
-        <div className="border-t border-gray-800/50 mt-16 pt-8 text-center text-gray-400">
-          <p>© {new Date().getFullYear()} Codaiq. All rights reserved.</p>
-          <p className="mt-2">By Badruk Group | Dubai</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }
