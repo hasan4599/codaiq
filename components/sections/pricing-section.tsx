@@ -13,13 +13,7 @@ export default function PricingSection() {
       name: "Starter",
       monthly: 19.99,
       yearly: 19,
-      firstMonth: 9.99,
-      originalFirstMonth: 19.99,
-      displayPrice: {
-        current: "$9.99",
-        original: "$19.99",
-        afterTrial: "$19.99/mo after 1 month",
-      },
+      firstMonthDiscount: 9.99, // Special first month price for monthly billing
       features: [
         "7-day free trial",
         "1 Domain (+$15 fee)",
@@ -37,13 +31,7 @@ export default function PricingSection() {
       name: "Pro",
       monthly: 49,
       yearly: 35,
-      firstMonth: 9.99,
-      originalFirstMonth: 19.99,
-      displayPrice: {
-        current: "$9.99",
-        original: "$19.99",
-        afterTrial: "$49/mo after 1 month",
-      },
+      firstMonthDiscount: 9.99, // Special first month price for monthly billing
       features: [
         "7-day free trial",
         "1 Free Domain",
@@ -62,13 +50,7 @@ export default function PricingSection() {
       name: "Enterprise",
       monthly: 99,
       yearly: 79,
-      firstMonth: 9.99,
-      originalFirstMonth: 19.99,
-      displayPrice: {
-        current: "$9.99",
-        original: "$19.99",
-        afterTrial: "$99/mo after 1 month",
-      },
+      firstMonthDiscount: 9.99, // Special first month price for monthly billing
       features: [
         "7-day free trial",
         "3 Free Domains",
@@ -160,27 +142,39 @@ export default function PricingSection() {
                     <h3 className="text-2xl font-bold mb-2 text-white">
                       {plan.name}
                     </h3>
-                    <div className="text-5xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
-                      ${isYearly ? plan.yearly : plan.monthly}
-                      <span className="text-lg text-gray-400">/month</span>
-                    </div>
+
+                    {/* Yearly Billing Display */}
                     {isYearly && (
-                      <p className="text-gray-400">
-                        Billed annually at ${plan.yearly * 12}
-                      </p>
-                    )}
-                    {!isYearly && (
-                      <div className="mt-2">
-                        <p className="text-sm text-gray-400">First month</p>
-                        <div className="flex items-center gap-2">
-                          <span className="text-gray-400 line-through text-sm">
-                            ${plan.originalFirstMonth}
-                          </span>
-                          <span className="text-green-400 font-bold text-lg">
-                            ${plan.firstMonth}
-                          </span>
+                      <>
+                        <div className="text-5xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                          ${plan.yearly}
+                          <span className="text-lg text-gray-400">/month</span>
                         </div>
-                      </div>
+                        <p className="text-gray-400">
+                          Billed annually at ${plan.yearly * 12}
+                        </p>
+                      </>
+                    )}
+
+                    {/* Monthly Billing Display - Special Price Up Front */}
+                    {!isYearly && (
+                      <>
+                        <div className="text-5xl font-bold mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                          ${plan.firstMonthDiscount}
+                          <span className="text-lg text-gray-400">/month</span>
+                        </div>
+                        <div className="mt-2">
+                          <p className="text-sm text-green-400 font-semibold">
+                            First month special!
+                          </p>
+                          <div className="flex items-center gap-2">
+                            <span className="text-gray-400 text-sm">Then</span>
+                            <span className="text-white font-bold text-lg">
+                              ${plan.monthly}/month
+                            </span>
+                          </div>
+                        </div>
+                      </>
                     )}
                   </div>
 

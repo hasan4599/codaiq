@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const SendIcon = () => (
@@ -175,33 +176,14 @@ export default function HeroSection() {
             </div>
 
             {/* Preview Content Area - Responsive height */}
-            <div className="bg-gray-900/40 backdrop-blur-sm rounded-b-2xl border-l border-r border-b border-gray-700/50 h-[400px] sm:h-[500px] lg:h-[600px] relative overflow-hidden">
+            <div className=" bg-gray-900/40 backdrop-blur-sm rounded-b-2xl border-l border-r border-b border-gray-700/50 h-[400px] sm:h-[500px] lg:h-[600px] relative overflow-hidden">
               {/* Blurred Background Website Mockup */}
-              <div className="absolute inset-0 p-3 sm:p-6 blur-[2px] opacity-30">
-                {/* Nav Bar */}
-                <div className="h-10 sm:h-16 bg-white/10 rounded-lg mb-4 sm:mb-6 flex items-center px-2 sm:px-4">
-                  <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-400/50 rounded"></div>
-                  <div className="ml-auto flex space-x-2 sm:space-x-4">
-                    <div className="w-12 h-4 sm:w-16 sm:h-6 bg-white/20 rounded"></div>
-                    <div className="w-12 h-4 sm:w-16 sm:h-6 bg-white/20 rounded"></div>
-                    <div className="w-12 h-4 sm:w-16 sm:h-6 bg-white/20 rounded"></div>
-                  </div>
-                </div>
-
-                {/* Hero Section Mockup */}
-                <div className="text-center mb-6 sm:mb-8">
-                  <div className="w-3/4 h-8 sm:h-12 bg-white/20 rounded mx-auto mb-3 sm:mb-4"></div>
-                  <div className="w-1/2 h-4 sm:h-6 bg-white/15 rounded mx-auto mb-4 sm:mb-6"></div>
-                  <div className="w-24 h-8 sm:w-32 sm:h-10 bg-blue-400/30 rounded mx-auto"></div>
-                </div>
-
-                {/* Three Cards - Stack on mobile */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
-                  <div className="bg-white/10 rounded-lg p-2 sm:p-4 h-16 sm:h-32"></div>
-                  <div className="bg-white/10 rounded-lg p-2 sm:p-4 h-16 sm:h-32 hidden sm:block"></div>
-                  <div className="bg-white/10 rounded-lg p-2 sm:p-4 h-16 sm:h-32 hidden sm:block"></div>
-                </div>
-              </div>
+              <Image
+                className="object-cover"
+                fill
+                src="/hero/preview-bg.png"
+                alt={""}
+              />
 
               {/* 3D Floating Blob - Responsive positioning */}
               <div

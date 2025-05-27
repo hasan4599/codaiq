@@ -17,6 +17,7 @@ const FooterLinks = () => {
       links: [
         { name: "Documentation", href: "/docs" },
         { name: "Academy", href: "/academy" },
+        { name: "Careers", href: "/careers" },
         { name: "Blog", href: "/blog" },
         { name: "Community", href: "/community" },
         { name: "Status", href: "https://status.example.com", external: true },
