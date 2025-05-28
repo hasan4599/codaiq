@@ -1,7 +1,18 @@
+//@ts-nocheck
+"use client";
+
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from "@clerk/nextjs";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
   faChevronRight,
   faRocket,
+  faTachometerAlt,
   faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -71,18 +82,73 @@ export default function MobileMenu({ onClose }: { onClose: () => void }) {
                 </div>
               </Link>
             ))}
+
+            {/* Dashboard Link - Only shown when signed in */}
+            <SignedIn>
+              <Link
+                href="/dashboard"
+                className="text-2xl sm:text-3xl py-4 sm:py-6 px-6 sm:px-8 text-white font-medium hover:text-blue-400 hover:bg-white/5 rounded-2xl transition-all duration-300 hover:scale-105 hover:translate-x-2"
+                onClick={onClose}
+                style={{
+                  animationDelay: `600ms`,
+                  animation: "slideInFromRight 0.6s ease-out forwards",
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="tracking-wide">Dashboard</span>
+                  <FontAwesomeIcon
+                    icon={faTachometerAlt as IconProp}
+                    className="w-5 h-5 sm:w-6 sm:h-6 opacity-60 hover:opacity-100 transition-all duration-300"
+                  />
+                </div>
+              </Link>
+            </SignedIn>
           </nav>
         </div>
 
         {/* Footer Section */}
         <div className="p-6 sm:p-8 border-t border-white/10">
           <div className="text-center max-w-md mx-auto">
-            <p className="text-white/80 text-sm sm:text-base mb-4">
-              Ready to transform your development workflow?
-            </p>
-            <button className="w-full sm:w-auto bg-gradient-to-r from-blue-500/80 to-purple-500/80 px-6 sm:px-8 py-3 rounded-xl text-white font-medium hover:from-blue-500/90 hover:to-purple-500/90 transition-all duration-300 hover:scale-105">
-              Get Started Free
-            </button>
+            {/* When NOT logged in */}
+            <SignedOut>
+              <p className="text-white/80 text-sm sm:text-base mb-4">
+                Ready to transform your development workflow?
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <SignInButton>
+                  <button className="w-full sm:w-auto px-6 sm:px-8 py-3 rounded-xl text-white font-medium bg-white/10 hover:bg-white/20 border border-white/20 transition-all duration-300 hover:scale-105">
+                    Sign In
+                  </button>
+                </SignInButton>
+                <SignUpButton>
+                  <button className="w-full sm:w-auto bg-gradient-to-r from-blue-500/80 to-purple-500/80 px-6 sm:px-8 py-3 rounded-xl text-white font-medium hover:from-blue-500/90 hover:to-purple-500/90 transition-all duration-300 hover:scale-105">
+                    Get Started Free
+                  </button>
+                </SignUpButton>
+              </div>
+            </SignedOut>
+
+            {/* When logged in */}
+            <SignedIn>
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <UserButton afterSignOutUrl="/" />
+                <p className="text-white/80 text-sm sm:text-base">
+                  Welcome back!
+                </p>
+              </div>
+              <Link href="/dashboard">
+                <button
+                  onClick={onClose}
+                  className="w-full sm:w-auto bg-gradient-to-r from-blue-500/80 to-purple-500/80 px-6 sm:px-8 py-3 rounded-xl text-white font-medium hover:from-blue-500/90 hover:to-purple-500/90 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+                >
+                  <FontAwesomeIcon
+                    icon={faTachometerAlt as IconProp}
+                    className="w-4 h-4"
+                  />
+                  <span>Go to Dashboard</span>
+                </button>
+              </Link>
+            </SignedIn>
           </div>
         </div>
       </div>

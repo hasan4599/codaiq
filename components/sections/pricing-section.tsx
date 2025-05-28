@@ -168,11 +168,16 @@ export default function PricingSection() {
                             First month special!
                           </p>
                           <div className="flex items-center gap-2">
-                            <span className="text-gray-400 text-sm">Then</span>
-                            <span className="text-white font-bold text-lg">
-                              ${plan.monthly}/month
+                            <span className="text-gray-400 line-through text-sm">
+                              ${plan.monthly}
+                            </span>
+                            <span className="text-gray-400 text-sm">
+                              regular price
                             </span>
                           </div>
+                          <p className="text-xs text-gray-400 mt-1">
+                            Then ${plan.monthly}/month
+                          </p>
                         </div>
                       </>
                     )}
