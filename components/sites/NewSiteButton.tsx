@@ -31,14 +31,20 @@ export default function NewSiteButton() {
   return (
     <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
       <Dialog.Trigger asChild>
-        <button className="fixed bottom-8 right-8 p-4 rounded-full bg-blue-500 text-white shadow-lg hover:bg-blue-600 transition-colors">
+        <button 
+          className="fixed bottom-8 right-8 p-4 rounded-full bg-blue-500 text-white shadow-lg hover:bg-blue-600 transition-colors"
+          aria-label="Create new site"
+        >
           <FontAwesomeIcon icon={faPlus as IconProp} className="w-6 h-6" />
         </button>
       </Dialog.Trigger>
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md rounded-xl bg-gray-900 border border-gray-800/50 p-6 shadow-xl">
+        <Dialog.Content 
+          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md rounded-xl bg-gray-900 border border-gray-800/50 p-6 shadow-xl"
+          aria-describedby="site-name-description"
+        >
           <Dialog.Title className="text-xl font-semibold mb-4">
             Create New Site
           </Dialog.Title>
@@ -57,6 +63,9 @@ export default function NewSiteButton() {
                 placeholder="My Awesome Site"
                 disabled={isLoading}
               />
+              <p id="site-name-description" className="text-sm text-gray-500 mt-1">
+                Enter a name for your new site. This will be used to generate a unique URL.
+              </p>
             </div>
 
             <div className="flex justify-end gap-3">

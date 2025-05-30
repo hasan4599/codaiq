@@ -16,6 +16,7 @@ model Site {
   name         String
   slug         String   @unique
   thumbnailUrl String?
+  config       Json?
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
