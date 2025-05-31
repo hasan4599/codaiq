@@ -1,94 +1,91 @@
-import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+'use client';
+
 import { useState } from "react";
-import { useSites } from "@/lib/hooks/useSites";
-import * as Dialog from '@radix-ui/react-dialog';
+import { useSites } from "@/hooks/use-sites";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
-export default function NewSiteButton() {
+export function NewSiteButton() {
   const [isOpen, setIsOpen] = useState(false);
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { createSite } = useSites();
+  const { mutate } = useSites();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) return;
-
     try {
       setIsLoading(true);
-      await createSite(name);
-      setName('');
+      const response = await fetch("/api/sites", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create site");
+      }
+
+      await mutate();
       setIsOpen(false);
+      setName("");
     } catch (error) {
-      console.error('Error creating site:', error);
-      // Handle error (show toast, etc.)
+      console.error("Error creating site:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
-      <Dialog.Trigger asChild>
-        <button 
-          className="fixed bottom-8 right-8 p-4 rounded-full bg-blue-500 text-white shadow-lg hover:bg-blue-600 transition-colors"
-          aria-label="Create new site"
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <DialogTrigger asChild>
+        <Button
+          size="icon"
+          className="rounded-full h-14 w-14 fixed bottom-8 right-8 shadow-2xl"
         >
-          <FontAwesomeIcon icon={faPlus as IconProp} className="w-6 h-6" />
-        </button>
-      </Dialog.Trigger>
-
-      <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-        <Dialog.Content 
-          className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md rounded-xl bg-gray-900 border border-gray-800/50 p-6 shadow-xl"
-          aria-describedby="site-name-description"
-        >
-          <Dialog.Title className="text-xl font-semibold mb-4">
-            Create New Site
-          </Dialog.Title>
-
-          <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="name" className="block text-sm font-medium text-gray-400 mb-2">
-                Site Name
-              </label>
-              <input
-                id="name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-2 bg-gray-800/50 border border-gray-700/50 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50"
-                placeholder="My Awesome Site"
-                disabled={isLoading}
-              />
-              <p id="site-name-description" className="text-sm text-gray-500 mt-1">
-                Enter a name for your new site. This will be used to generate a unique URL.
-              </p>
-            </div>
-
-            <div className="flex justify-end gap-3">
-              <Dialog.Close asChild>
-                <button
-                  type="button"
-                  className="px-4 py-2 text-sm text-gray-400 hover:text-gray-300 transition-colors"
-                  disabled={isLoading}
-                >
-                  Cancel
-                </button>
-              </Dialog.Close>
-              <button
-                type="submit"
-                className="px-4 py-2 text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                disabled={isLoading || !name.trim()}
-              >
-                {isLoading ? 'Creating...' : 'Create Site'}
-              </button>
-            </div>
-          </form>
-        </Dialog.Content>
-      </Dialog.Portal>
-    </Dialog.Root>
+          <FontAwesomeIcon icon={faPlus} className="h-6 w-6" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Create New Site</DialogTitle>
+          <DialogDescription>
+            Give your new site a name. You can change this later.
+          </DialogDescription>
+        </DialogHeader>
+        <form onSubmit={onSubmit}>
+          <div className="py-4">
+            <Label htmlFor="name">Site Name</Label>
+            <Input
+              id="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="My Awesome Site"
+              disabled={isLoading}
+            />
+          </div>
+          <DialogFooter>
+            <Button
+              type="submit"
+              disabled={!name || isLoading}
+              className="w-full"
+            >
+              Create Site
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 } 

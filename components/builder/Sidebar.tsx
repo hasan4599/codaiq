@@ -1,126 +1,91 @@
+'use client';
+
+import { useState } from 'react';
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import {
-  faComments,
+import { 
+  faMessage,
   faCode,
   faCog,
-  faChevronLeft,
-  faSpinner
+  faXmark
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { useState } from "react";
-import * as Tooltip from '@radix-ui/react-tooltip';
+import { Tooltip, TooltipProvider } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
-const menuItems = [
-  {
-    icon: faComments,
-    label: "Chat",
-    description: "AI Chat Interface",
-    isLoading: true
-  },
-  {
-    icon: faCode,
-    label: "Code",
-    description: "View Generated Code",
-    isLoading: false
-  },
-  {
-    icon: faCog,
-    label: "Settings",
-    description: "Builder Settings",
-    isLoading: false
-  }
+interface BuilderSidebarProps {
+  onClose?: () => void;
+}
+
+const sidebarItems = [
+  { icon: faMessage, label: 'Chat', id: 'chat' },
+  { icon: faCode, label: 'Code', id: 'code' },
+  { icon: faCog, label: 'Settings', id: 'settings' },
 ];
 
-export default function BuilderSidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+export default function BuilderSidebar({ onClose }: BuilderSidebarProps) {
+  const [activeItem, setActiveItem] = useState('chat');
 
   return (
-    <Tooltip.Provider delayDuration={200}>
-      <div className={`h-full flex flex-col ${isCollapsed ? 'w-16' : 'w-full'}`}>
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-gray-800/50">
-          {!isCollapsed && (
-            <h2 className="text-lg font-semibold">AI Console</h2>
-          )}
+    <div className="h-full flex flex-col">
+      {/* Header */}
+      <div className="flex items-center justify-between p-4 border-b border-gray-800/50">
+        <h2 className="text-lg font-semibold">AI Console</h2>
+        {onClose && (
           <button
-            onClick={() => setIsCollapsed(!isCollapsed)}
-            className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
-            aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+            onClick={onClose}
+            className="md:hidden p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
           >
-            <FontAwesomeIcon 
-              icon={faChevronLeft as IconProp} 
-              className={`w-4 h-4 transition-transform ${isCollapsed ? 'rotate-180' : ''}`}
-            />
+            <FontAwesomeIcon icon={faXmark} className="w-5 h-5" />
           </button>
-        </div>
+        )}
+      </div>
 
-        {/* Menu Items */}
-        <nav className="flex-1 p-2">
-          <ul className="space-y-2">
-            {menuItems.map((item) => (
-              <li key={item.label}>
-                <Tooltip.Root>
-                  <Tooltip.Trigger asChild>
-                    <button
-                      className={`w-full flex items-center gap-3 p-3 rounded-lg hover:bg-gray-800/50 transition-colors relative ${
-                        isCollapsed ? 'justify-center' : ''
-                      } ${item.isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      disabled={item.isLoading}
-                    >
-                      <FontAwesomeIcon 
-                        icon={item.icon as IconProp} 
-                        className={`w-5 h-5 ${item.isLoading ? 'opacity-0' : ''}`}
-                      />
-                      {item.isLoading && (
-                        <FontAwesomeIcon 
-                          icon={faSpinner as IconProp} 
-                          className="w-5 h-5 animate-spin absolute left-3"
-                        />
-                      )}
-                      {!isCollapsed && (
-                        <span className="text-sm font-medium flex-1 text-left">
-                          {item.label}
-                          {item.isLoading && (
-                            <span className="text-xs text-blue-400 ml-2">
-                              Loading...
-                            </span>
-                          )}
-                        </span>
-                      )}
-                    </button>
-                  </Tooltip.Trigger>
-                  {isCollapsed && (
-                    <Tooltip.Portal>
-                      <Tooltip.Content
-                        className="bg-gray-900 text-white px-3 py-2 rounded-lg text-sm shadow-xl border border-gray-800/50"
-                        side="right"
-                        sideOffset={5}
-                      >
-                        <div className="flex flex-col">
-                          <span className="font-medium">{item.label}</span>
-                          <span className="text-gray-400 text-xs">{item.description}</span>
-                          {item.isLoading && (
-                            <span className="text-blue-400 text-xs mt-1">Loading...</span>
-                          )}
-                        </div>
-                        <Tooltip.Arrow className="fill-gray-900" />
-                      </Tooltip.Content>
-                    </Tooltip.Portal>
-                  )}
-                </Tooltip.Root>
-              </li>
-            ))}
-          </ul>
+      {/* Sidebar Content */}
+      <div className="flex-1 p-4">
+        <nav className="space-y-2">
+          {sidebarItems.map((item) => (
+            <button
+              key={item.id}
+              onClick={() => setActiveItem(item.id)}
+              className={cn(
+                "w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
+                "hover:bg-gray-800/50",
+                activeItem === item.id ? "bg-blue-500/20 text-blue-500" : "text-gray-400"
+              )}
+            >
+              <FontAwesomeIcon 
+                icon={item.icon as IconProp} 
+                className={cn(
+                  "w-5 h-5",
+                  activeItem === item.id ? "text-blue-500" : ""
+                )} 
+              />
+              <span className="font-medium">{item.label}</span>
+            </button>
+          ))}
         </nav>
 
-        {/* Mobile Close Button */}
-        <button
-          className="md:hidden p-4 w-full text-center text-sm text-gray-400 hover:text-gray-300 transition-colors border-t border-gray-800/50"
-          onClick={() => setIsCollapsed(true)}
-        >
-          Close Sidebar
-        </button>
+        {/* Content Panel */}
+        <div className="mt-8">
+          <div className="text-sm text-gray-400">
+            {activeItem === 'chat' && (
+              <div className="space-y-4">
+                <p>Chat interface coming soon...</p>
+              </div>
+            )}
+            {activeItem === 'code' && (
+              <div className="space-y-4">
+                <p>Code editor coming soon...</p>
+              </div>
+            )}
+            {activeItem === 'settings' && (
+              <div className="space-y-4">
+                <p>Settings panel coming soon...</p>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
-    </Tooltip.Provider>
+    </div>
   );
 } 

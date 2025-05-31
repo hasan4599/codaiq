@@ -1,25 +1,35 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { authMiddleware } from "@clerk/nextjs"
 
 export default authMiddleware({
   // Routes that can be accessed while signed out
   publicRoutes: [
     "/",
-    "/sign-in*",
-    "/sign-up*",
-    "/api/generate",
-    "/legal/*",
-    "/careers/*"
+    "/sign-in",
+    "/sign-up",
+    "/api/webhook",
   ],
   // Routes that can always be accessed, and have
   // no authentication information
   ignoredRoutes: [
-    "/api/generate"
+    "/api/webhook",
   ],
-});
+  // Handle token expiration more gracefully
+  afterAuth(auth, req, evt) {
+    // If the token is expired, redirect to sign-in
+    if (!auth.userId && !auth.isPublicRoute) {
+      const signInUrl = new URL('/sign-in', req.url);
+      signInUrl.searchParams.set('redirect_url', req.url);
+      return Response.redirect(signInUrl);
+    }
+  },
+})
 
+// Stop Middleware running on static files
 export const config = {
-  // Protects all routes, including api/trpc.
-  // See https://clerk.com/docs/references/nextjs/auth-middleware
-  // for more information about configuring your Middleware
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
-}; 
+  matcher: [
+    // Exclude files with a "." followed by an extension
+    "/((?!.*\\.).*)",
+    // Optional: Allow access to static files
+    "/(api|trpc)(.*)",
+  ],
+} 

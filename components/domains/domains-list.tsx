@@ -1,4 +1,6 @@
-import { Button } from "@/components/ui/button"
+"use client"
+
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -11,6 +13,9 @@ import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { useDomains } from "@/lib/hooks/use-domains"
 import { cn } from "@/lib/utils"
+import { type VariantProps } from "class-variance-authority"
+
+type ButtonVariants = VariantProps<typeof buttonVariants>
 
 export function DomainsList({ siteId }: { siteId: string }) {
   const { domains, isLoading, isAdding, isRemoving, addDomain, removeDomain, refreshDomains } = useDomains({ siteId })
@@ -84,7 +89,6 @@ export function DomainsList({ siteId }: { siteId: string }) {
                 </div>
                 <Button
                   variant="ghost"
-                  size="sm"
                   onClick={() => removeDomain(domain.id)}
                   disabled={isRemoving === domain.id}
                 >
@@ -108,6 +112,7 @@ export function DomainsList({ siteId }: { siteId: string }) {
                 disabled={isAdding}
               />
               <Button 
+                variant="default"
                 onClick={handleAddDomain}
                 disabled={isAdding || !newDomain}
               >

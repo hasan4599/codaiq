@@ -1,18 +1,18 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
-import { useAuth } from '@clerk/nextjs';
-import { useSites } from '@/lib/hooks/useSites';
-import SiteCard from '@/components/sites/SiteCard';
-import NewSiteButton from '@/components/sites/NewSiteButton';
-import EmptyState from '@/components/sites/EmptyState';
-import DashboardSkeleton from '@/components/sites/DashboardSkeleton';
+import { useAuth } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useSites } from "@/hooks/use-sites";
+import { SiteCard } from "@/components/sites/SiteCard";
+import { NewSiteButton } from "@/components/sites/NewSiteButton";
+import { EmptyState } from "@/components/sites/EmptyState";
+import { DashboardSkeleton } from "@/components/sites/DashboardSkeleton";
 
 export default function DashboardPage() {
   const { isLoaded, userId } = useAuth();
   const router = useRouter();
-  const { sites, isLoading, error } = useSites();
+  const { sites, isLoading, isError } = useSites();
 
   // Route guard
   useEffect(() => {
@@ -25,37 +25,38 @@ export default function DashboardPage() {
     return null;
   }
 
-  if (error) {
+  if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-[60vh]">
+      <div className="container mx-auto p-6">
+        <DashboardSkeleton />
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="container mx-auto p-6 text-center">
         <p className="text-red-500">Failed to load sites. Please try again later.</p>
       </div>
     );
   }
 
-  if (isLoading) {
-    return <DashboardSkeleton />;
-  }
-
   if (!sites?.length) {
     return (
-      <>
-        <EmptyState />
+      <div className="container mx-auto p-6">
+        <EmptyState onCreate={() => {}} />
         <NewSiteButton />
-      </>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)]">
-      {/* Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+    <div className="container mx-auto p-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sites.map((site) => (
           <SiteCard key={site.id} site={site} />
         ))}
       </div>
-
-      {/* Floating Action Button */}
       <NewSiteButton />
     </div>
   );

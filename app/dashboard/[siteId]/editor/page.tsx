@@ -4,11 +4,13 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faSpinner, faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { toast } from 'sonner';
 import EditorSidebar from '@/components/editor/Sidebar';
-import Preview from '@/components/editor/Preview';
+import { SitePreview } from '@/components/shared/SitePreview';
 import { useEditorStore } from '@/lib/store/editorStore';
+import { Loading } from '@/components/ui/loading';
 
 export default function EditorPage({ params }: { params: { siteId: string } }) {
   const { isLoaded, userId } = useAuth();
@@ -16,6 +18,7 @@ export default function EditorPage({ params }: { params: { siteId: string } }) {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const { setSiteId, setConfig, isDirty } = useEditorStore();
 
@@ -29,12 +32,16 @@ export default function EditorPage({ params }: { params: { siteId: string } }) {
     const loadSiteConfig = async () => {
       try {
         const response = await fetch(`/api/sites/${params.siteId}/config`);
-        if (!response.ok) throw new Error('Failed to fetch site config');
+        if (!response.ok) {
+          throw new Error('Failed to fetch site configuration');
+        }
         const config = await response.json();
         setSiteId(params.siteId);
         setConfig(config);
       } catch (error) {
         console.error('Error loading site config:', error);
+        setError(error instanceof Error ? error.message : 'An error occurred');
+        toast.error('Failed to load site configuration');
       } finally {
         setIsLoading(false);
       }
@@ -59,17 +66,7 @@ export default function EditorPage({ params }: { params: { siteId: string } }) {
   }, [isDirty]);
 
   if (!isLoaded || isLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-900/50 backdrop-blur-xl">
-        <div className="text-center">
-          <FontAwesomeIcon 
-            icon={faSpinner as IconProp} 
-            className="w-8 h-8 animate-spin text-blue-500 mb-4" 
-          />
-          <h2 className="text-xl font-semibold">Loading Editor...</h2>
-        </div>
-      </div>
-    );
+    return <Loading title="Loading Editor..." />;
   }
 
   if (!userId) {
@@ -138,7 +135,10 @@ export default function EditorPage({ params }: { params: { siteId: string } }) {
         </div>
 
         {/* Preview Area */}
-        <Preview siteId={params.siteId} />
+        <SitePreview 
+          config={useEditorStore.getState().config}
+          error={error || undefined}
+        />
       </div>
     </div>
   );

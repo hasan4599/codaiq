@@ -2,7 +2,8 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faDesktop, faTabletAlt, faMobileAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
-import { useEditorStore } from '@/lib/store/editorStore';
+import { useEditorStore, SiteConfig } from '@/lib/store/editorStore';
+import { Loading } from '@/components/ui/loading';
 
 type ViewportSize = "desktop" | "tablet" | "mobile";
 
@@ -54,7 +55,7 @@ export default function Preview({ siteId }: PreviewProps) {
       </div>
 
       {/* Preview Frame */}
-      <div className="flex-1 overflow-hidden p-6">
+      <div className="flex-1 overflow-auto p-4">
         <div className="h-full flex items-start justify-center">
           <div
             style={{ width: viewportSizes[viewportSize] }}
@@ -73,7 +74,7 @@ export default function Preview({ siteId }: PreviewProps) {
                 className="min-h-screen"
               >
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                  {config.components.map((component) => (
+                  {config.components.map((component: SiteConfig['components'][0]) => (
                     <div key={component.id} className="mb-8">
                       {/* Render component based on type */}
                       {/* This will be expanded with actual component rendering logic */}
@@ -85,12 +86,7 @@ export default function Preview({ siteId }: PreviewProps) {
                 </div>
               </div>
             ) : (
-              <div className="flex h-full items-center justify-center">
-                <div className="text-center">
-                  <h1 className="text-2xl font-bold text-gray-400">No Preview Available</h1>
-                  <p className="text-gray-500">Start editing to see your site preview</p>
-                </div>
-              </div>
+              <Loading title="Start editing to see your site preview" fullHeight={false} />
             )}
           </div>
         </div>

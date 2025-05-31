@@ -10,15 +10,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id        String   @id
+  email     String?  @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  sites     Site[]
+}
+
 model Site {
-  id           String   @id @default(cuid())
-  ownerId      String
-  name         String
-  slug         String   @unique
-  thumbnailUrl String?
-  config       Json?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id             String    @id @default(cuid())
+  name           String
+  slug           String    @unique
+  thumbnailUrl   String?
+  description    String?
+  url            String?
+  status         String    @default("offline")
+  lastDeployedAt DateTime?
+  ownerId        String
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  domains        Domain[]
+  owner          User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@index([ownerId])
-} 
+}
+
+model Domain {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  status    String   @default("pending")
+  siteId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  site      Site     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@index([siteId])
+}
