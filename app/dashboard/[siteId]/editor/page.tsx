@@ -74,7 +74,7 @@ export default function EditorPage({ params }: { params: { siteId: string } }) {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-900">
+    <div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-gray-900">
       {/* Mobile Drawer Overlay */}
       {isMobileDrawerOpen && (
         <div 
@@ -84,7 +84,7 @@ export default function EditorPage({ params }: { params: { siteId: string } }) {
       )}
 
       {/* Sidebar */}
-      <div 
+      <div
         className={`
           fixed md:relative
           inset-y-0 left-0

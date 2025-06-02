@@ -1,4 +1,4 @@
-import { authMiddleware } from "@clerk/nextjs"
+import { authMiddleware } from "@clerk/nextjs/server"
 
 export default authMiddleware({
   // Routes that can be accessed while signed out
@@ -27,9 +27,7 @@ export default authMiddleware({
 // Stop Middleware running on static files
 export const config = {
   matcher: [
-    // Exclude files with a "." followed by an extension
-    "/((?!.*\\.).*)",
-    // Optional: Allow access to static files
+    "/((?!.*\\..*|_next).*)",
     "/(api|trpc)(.*)",
   ],
 } 

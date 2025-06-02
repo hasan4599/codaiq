@@ -1,16 +1,18 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { 
-  faChartLine, 
-  faCode, 
-  faCog, 
-  faDatabase, 
-  faGlobe, 
-  faImage, 
-  faXmark 
+import {
+  faRobot,
+  faGlobe,
+  faPencil,
+  faServer,
+  faChartLine,
+  faCog,
+  faLifeRing,
+  faXmark
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useParams } from "next/navigation";
+import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface DashboardSidebarProps {
@@ -18,17 +20,73 @@ interface DashboardSidebarProps {
   onClose: () => void;
 }
 
-const menuItems = [
-  { icon: faChartLine, label: "Overview", href: "/dashboard" },
-  { icon: faGlobe, label: "Websites", href: "/dashboard/websites" },
-  { icon: faCode, label: "Components", href: "/dashboard/components" },
-  { icon: faImage, label: "Media", href: "/dashboard/media" },
-  { icon: faDatabase, label: "Data", href: "/dashboard/data" },
-  { icon: faCog, label: "Settings", href: "/dashboard/settings" },
+// Navigation items in the specified order
+const navigationItems = [
+  {
+    id: "ai-builder",
+    label: "AI Webbuilder",
+    href: "/dashboard/builder",
+    icon: faRobot,
+    description: "Create with AI"
+  },
+  {
+    id: "my-sites",
+    label: "My Sites",
+    href: "/dashboard",
+    icon: faGlobe,
+    description: "Manage your websites"
+  },
+  {
+    id: "editor",
+    label: "Editor",
+    href: "/dashboard/site/editor",
+    icon: faPencil,
+    description: "Edit your site",
+    dynamic: true
+  },
+  {
+    id: "domain",
+    label: "Domain & Hosting",
+    href: "/dashboard/site/domain",
+    icon: faServer,
+    description: "Manage domains",
+    dynamic: true
+  },
+  {
+    id: "analytics",
+    label: "Analytics",
+    href: "/dashboard/site/analytics",
+    icon: faChartLine,
+    description: "View statistics",
+    dynamic: true
+  },
+  {
+    id: "settings",
+    label: "Settings",
+    href: "/settings",
+    icon: faCog,
+    description: "Configure settings"
+  },
+  {
+    id: "support",
+    label: "Support",
+    href: "/support",
+    icon: faLifeRing,
+    description: "Get help"
+  }
 ];
 
 export default function DashboardSidebar({ open, onClose }: DashboardSidebarProps) {
   const pathname = usePathname();
+  const params = useParams();
+  const siteId = params?.siteId as string;
+
+  // Function to check if a route is active
+  const isActive = (href: string) => {
+    if (href === "/dashboard" && pathname === "/dashboard") return true;
+    if (href !== "/dashboard" && pathname.startsWith(href)) return true;
+    return false;
+  };
 
   return (
     <>
@@ -40,46 +98,110 @@ export default function DashboardSidebar({ open, onClose }: DashboardSidebarProp
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+            className="fixed inset-0 z-40 bg-black/50 backdrop-blur-sm lg:hidden"
           />
         )}
       </AnimatePresence>
 
       {/* Sidebar */}
+      <aside className="hidden lg:block fixed top-16 left-0 w-80 h-[calc(100vh-4rem)] bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50">
+        {/* Navigation */}
+        <nav className="p-4 space-y-2">
+          {navigationItems.map((item) => {
+            const active = isActive(item.href);
+            const disabled = item.dynamic && !siteId;
+            const href = item.dynamic && siteId ? item.href.replace('site', siteId) : item.href;
+
+            return (
+              <Link
+                key={item.id}
+                href={disabled ? "#" : href}
+                onClick={(e) => {
+                  if (disabled) e.preventDefault();
+                }}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
+                  "hover:bg-gray-800/50",
+                  {
+                    "bg-blue-500/20 text-blue-500": active,
+                    "text-gray-400": !active,
+                    "opacity-50 cursor-not-allowed": disabled
+                  }
+                )}
+                title={disabled ? "Select a site first" : item.description}
+              >
+                <FontAwesomeIcon 
+                  icon={item.icon as IconProp} 
+                  className={cn(
+                    "w-5 h-5",
+                    active ? "text-blue-500" : ""
+                  )}
+                />
+                <span className="font-medium">{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+      </aside>
+
+      {/* Mobile Sidebar */}
       <motion.aside
-        initial={{ x: -300 }}
-        animate={{ x: open ? 0 : -300 }}
+        initial={{ x: -320 }}
+        animate={{ x: open ? 0 : -320 }}
         transition={{ type: "spring", damping: 20 }}
-        className={`fixed top-0 left-0 z-40 h-screen w-64 border-r border-gray-800/50 bg-gray-900/95 backdrop-blur-xl lg:sticky lg:translate-x-0`}
+        className="lg:hidden fixed top-0 left-0 z-50 h-full w-80 bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50"
       >
-        <div className="flex h-16 items-center justify-between px-4 lg:px-6">
-          <span className="text-lg font-semibold">Navigation</span>
+        {/* Header */}
+        <div className="flex items-center justify-between h-16 px-6 border-b border-gray-800/50">
+          <Link href="/dashboard" className="flex items-center gap-3">
+            <FontAwesomeIcon 
+              icon={faRobot as IconProp} 
+              className="text-blue-400 w-6 h-6" 
+            />
+            <span className="text-xl font-bold">Codaiq</span>
+          </Link>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors lg:hidden"
+            className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors"
           >
             <FontAwesomeIcon icon={faXmark as IconProp} className="w-5 h-5" />
           </button>
         </div>
 
-        <nav className="space-y-1 px-3">
-          {menuItems.map((item) => {
-            const isActive = pathname === item.href;
+        {/* Navigation */}
+        <nav className="p-4 space-y-2">
+          {navigationItems.map((item) => {
+            const active = isActive(item.href);
+            const disabled = item.dynamic && !siteId;
+            const href = item.dynamic && siteId ? item.href.replace('site', siteId) : item.href;
+
             return (
               <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition-colors ${
-                  isActive 
-                    ? "bg-blue-500/10 text-blue-500" 
-                    : "text-gray-400 hover:bg-gray-800/50 hover:text-gray-100"
-                }`}
+                key={item.id}
+                href={disabled ? "#" : href}
+                onClick={(e) => {
+                  if (disabled) e.preventDefault();
+                  if (window.innerWidth < 1024) onClose();
+                }}
+                className={cn(
+                  "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
+                  "hover:bg-gray-800/50",
+                  {
+                    "bg-blue-500/20 text-blue-500": active,
+                    "text-gray-400": !active,
+                    "opacity-50 cursor-not-allowed": disabled
+                  }
+                )}
+                title={disabled ? "Select a site first" : item.description}
               >
                 <FontAwesomeIcon 
                   icon={item.icon as IconProp} 
-                  className={`w-5 h-5 ${isActive ? "text-blue-500" : ""}`} 
+                  className={cn(
+                    "w-5 h-5",
+                    active ? "text-blue-500" : ""
+                  )}
                 />
-                {item.label}
+                <span className="font-medium">{item.label}</span>
               </Link>
             );
           })}

@@ -204,145 +204,69 @@ interface ThemeBreakpoints {
 
 export interface SiteConfig {
   id: string;
+  name: string;
   theme: {
-    colors: ThemeColors;
-    typography: ThemeTypography;
-    spacing?: ThemeSpacing;
-    breakpoints?: ThemeBreakpoints;
+    colors: {
+      primary: string;
+      secondary: string;
+      background: string;
+      text: string;
+      accent: string;
+      muted: string;
+      surface: string;
+    };
+    typography: {
+      headingFont: string;
+      bodyFont: string;
+      baseSize: string;
+      scaleRatio: number;
+    };
+    spacing?: {
+      base?: string;
+      scale?: number;
+      container?: {
+        padding?: string;
+        maxWidth?: string;
+      };
+    };
+    breakpoints?: {
+      sm?: string;
+      md?: string;
+      lg?: string;
+      xl?: string;
+    };
   };
-  components: SiteComponent[];
-  meta: {
-    title: string;
-    description: string;
-    favicon?: string;
-  };
+  components: Array<{
+    id: string;
+    type: string;
+    props: Record<string, any>;
+  }>;
 }
 
-interface EditorState {
+interface EditorStore {
   siteId: string | null;
   config: SiteConfig | null;
   isDirty: boolean;
-  activePanel: string | null;
-  selectedComponent: string | null;
-  
-  // Actions
+  activePanel: string;
   setSiteId: (id: string) => void;
   setConfig: (config: SiteConfig) => void;
-  updateTheme: (theme: Partial<SiteConfig['theme']>) => void;
-  addComponent: (type: SiteComponent['type'], props: any) => void;
-  updateComponent: (id: string, props: any) => void;
-  deleteComponent: (id: string) => void;
-  setActivePanel: (panel: string | null) => void;
-  setSelectedComponent: (id: string | null) => void;
-  markClean: () => void;
+  setIsDirty: (isDirty: boolean) => void;
+  setActivePanel: (panel: string) => void;
+  updateConfig: (updates: Partial<SiteConfig>) => void;
 }
 
-const defaultConfig: SiteConfig = {
-  id: '',
-  theme: {
-    colors: {
-      primary: '#3B82F6',
-      secondary: '#10B981',
-      background: '#FFFFFF',
-      text: '#1F2937',
-      accent: '#F59E0B',
-      muted: '#6B7280',
-      surface: '#F3F4F6',
-    },
-    typography: {
-      headingFont: 'Inter',
-      bodyFont: 'Inter',
-      baseSize: '16px',
-      scaleRatio: 1.25,
-    },
-    spacing: {
-      base: '1rem',
-      scale: 1.5,
-      container: {
-        padding: '1rem',
-        maxWidth: '80rem',
-      },
-    },
-    breakpoints: {
-      sm: '640px',
-      md: '768px',
-      lg: '1024px',
-      xl: '1280px',
-    },
-  },
-  components: [],
-  meta: {
-    title: 'New Site',
-    description: 'Created with CodaIQ',
-  },
-};
-
-export const useEditorStore = create<EditorState>()((set) => ({
+export const useEditorStore = create<EditorStore>((set) => ({
   siteId: null,
   config: null,
   isDirty: false,
-  activePanel: null,
-  selectedComponent: null,
-
-  setSiteId: (id: string) => set({ siteId: id }),
-  
-  setConfig: (config: SiteConfig) => set({ config, isDirty: true }),
-  
-  updateTheme: (theme: Partial<SiteConfig['theme']>) => set((state: EditorState) => ({
-    config: state.config ? {
-      ...state.config,
-      theme: { ...state.config.theme, ...theme },
-    } : defaultConfig,
-    isDirty: true,
-  })),
-  
-  addComponent: (type: SiteComponent['type'], props: any) => set((state: EditorState) => {
-    if (!state.config) return state;
-    
-    const newComponent: SiteComponent = {
-      id: crypto.randomUUID(),
-      type,
-      props,
-    };
-    
-    return {
-      config: {
-        ...state.config,
-        components: [...state.config.components, newComponent],
-      },
-      isDirty: true,
-    };
-  }),
-  
-  updateComponent: (id: string, props: any) => set((state: EditorState) => {
-    if (!state.config) return state;
-    
-    return {
-      config: {
-        ...state.config,
-        components: state.config.components.map((comp) =>
-          comp.id === id ? { ...comp, props: { ...comp.props, ...props } } : comp
-        ),
-      },
-      isDirty: true,
-    };
-  }),
-  
-  deleteComponent: (id: string) => set((state: EditorState) => {
-    if (!state.config) return state;
-    
-    return {
-      config: {
-        ...state.config,
-        components: state.config.components.filter((comp) => comp.id !== id),
-      },
-      isDirty: true,
-    };
-  }),
-  
-  setActivePanel: (panel: string | null) => set({ activePanel: panel }),
-  
-  setSelectedComponent: (id: string | null) => set({ selectedComponent: id }),
-  
-  markClean: () => set({ isDirty: false }),
+  activePanel: 'theme',
+  setSiteId: (id) => set({ siteId: id }),
+  setConfig: (config) => set({ config, isDirty: false }),
+  setIsDirty: (isDirty) => set({ isDirty }),
+  setActivePanel: (panel) => set({ activePanel: panel }),
+  updateConfig: (updates) => 
+    set((state) => ({
+      config: state.config ? { ...state.config, ...updates } : null,
+      isDirty: true
+    })),
 })); 

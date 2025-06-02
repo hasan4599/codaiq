@@ -1,31 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-   
-    typescript: {
-    ignoreBuildErrors: true,
+  typescript: {
+    ignoreBuildErrors: true
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: true
   },
-  experimental: {
-    serverActions: true,
-  },
-  // Ensure proper script loading
-  poweredByHeader: false,
-  generateEtags: false,
-  // Specify the base path and assetPrefix if needed
-  async rewrites() {
-    return {
-      beforeFiles: [
-        // Rewrite API requests to the correct port
-        {
-          source: '/api/:path*',
-          destination: 'http://localhost:3001/api/:path*',
-        },
-      ],
-    };
-  },
-};
+  env: {
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY || 'dummy_key',
+    DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY || ''
+  }
+}
 
-module.exports = nextConfig;
+module.exports = nextConfig 
