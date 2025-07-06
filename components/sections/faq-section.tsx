@@ -60,7 +60,7 @@ const itemVariants = {
     scale: 1,
     transition: {
       duration: 0.6,
-      ease: [0.22, 1, 0.36, 1],
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],  // cast here
     },
   },
 };
@@ -71,7 +71,7 @@ const accordionVariants = {
     opacity: 0,
     transition: {
       duration: 0.3,
-      ease: [0.04, 0.62, 0.23, 0.98],
+      ease: [0.04, 0.62, 0.23, 0.98] as [number, number, number, number],
     },
   },
   expanded: {
@@ -79,10 +79,11 @@ const accordionVariants = {
     opacity: 1,
     transition: {
       duration: 0.4,
-      ease: [0.04, 0.62, 0.23, 0.98],
+      ease: [0.04, 0.62, 0.23, 0.98] as [number, number, number, number],
     },
   },
 };
+
 
 const iconVariants = {
   collapsed: { rotate: 0 },

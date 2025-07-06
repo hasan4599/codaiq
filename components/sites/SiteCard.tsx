@@ -1,6 +1,5 @@
 'use client';
 
-import { Site } from '@prisma/client';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
   faGlobe,
@@ -19,11 +18,12 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
+import { ISite } from '@/model/site';
 
 interface SiteCardProps {
-  site: Site;
-  onEdit?: (site: Site) => void;
-  onDelete?: (site: Site) => void;
+  site: ISite;
+  onEdit?: (site: ISite) => void;
+  onDelete?: (site: ISite) => void;
 }
 
 export default function SiteCard({ site, onEdit, onDelete }: SiteCardProps) {
@@ -46,10 +46,10 @@ export default function SiteCard({ site, onEdit, onDelete }: SiteCardProps) {
       <div className="p-4">
         <div className="flex items-start justify-between">
           <div>
-            <h3 className="font-medium text-lg truncate">{site.name}</h3>
-            {site.description && (
+            <h3 className="font-medium text-lg truncate">{site.metadata.title}</h3>
+            {site.metadata.description && (
               <p className="text-sm text-gray-400 line-clamp-2 mt-1">
-                {site.description}
+                {site.metadata.description}
               </p>
             )}
           </div>
@@ -103,4 +103,4 @@ export default function SiteCard({ site, onEdit, onDelete }: SiteCardProps) {
       </div>
     </div>
   );
-} 
+}

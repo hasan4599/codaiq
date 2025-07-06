@@ -1,6 +1,5 @@
 import useSWR from 'swr';
 import { toast } from 'sonner';
-import { Site } from '@prisma/client';
 
 export type Site = {
   id: string;

@@ -104,7 +104,7 @@ export default function DashboardSidebar({ open, onClose }: DashboardSidebarProp
       </AnimatePresence>
 
       {/* Sidebar */}
-      <aside className="hidden lg:block fixed top-16 left-0 w-80 h-[calc(100vh-4rem)] bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50">
+      <aside className="hidden lg:block w-80 h-full bg-gray-900/95 backdrop-blur-xl border-r border-gray-800/50">
         {/* Navigation */}
         <nav className="p-4 space-y-2">
           {navigationItems.map((item) => {

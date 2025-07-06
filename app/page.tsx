@@ -9,6 +9,7 @@ import MarqueeSamples from "@/components/sections/marqee-samples";
 import ModernBanner from "@/components/sections/modern-banner";
 import PricingSection from "@/components/sections/pricing-section";
 import Testimonials from "@/components/sections/testimonials";
+import { Fetch } from "@/hooks/fetch";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 import {
   faBolt,
@@ -20,9 +21,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
+  const [user, setUser] = useState<{ email: string, name: string, image: string }>();
+  const [loading, setLoading] = useState(false);
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -30,8 +34,27 @@ export default function Home() {
   });
   const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
+  useEffect(() => {
+    try {
+      setLoading(true)
+      const handle = async () => {
+        const response = await Fetch({ body: '', api: 'get/user/selected', method: "GET", host: 'server', loading: (v) => { } })
+        if (response !== null) {
+          setUser({
+            name: response.fullName,
+            email: response.email,
+            image: response.avatarUrl
+          })
+        }
+      }
+      handle();
+    } finally {
+      setLoading(false)
+    }
+  }, []);
+
   return (
-    <div
+    user && <div
       ref={ref}
       className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden"
     >
@@ -41,7 +64,7 @@ export default function Home() {
         style={{ y: yBg }}
       />
 
-      <Header />
+      <Header user={user} />
       <HeroSection />
       <MarqueeSamples />
 

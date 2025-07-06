@@ -2,16 +2,39 @@
 
 import Footer from "@/components/sections/footer";
 import Header from "@/components/sections/header";
+import { Fetch } from "@/hooks/fetch";
+import { useEffect, useState } from "react";
 
 const AUPPolicyPage = () => {
+  const [user, setUser] = useState<{ email: string, name: string, image: string } | null>(null);
+  const [loading, setLoading] = useState(false);
   const scrollToSection = (sectionId: string) => {
     document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
   };
 
+  useEffect(() => {
+    try {
+      setLoading(true)
+      const handle = async () => {
+        const response = await Fetch({ body: '', api: 'get/user/selected', method: "GET", host: 'server', loading: (v) => { } })
+        if (response !== null) {
+          setUser({
+            name: response.fullName,
+            email: response.email,
+            image: response.avatarUrl
+          })
+        }
+      }
+      handle();
+    } finally {
+      setLoading(false)
+    }
+  }, []);
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 text-gray-100 font-poppins overflow-x-hidden">
+    user && <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 text-gray-100 font-poppins overflow-x-hidden">
       {/* Header */}
-      <Header />
+      <Header user={user} />
 
       {/* Animated background elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">

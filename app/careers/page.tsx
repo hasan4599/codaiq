@@ -4,8 +4,9 @@
 
 import Footer from "@/components/sections/footer";
 import Header from "@/components/sections/header";
+import { Fetch } from "@/hooks/fetch";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const jobRoles = [
   {
@@ -202,15 +203,33 @@ const jobRoles = [
 
 export default function CareersPage() {
   const [expandedRole, setExpandedRole] = useState(null);
-
+  const [user, setUser] = useState<{ email: string, name: string, image: string } | null>(null);
+  const [loading, setLoading] = useState(false);
   const toggleRole = (roleId: any) => {
     setExpandedRole(expandedRole === roleId ? null : roleId);
   };
-
+  useEffect(() => {
+    try {
+      setLoading(true)
+      const handle = async () => {
+        const response = await Fetch({ body: '', api: 'get/user/selected', method: "GET", host: 'server', loading: (v) => { } })
+        if (response !== null) {
+          setUser({
+            name: response.fullName,
+            email: response.email,
+            image: response.avatarUrl
+          })
+        }
+      }
+      handle();
+    } finally {
+      setLoading(false)
+    }
+  }, []);
   return (
-    <div className="min-h-screen bg-[#020617] text-gray-100 font-sans overflow-x-hidden">
+    user && <div className="min-h-screen bg-[#020617] text-gray-100 font-sans overflow-x-hidden">
       {/* Header */}
-      <Header />
+      <Header user={user} />
 
       {/* Background Grid Pattern */}
       <div className="absolute inset-0 bg-[url('/grid-pattern.svg')] bg-repeat opacity-[3%] -z-10" />

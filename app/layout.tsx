@@ -1,10 +1,11 @@
-// @ts-nocheck
-import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata, Viewport } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { Toaster } from 'sonner';
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/auth-options";
+import AuthProvider from "./api/auth/[...nextauth]/auth-provider";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -22,19 +23,20 @@ export const viewport: Viewport = {
   themeColor: "#020617",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getServerSession(authOptions);
   return (
-    <ClerkProvider>
-      <html lang="en" className={`${poppins.variable} ${inter.className}`} suppressHydrationWarning>
-        <body className="bg-[#020617] text-white font-sans">
+    <html lang="en" className={`${poppins.variable} ${inter.className}`} suppressHydrationWarning>
+      <body className="bg-[#020617] text-white font-sans">
+        <AuthProvider session={session}>
           {children}
-          <Toaster position="top-right" />
-        </body>
-      </html>
-    </ClerkProvider>
+        </AuthProvider>
+        <Toaster position="top-right" />
+      </body>
+    </html>
   );
 }

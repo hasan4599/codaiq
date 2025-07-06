@@ -56,7 +56,7 @@ export default function HowItWorks() {
         <div className="lg:hidden">
           <div className="relative max-w-2xl mx-auto">
             {/* Vertical Timeline */}
-            <div className="absolute left-8 sm:left-10 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 via-purple-400 via-pink-400 to-green-400 opacity-50 rounded-full" />
+            <div className="absolute left-8 sm:left-10 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-400 via-pink-400 to-green-400 opacity-50 rounded-full" />
 
             <div className="space-y-8 sm:space-y-12">
               {workflowSteps.map((step, i) => (
@@ -116,7 +116,7 @@ export default function HowItWorks() {
         <div className="hidden lg:block">
           <div className="relative">
             {/* Horizontal Timeline */}
-            <div className="absolute top-24 left-0 right-0 h-2 bg-gradient-to-r from-blue-400 via-purple-400 via-pink-400 to-green-400 w-3/4 mx-auto rounded-full opacity-50" />
+            <div className="absolute top-24 left-0 right-0 h-2 bg-gradient-to-r from-blue-400 via-pink-400 to-green-400 w-3/4 mx-auto rounded-full opacity-50" />
 
             <div className="grid grid-cols-4 gap-6 xl:gap-8">
               {workflowSteps.map((step, i) => (

@@ -98,7 +98,7 @@ export const ComponentRenderer: FC<ComponentRendererProps> = ({
           {component.type}
         </div>
       )}
-      <Component {...responsiveProps} />
+      <Component title={''} features={[]} testimonials={[]} plans={[]} {...responsiveProps} />
     </div>
   );
 }; 
