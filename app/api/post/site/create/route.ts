@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
 import { User } from "@/model/user";
 import Site from "@/model/site";
+import connectMongo from "@/db/mongoose";
 
 interface SiteProps {
     title: string;
@@ -36,7 +37,8 @@ export async function POST(req: NextRequest) {
         if (!devResult.success) {
             return NextResponse.json({ error: "Failed to start dev server", detail: devResult.error }, { status: 500 });
         }
-
+        await connectMongo();
+        
         const newSite = await Site.create({
             metadata: {
                 title: site.title,
