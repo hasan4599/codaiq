@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
         }
 
-        const { site }: { site: SiteProps } = await req.json();
+        const site: SiteProps = await req.json();
 
         // Clone repo
         const cloneResult = await cloneRepo(site.repoURL, site.title);
