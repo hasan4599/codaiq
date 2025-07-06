@@ -7,7 +7,7 @@ export interface IUser extends Document {
     role: string;
     bio?: string;
     avatarUrl?: string;
-    site: { id: string; name: string; role: string }[];
+    site: { id: string; name: string; role: string, environment: string }[];
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -46,6 +46,7 @@ const UserSchema = new Schema<IUser>(
                 id: { type: String, required: true },
                 name: { type: String, required: true },
                 role: { type: String, required: true },
+                environment: { type: String, enum: ['dev', 'prod'], default: 'prod' }
             },
             {
                 _id: false

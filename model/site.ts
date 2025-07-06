@@ -48,7 +48,17 @@ const SiteSchema = new Schema(
             required: true,
             default: 'offline',
         },
-        repoURL: { type: String, required: true }
+        repoURL: { type: String, required: true },
+
+        devPort: { type: Number },             // dev port assigned
+        devPm2Name: { type: String },          // pm2 process name for dev
+        devTunnelUrl: { type: String },        // tunnel URL for dev environment
+
+        prodPort: { type: Number },            // production port assigned
+        prodPm2Name: { type: String },         // pm2 process name for production
+        prodTunnelUrl: { type: String },       // tunnel URL for production environment
+
+        deployDomain: { type: String },        // domain for deployed production site
     },
     { timestamps: true }
 );
@@ -85,6 +95,17 @@ export interface ISite extends Document {
     };
     status: 'online' | 'offline' | 'deploying';
     repoURL: string;
+
+    devPort?: number;
+    devPm2Name?: string;
+    devTunnelUrl?: string;
+
+    prodPort?: number;
+    prodPm2Name?: string;
+    prodTunnelUrl?: string;
+
+    deployDomain?: string;
+
     createdAt: Date;
     updatedAt: Date;
 }

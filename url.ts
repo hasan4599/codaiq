@@ -1,2 +1,2 @@
-const server = process.env.NODE_ENV === 'development'? 'http://localhost:3000':'http://localhost:3000';
+const server = process.env.NODE_ENV === 'development'? 'https://codaiq.com':'https://codaiq.com';
 export {server}
