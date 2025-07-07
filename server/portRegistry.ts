@@ -4,8 +4,8 @@ import path from "path";
 const PORT_FILE = path.resolve(__dirname, "port-registry.json");
 
 const DEFAULT_START_PORTS = {
-  dev: 6000,
-  prod: 3200,
+  dev: 10000,
+  prod: 13000,
 };
 
 type Environment = "dev" | "prod";
