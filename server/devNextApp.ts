@@ -2,7 +2,7 @@ import { exec } from "child_process";
 import util from "util";
 import path from "path";
 import { getOrAssignPort } from "./portRegistry";
-import { createLocalTunnel } from "./localtunnel";
+// Removed import { createLocalTunnel } from "./localtunnel";
 
 const execAsync = util.promisify(exec);
 const DEV_DIR = "/var/www/projects";
@@ -11,7 +11,6 @@ export async function devNextApp(projectId: string) {
   const projectPath = path.join(DEV_DIR, projectId);
   const port = getOrAssignPort(projectId, "dev");
   const pm2Name = `dev-${projectId}`;
-  const subdomain = `dev-${projectId}`;
 
   try {
     console.log(`[DEV] Project path: ${projectPath}`);
@@ -25,17 +24,10 @@ export async function devNextApp(projectId: string) {
     const command = `pm2 start npm --name "${pm2Name}" -- run dev -- -p ${port}`;
     await execAsync(command, { cwd: projectPath });
 
-    console.log(`[DEV] Creating localtunnel on port ${port}...`);
-    const tunnelResult = await createLocalTunnel(port, subdomain);
-    if (!tunnelResult.success) throw new Error(tunnelResult.error);
-
-    console.log(`[DEV] Tunnel created at: ${tunnelResult.url}`);
-
     return {
       success: true,
       port,
       pm2Name,
-      tunnelUrl: tunnelResult.url,
     };
   } catch (err: any) {
     console.error(`[DEV ERROR] ${err.stderr || err.message}`);

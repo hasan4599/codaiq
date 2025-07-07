@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
                     repoURL: site.repoURL,
                     devPort: devResult.port,
                     devPm2Name: devResult.pm2Name,
-                    devTunnelUrl: devResult.tunnelUrl,
+                    devTunnelUrl: `http://localhost:3000/${devResult.port}`,
                 });
 
                 user.sites.push(newSite._id);
