@@ -14,13 +14,22 @@ export async function devNextApp(projectId: string) {
   const subdomain = `dev-${projectId}`;
 
   try {
+    console.log(`[DEV] Project path: ${projectPath}`);
+    console.log(`[DEV] Assigned port: ${port}`);
+    console.log(`[DEV] PM2 process name: ${pm2Name}`);
+
+    console.log(`[DEV] Installing dependencies...`);
     await execAsync("npm install", { cwd: projectPath });
 
+    console.log(`[DEV] Starting dev server with PM2...`);
     const command = `pm2 start npm --name "${pm2Name}" -- run dev -- -p ${port}`;
     await execAsync(command, { cwd: projectPath });
 
+    console.log(`[DEV] Creating localtunnel on port ${port}...`);
     const tunnelResult = await createLocalTunnel(port, subdomain);
     if (!tunnelResult.success) throw new Error(tunnelResult.error);
+
+    console.log(`[DEV] Tunnel created at: ${tunnelResult.url}`);
 
     return {
       success: true,
@@ -29,6 +38,7 @@ export async function devNextApp(projectId: string) {
       tunnelUrl: tunnelResult.url,
     };
   } catch (err: any) {
+    console.error(`[DEV ERROR] ${err.stderr || err.message}`);
     return {
       success: false,
       error: err.stderr || err.message,

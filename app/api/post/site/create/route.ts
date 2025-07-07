@@ -10,7 +10,7 @@ import connectMongo from "@/db/mongoose";
 interface SiteProps {
     title: string;
     description: string;
-    keywords: string[];
+    keywords: string[] | string;
     authors: { name: string; url: string }[];
     creator: string;
     domain: string;
@@ -26,50 +26,59 @@ export async function POST(req: NextRequest) {
 
         const site: SiteProps = await req.json();
 
-        // Clone repo
-        const cloneResult = await cloneRepo(site.repoURL, site.title);
-        if (!cloneResult.success) {
-            return NextResponse.json({ error: "Failed to clone repo", detail: cloneResult.error }, { status: 500 });
-        }
-
-        // Start dev server + tunnel
-        const devResult = await devNextApp(site.title);
-        if (!devResult.success) {
-            return NextResponse.json({ error: "Failed to start dev server", detail: devResult.error }, { status: 500 });
-        }
+        // Early connect to MongoDB and user validation
         await connectMongo();
-        
-        const newSite = await Site.create({
-            metadata: {
-                title: site.title,
-                description: site.description,
-                keywords: site.keywords,
-                authors: site.authors,
-                creator: site.creator,
-                metadataBase: site.domain,
-            },
-            status: "online",
-            repoURL: site.repoURL,
-            devPort: devResult.port,
-            devPm2Name: devResult.pm2Name,
-            devTunnelUrl: devResult.tunnelUrl,
-        });
-
-        // Link site to user
         const user = await User.findOne({ email: session.user.email });
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
-        user.sites.push(newSite._id);
-        await user.save();
 
-        return NextResponse.json({
-            message: "Site initialized and saved successfully",
-            site: newSite,
-            port: devResult.port,
-            pm2Name: devResult.pm2Name,
-            tunnelUrl: devResult.tunnelUrl,
-        });
+        // Send the response immediately
+        const response = NextResponse.json({ message: "Site is being initialized in background" });
+
+        // Start background process
+        (async () => {
+            try {
+                const cloneResult = await cloneRepo(site.repoURL, site.title);
+                if (!cloneResult.success) {
+                    console.error("[CLONE ERROR]", cloneResult.error);
+                    return;
+                }
+
+                const devResult = await devNextApp(site.title);
+                if (!devResult.success) {
+                    console.error("[DEV ERROR]", devResult.error);
+                    return;
+                }
+
+                const newSite = await Site.create({
+                    metadata: {
+                        title: site.title,
+                        description: site.description,
+                        keywords: Array.isArray(site.keywords)
+                            ? site.keywords
+                            : site.keywords.split(",").map((kw: string) => kw.trim()),
+                        authors: site.authors,
+                        creator: site.creator,
+                        metadataBase: site.domain,
+                    },
+                    status: "online",
+                    repoURL: site.repoURL,
+                    devPort: devResult.port,
+                    devPm2Name: devResult.pm2Name,
+                    devTunnelUrl: devResult.tunnelUrl,
+                });
+
+                user.sites.push(newSite._id);
+                await user.save();
+
+                console.log(`[SITE INITIALIZED]: ${site.title} on port ${devResult.port}`);
+            } catch (err) {
+                console.error("[BACKGROUND INIT ERROR]", err);
+            }
+        })();
+
+        return response;
 
     } catch (err: any) {
         return NextResponse.json({ error: "Unexpected server error", detail: err.message }, { status: 500 });
