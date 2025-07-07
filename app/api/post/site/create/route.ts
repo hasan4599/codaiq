@@ -3,7 +3,7 @@ import { devNextApp } from "@/server/devNextApp";
 import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
-import { User } from "@/model/user";
+import { IUser, User } from "@/model/user";
 import Site from "@/model/site";
 import connectMongo from "@/db/mongoose";
 
@@ -13,7 +13,6 @@ interface SiteProps {
     keywords: string[] | string;
     authors: { name: string; url: string }[];
     creator: string;
-    domain: string;
     repoURL: string;
 }
 
@@ -28,7 +27,8 @@ export async function POST(req: NextRequest) {
 
         // Early connect to MongoDB and user validation
         await connectMongo();
-        const user = await User.findOne({ email: session.user.email });
+        const user: IUser | null = await User.findOne({ email: session.user.email });
+
         if (!user) {
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
@@ -60,7 +60,6 @@ export async function POST(req: NextRequest) {
                             : site.keywords.split(",").map((kw: string) => kw.trim()),
                         authors: site.authors,
                         creator: site.creator,
-                        metadataBase: site.domain,
                     },
                     status: "online",
                     repoURL: site.repoURL,
@@ -69,7 +68,7 @@ export async function POST(req: NextRequest) {
                     devTunnelUrl: `http://localhost:3000/${devResult.port}`,
                 });
 
-                user.sites.push(newSite._id);
+                user.site.push({ id: newSite._id, name: site.title, role: 'Admin', environment: 'dev' });
                 await user.save();
 
                 console.log(`[SITE INITIALIZED]: ${site.title} on port ${devResult.port}`);

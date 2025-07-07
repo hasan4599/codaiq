@@ -11,7 +11,7 @@ const MetadataSchema = new Schema({
         },
     ],
     creator: { type: String, required: true },
-    metadataBase: { type: String, required: true },
+    metadataBase: { type: String },
 
     openGraph: {
         title: String,

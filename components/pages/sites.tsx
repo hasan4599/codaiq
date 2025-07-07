@@ -24,7 +24,7 @@ export default function Sites() {
     const handleCreateProject = async (site: SiteProps) => {
         const response = await Fetch({ body: site, api: 'post/site/create', method: "POST", host: 'server', loading: (v) => { } })
         if (response) {
-            
+
         }
     }
 
@@ -37,13 +37,10 @@ export default function Sites() {
         );
     }
     return (
-        <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full overflow-y-auto">
-                {sites.map((site, index) => (
-                    <SiteCard key={index} site={site} />
-                ))}
-            </div>
-            <NewSiteButton />
-        </>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full overflow-y-auto">
+            {sites.map((site, index) => (
+                <SiteCard key={index} site={site} />
+            ))}
+        </div>
     )
 }
