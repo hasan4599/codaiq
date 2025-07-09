@@ -49,7 +49,7 @@ export async function devNextApp(projectId: string) {
   const port = getOrAssignPort(projectId, "dev");
   const pm2Name = `dev-${projectId}`;
   const tunnelName = `dev-${projectId}-tunnel`;
-  const hostname = `${projectId}.${server}`;
+  const hostname = `${projectId}.codaiq.com`;
   const tunnelPm2Name = `tunnel-${projectId}`;
 
   const platform = os.platform();
