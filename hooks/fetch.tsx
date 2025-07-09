@@ -10,8 +10,12 @@ const hosts = [
 type API =
   | 'get/user/all'
   | 'get/user/selected'
+  | 'get/site/proxy'
+  | 'get/dev/scan'
+  | 'get/dev/file'
   | 'get/site/selected'
   | 'post/site/create'
+  | 'post/dev/file/save'
 
 async function Fetch({
   body,

@@ -46,6 +46,7 @@ export interface SiteProps {
 }
 
 export function EmptyState({ onCreate }: { onCreate: (v: SiteProps) => void }) {
+  const [open, setOpen] = useState(false);
   const {
     control,
     handleSubmit,
@@ -83,7 +84,7 @@ export function EmptyState({ onCreate }: { onCreate: (v: SiteProps) => void }) {
       creator: data.creator,
       repoURL: data.repoURL,
     });
-
+    setOpen(false);
     reset();
   };
 
@@ -97,7 +98,7 @@ export function EmptyState({ onCreate }: { onCreate: (v: SiteProps) => void }) {
         Get started by creating your first website. Our AI-powered builder will help you create a professional NEXTJS site in minutes.
       </p>
 
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button size="lg">Create New Site</Button>
         </DialogTrigger>

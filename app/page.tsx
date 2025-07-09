@@ -25,7 +25,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
 export default function Home() {
-  const [user, setUser] = useState<{ email: string, name: string, image: string }>();
+  const [user, setUser] = useState<{ email: string, name: string, image: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({

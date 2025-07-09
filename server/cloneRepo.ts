@@ -1,17 +1,21 @@
 import { exec } from "child_process";
 import path from "path";
 import fs from "fs";
+import os from "os";
 import util from "util";
+import { project } from "@/url";
 
 const execAsync = util.promisify(exec);
 
-const PROJECTS_DIR = "/var/www/projects";
-
-export async function cloneRepo(repoUrl: string, projectId: string): Promise<{
+export async function cloneRepo(
+    repoUrl: string,
+    projectId: string
+): Promise<{
     success: boolean;
     message?: string;
     error?: string;
 }> {
+    const PROJECTS_DIR = project;
     const targetPath = path.join(PROJECTS_DIR, projectId);
 
     try {

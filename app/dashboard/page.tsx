@@ -59,7 +59,7 @@ export default function DashboardPage() {
         />
         
         {/* Main Content */}
-        <main className="overflow-y-auto h-full w-full flex items-start justify-start p-6">
+        <main className="h-full w-full flex items-start justify-start p-6">
           <Sites />
         </main>
 
