@@ -4,6 +4,10 @@ import os from "os";
 import { getOrAssignPort } from "./portRegistry";
 import { getCloudflareTunnelCommand } from "./createCloudflareTunnel";
 import { project, server } from "@/url";
+import { exec } from "child_process";
+import util from "util";
+
+const execAsync = util.promisify(exec);
 
 function execCommand(command: string, options: { cwd?: string } = {}) {
   return new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
@@ -95,7 +99,8 @@ export async function devNextApp(projectId: string) {
 
     console.log(`[DEV] Starting Cloudflare tunnel with PM2...`);
     const tunnelCmd = getCloudflareTunnelCommand(tunnelName, port, hostname);
-    await execCommand(`pm2 start --name "${tunnelPm2Name}" -- ${tunnelCmd}`);
+    await execAsync(`pm2 start bash --name "${tunnelPm2Name}" -- -c "${tunnelCmd}"`);
+
 
     return {
       success: true,
