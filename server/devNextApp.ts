@@ -1,12 +1,43 @@
-import { exec, spawn } from "child_process";
-import util from "util";
+import { spawn } from "child_process";
 import path from "path";
 import os from "os";
 import { getOrAssignPort } from "./portRegistry";
 import { getCloudflareTunnelCommand } from "./createCloudflareTunnel";
 import { project, server } from "@/url";
 
-const execAsync = util.promisify(exec);
+function execCommand(command: string, options: { cwd?: string } = {}) {
+  return new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
+    const child = spawn(command, {
+      shell: true,        // important for commands like "pm2 start ..."
+      cwd: options.cwd,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+
+    let stdout = "";
+    let stderr = "";
+
+    child.stdout.on("data", (data) => {
+      stdout += data.toString();
+    });
+
+    child.stderr.on("data", (data) => {
+      stderr += data.toString();
+    });
+
+    child.on("error", (error) => {
+      reject(error);
+    });
+
+    child.on("close", (code) => {
+      if (code === 0) {
+        resolve({ stdout, stderr });
+      } else {
+        reject(new Error(`Command failed with exit code ${code}: ${stderr}`));
+      }
+    });
+  });
+}
+
 const DEV_DIR = project;
 
 export async function devNextApp(projectId: string) {
@@ -15,11 +46,10 @@ export async function devNextApp(projectId: string) {
   const pm2Name = `dev-${projectId}`;
   const tunnelName = `dev-${projectId}-tunnel`;
   const hostname = `${projectId}.${server}`;
-
   const tunnelPm2Name = `tunnel-${projectId}`;
 
-  const isFake = process.env.NODE_ENV === "development";
   const platform = os.platform();
+  const isFake = platform === "win32"; // Fake mode only on Windows
 
   try {
     console.log(`[DEV] Project path: ${projectPath}`);
@@ -31,13 +61,13 @@ export async function devNextApp(projectId: string) {
       console.log(`[DEV] Fake mode active — manual start without PM2.`);
 
       console.log(`[DEV] Installing dependencies (npm install)...`);
-      await execAsync("npm install", { cwd: projectPath });
+      await execCommand("npm install", { cwd: projectPath });
 
       console.log(`[DEV] Starting dev server (npm run dev)...`);
       const child = spawn(`npm run dev -- -p ${port}`, {
         cwd: projectPath,
         stdio: "inherit",
-        shell: true, // ✅ fix for ENOENT
+        shell: true,
       });
 
       child.on("error", (err) => {
@@ -57,16 +87,15 @@ export async function devNextApp(projectId: string) {
       };
     }
 
-
     console.log(`[DEV] Installing dependencies...`);
-    await execAsync("npm install", { cwd: projectPath });
+    await execCommand("npm install", { cwd: projectPath });
 
     console.log(`[DEV] Starting dev server with PM2...`);
-    await execAsync(`pm2 start npm --name "${pm2Name}" -- run dev -- -p ${port}`, { cwd: projectPath });
+    await execCommand(`pm2 start npm --name "${pm2Name}" -- run dev -- -p ${port}`, { cwd: projectPath });
 
     console.log(`[DEV] Starting Cloudflare tunnel with PM2...`);
     const tunnelCmd = getCloudflareTunnelCommand(tunnelName, port, hostname);
-    await execAsync(`pm2 start --name "${tunnelPm2Name}" -- ${tunnelCmd}`);
+    await execCommand(`pm2 start --name "${tunnelPm2Name}" -- ${tunnelCmd}`);
 
     return {
       success: true,
@@ -76,10 +105,10 @@ export async function devNextApp(projectId: string) {
       tunnelPm2Name,
     };
   } catch (err: any) {
-    console.error(`[DEV ERROR] ${err.stderr || err.message}`);
+    console.error(`[DEV ERROR] ${err.message || err.stderr || err}`);
     return {
       success: false,
-      error: err.stderr || err.message,
+      error: err.message || err.stderr || String(err),
     };
   }
 }
