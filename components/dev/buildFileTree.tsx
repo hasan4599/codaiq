@@ -1,6 +1,6 @@
-import { FileProps } from "@/app/dev/[id]/page";
+import { FileMeta } from "@/app/api/get/dev/scan/route";
 
-export function buildFileTree(files: FileProps[]) {
+export function buildFileTree(files: FileMeta[]) {
   const tree: any = {};
   for (const file of files) {
     const parts = file.name.split("/");
