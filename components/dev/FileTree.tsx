@@ -1,9 +1,9 @@
-import { FileProps } from "@/app/dev/[id]/page";
 import {
     Folder,
     FolderOpen,
 } from "lucide-react";
 import { getIconForFile } from "./getIconForFile";
+import { FileMeta } from "@/app/api/get/dev/scan/route";
 
 export function FileTree({
     tree,
@@ -16,7 +16,7 @@ export function FileTree({
     tree: any;
     openFolders: Record<string, boolean>;
     toggleFolder: (path: string) => void;
-    onSelect: (file: FileProps) => void;
+    onSelect: (file: FileMeta) => void;
     selectedFileName: string | null;
     path?: string;
 }) {
