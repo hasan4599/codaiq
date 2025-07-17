@@ -33,6 +33,7 @@ export default async function RootLayout({
     <html lang="en" className={`${poppins.variable} ${inter.className}`} suppressHydrationWarning>
       <body className="bg-[#020617] text-white font-sans">
         <AuthProvider session={session}>
+          <Toaster richColors position="top-right" />
           {children}
         </AuthProvider>
         <Toaster position="top-right" />

@@ -7,10 +7,10 @@ import { ISite } from "@/model/site";
 import { Fetch } from "@/hooks/fetch";
 import { EmptyState, SiteProps } from "../sites/EmptyState";
 import { CreateSiteCard } from "../sites/CreateSiteCard";
+import { server } from "@/url";
 
 export default function Sites() {
     const [sites, setSites] = useState<ISite[]>([]);
-    const [toast, setToast] = useState<{ message: string; type?: "success" | "error" } | null>(null);
 
     useEffect(() => {
         const get = async () => {
@@ -25,7 +25,7 @@ export default function Sites() {
     const handleCreateProject = async (site: SiteProps) => {
         const response = await Fetch({ body: site, api: 'post/site/create', method: "POST", host: 'server', loading: (v) => { } })
         if (response) {
-            
+
         }
     }
 
@@ -42,7 +42,7 @@ export default function Sites() {
             {sites.map((site, index) => (
                 <SiteCard key={index} site={site} />
             ))}
-            <CreateSiteCard onCreate={(v) => handleCreateProject(v)} />
+            <CreateSiteCard />
         </div>
     )
 }

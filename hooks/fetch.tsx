@@ -16,6 +16,10 @@ type API =
   | 'get/site/selected'
   | 'post/site/create'
   | 'post/dev/file/save'
+  | 'post/pm2/dev/start'
+  | 'post/pm2/dev/stop'
+  | 'post/cache'
+  | 'post/ai/prompt'
 
 async function Fetch({
   body,

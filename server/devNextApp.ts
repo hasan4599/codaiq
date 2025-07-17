@@ -1,18 +1,14 @@
 import { spawn } from "child_process";
 import path from "path";
-import os from "os";
-import { getOrAssignPort } from "./portRegistry";
-import { getCloudflareTunnelCommand } from "./createCloudflareTunnel";
-import { project, server } from "@/url";
-import { exec } from "child_process";
-import util from "util";
+import fs from "fs";
+import { project } from "@/url";
+import { updateNginxMap } from "./nginx.conf";
+import { createARecord } from "./createARecord";
 
-const execAsync = util.promisify(exec);
-
-function execCommand(command: string, options: { cwd?: string } = {}) {
+export function execCommand(command: string, options: { cwd?: string } = {}) {
   return new Promise<{ stdout: string; stderr: string }>((resolve, reject) => {
     const child = spawn(command, {
-      shell: true,        // important for commands like "pm2 start ..."
+      shell: true,
       cwd: options.cwd,
       stdio: ["ignore", "pipe", "pipe"],
     });
@@ -42,75 +38,39 @@ function execCommand(command: string, options: { cwd?: string } = {}) {
   });
 }
 
-const DEV_DIR = project;
+const DEV_DIR = project; // "/var/www/projects"
 
 export async function devNextApp(projectId: string) {
   const projectPath = path.join(DEV_DIR, projectId);
-  const port = getOrAssignPort(projectId, "dev");
-  const pm2Name = `dev-${projectId}`;
-  const tunnelName = `dev-${projectId}-tunnel`;
   const hostname = `${projectId}.codaiq.com`;
-  const tunnelPm2Name = `tunnel-${projectId}`;
-
-  const platform = os.platform();
-  const isFake = platform === "win32"; // Fake mode only on Windows
 
   try {
-    console.log(`[DEV] Project path: ${projectPath}`);
-    console.log(`[DEV] Assigned port: ${port}`);
-    console.log(`[DEV] PM2 process name: ${pm2Name}`);
-    console.log(`[DEV] Platform detected: ${platform}`);
+    console.log(`[STATIC] Project path: ${projectPath}`);
 
-    if (isFake) {
-      console.log(`[DEV] Fake mode active — manual start without PM2.`);
-
-      console.log(`[DEV] Installing dependencies (npm install)...`);
-      await execCommand("npm install", { cwd: projectPath });
-
-      console.log(`[DEV] Starting dev server (npm run dev)...`);
-      const child = spawn(`npm run dev -- -p ${port}`, {
-        cwd: projectPath,
-        stdio: "inherit",
-        shell: true,
-      });
-
-      child.on("error", (err) => {
-        console.error(`[FAKE DEV ERROR] ${err.message}`);
-      });
-
-      child.on("exit", (code, signal) => {
-        console.log(`[FAKE DEV] Process exited with code ${code} and signal ${signal}`);
-      });
-
-      return {
-        success: true,
-        port,
-        pm2Name: `${pm2Name}-fake`,
-        tunnelPm2Name: `${tunnelPm2Name}-fake`,
-        tunnelUrl: `http://localhost:${port}`,
-      };
+    if (!fs.existsSync(projectPath)) {
+      throw new Error(`[STATIC] Project folder does not exist.`);
     }
 
-    console.log(`[DEV] Installing dependencies...`);
-    await execCommand("npm install", { cwd: projectPath });
+    const indexPath = path.join(projectPath, "index.html");
+    if (!fs.existsSync(indexPath)) {
+      throw new Error(`[STATIC] Missing index.html file.`);
+    }
 
-    console.log(`[DEV] Starting dev server with PM2...`);
-    await execCommand(`pm2 start npm --name "${pm2Name}" -- run dev -- -p ${port}`, { cwd: projectPath });
+    console.log(`[STATIC] Updating Nginx config...`);
+    await updateNginxMap(projectId, projectPath);
 
-    console.log(`[DEV] Starting Cloudflare tunnel with PM2...`);
-    const tunnelCmd = getCloudflareTunnelCommand(tunnelName, port, hostname);
-    await execAsync(`pm2 start bash --name "${tunnelPm2Name}" -- -c "${tunnelCmd}"`);
+    console.log(`[NGINX] Reloading Nginx...`);
+    await execCommand("nginx -t && systemctl reload nginx");
 
+    await createARecord(projectId, "89.117.57.53");
 
     return {
       success: true,
-      port,
-      pm2Name,
-      tunnelUrl: `https://${hostname}`,
-      tunnelPm2Name,
+      url: `https://${hostname}`,
+      domain: hostname
     };
   } catch (err: any) {
-    console.error(`[DEV ERROR] ${err.message || err.stderr || err}`);
+    console.error(`[STATIC ERROR] ${err.message || err.stderr || err}`);
     return {
       success: false,
       error: err.message || err.stderr || String(err),

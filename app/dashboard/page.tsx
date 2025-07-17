@@ -1,15 +1,10 @@
 'use client';
 
-import { useSites } from "@/hooks/use-sites";
-import { NewSiteButton } from "@/components/sites/NewSiteButton";
-import { EmptyState } from "@/components/sites/EmptyState";
 import { DashboardSkeleton } from "@/components/sites/DashboardSkeleton";
-import SiteCard from "@/components/sites/SiteCard";
 import { useEffect, useState } from "react";
 import { Fetch } from "@/hooks/fetch";
 import DashboardHeader from "@/components/dashboard/header";
 import DashboardSidebar from "@/components/dashboard/sidebar";
-import { FloatingAIButton } from "@/components/shared/FloatingAIButton";
 import Sites from "@/components/pages/sites";
 
 export default function DashboardPage() {
@@ -62,9 +57,6 @@ export default function DashboardPage() {
         <main className="h-full w-full flex items-start justify-start p-6">
           <Sites />
         </main>
-
-        {/* AI Assistant */}
-        <FloatingAIButton />
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ const platform = os.platform();
 
 const server = platform === 'win32'
     ? 'http://localhost:3000'
-    : 'https://codaiq.com';
+    : 'http://localhost:3000';
 
 const project = '/var/www/projects';
 

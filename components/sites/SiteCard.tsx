@@ -50,12 +50,13 @@ export default function SiteCard({ site }: SiteCardProps) {
       {/* Content */}
       <div className="p-4 space-y-4">
         {/* Title */}
-        <h3
+        <Link
+          href={`${server}/site/${site._id}`}
           title={site.metadata.title}
           className="text-white text-lg font-semibold truncate"
         >
           {site.metadata.title}
-        </h3>
+        </Link>
 
         {/* Description */}
         {site.metadata.description && (
