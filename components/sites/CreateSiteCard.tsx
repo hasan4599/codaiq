@@ -33,7 +33,7 @@ export function CreateSiteCard() {
     return (
         <Link
             href={`${server}/projects/new`}
-            className="group relative bg-gradient-to-br from-gray-900/40 to-gray-800/40 backdrop-blur-lg rounded-md border border-dashed border-gray-700/40 hover:border-gray-500/60 transition duration-200 w-[350px] h-[450px] p-6 cursor-pointer flex flex-col justify-center items-center text-center">
+            className="group relative bg-gradient-to-br from-gray-900/40 to-gray-800/40 backdrop-blur-lg rounded-2xl border border-dashed border-gray-700/40 hover:border-gray-500/60 transition duration-200 w-[250px] h-[300px] p-6 cursor-pointer flex flex-col justify-center items-center text-center">
             <div className="flex flex-col items-center gap-4 text-gray-300 group-hover:text-white transition text-center">
                 <div className="w-16 h-16 rounded-full bg-blue-500/10 text-blue-400 flex items-center justify-center group-hover:bg-blue-500/20 transition">
                     <Plus className="w-8 h-8" />

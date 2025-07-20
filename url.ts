@@ -8,4 +8,5 @@ const server = platform === 'win32'
 
 const project = '/var/www/projects';
 
-export { server, project };
+
+export { server, project};

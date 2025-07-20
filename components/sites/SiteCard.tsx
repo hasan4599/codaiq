@@ -4,9 +4,10 @@ import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
   faGlobe,
   faCircle,
-  faCodeBranch,
   faMicrochip,
-  faRocket,
+  faCodeBranch,
+  faEllipsisV,
+  faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { formatDistanceToNow } from 'date-fns';
@@ -14,139 +15,101 @@ import Link from 'next/link';
 import { cn } from '@/lib/utils';
 import { ISite } from '@/model/site';
 import { server } from '@/url';
+import { useState } from 'react';
 
 interface SiteCardProps {
   site: ISite;
+  onDelete: (v: ISite) => void;
 }
 
-export default function SiteCard({ site }: SiteCardProps) {
+export default function SiteCard({ site, onDelete }: SiteCardProps) {
+  const [showDropdown, setShowDropdown] = useState(false);
+
   const statusColor = {
     online: 'text-green-500',
-    offline: 'text-gray-400',
-    deploying: 'text-blue-500',
+    offline: 'text-gray-500',
+    deploying: 'text-yellow-400',
   }[site.status];
 
-  const authors = site.metadata.authors ?? [];
-
   return (
-    <div className="group relative bg-gray-900/60 backdrop-blur-lg rounded-md border border-gray-800/60 overflow-hidden hover:border-gray-700/70 transition duration-200 w-[350px] h-[450px]">
-      {/* Preview Block */}
-      <div className="aspect-video w-full bg-gray-800/60">
-        {site.devTunnelUrl ? (
-          <iframe
-            src={site.devTunnelUrl}
-            className="w-full h-full border-none rounded-t-md"
-            sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-500">
-            <FontAwesomeIcon icon={faGlobe as IconProp} className="w-6 h-6" />
+    <div className="group relative w-[250px] h-[300px] bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300">
+      {/* Dropdown Trigger */}
+      <div className="absolute top-2 right-2 z-10">
+        <button
+          onClick={() => setShowDropdown((prev) => !prev)}
+          className="text-white hover:text-gray-300 p-1"
+        >
+          <FontAwesomeIcon icon={faEllipsisV as IconProp} />
+        </button>
+        {showDropdown && (
+          <div className="absolute right-0 mt-2 w-32 bg-zinc-800 rounded-md shadow-lg z-20 border border-white/10">
+            <button
+              onClick={() => {
+                setShowDropdown(false);
+                onDelete(site);
+              }}
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-400 hover:bg-zinc-700 rounded-t-md"
+            >
+              <FontAwesomeIcon icon={faTrash as IconProp} />
+              Delete
+            </button>
           </div>
         )}
       </div>
 
-
-      {/* Content */}
-      <div className="p-4 space-y-4">
-        {/* Title */}
-        <Link
-          href={`${server}/site/${site._id}`}
-          title={site.metadata.title}
-          className="text-white text-lg font-semibold truncate"
-        >
-          {site.metadata.title}
-        </Link>
-
-        {/* Description */}
-        {site.metadata.description && (
-          <p
-            title={site.metadata.description}
-            className="text-gray-400 text-sm line-clamp-2"
-          >
-            {site.metadata.description}
-          </p>
-        )}
-
-        {/* Links (Dev/Prod Preview) */}
-        <div className="flex flex-wrap gap-3 text-xs text-gray-400 mt-2">
-          {site.repoURL && (
-            <Link
-              href={site.repoURL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 hover:text-blue-400 transition"
-              title="Repository URL"
-            >
-              <FontAwesomeIcon icon={faCodeBranch as IconProp} />
-              Repo
-            </Link>
-          )}
-          {site.devTunnelUrl && (
-            <a
-              href={`${server}/dev/${site._id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 hover:text-blue-400 transition"
-              title="Dev Preview"
-            >
-              <FontAwesomeIcon icon={faMicrochip as IconProp} />
-              Dev Preview
-            </a>
-          )}
-          {site.prodTunnelUrl && (
-            <a
-              href={site.prodTunnelUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1 hover:text-green-400 transition"
-              title="Prod Preview"
-            >
-              <FontAwesomeIcon icon={faRocket as IconProp} />
-              Prod Preview
-            </a>
-          )}
-        </div>
-
-        {/* Dev info badges */}
-        <div className="flex flex-wrap gap-2 text-xs text-gray-300 mt-2">
-          {site.devPort && (
-            <span className="inline-flex items-center gap-1 bg-gray-700 px-2 py-0.5 rounded-full">
-              <FontAwesomeIcon icon={faMicrochip as IconProp} className="w-3 h-3" />
-              Dev Port: {site.devPort}
-            </span>
-          )}
-          {site.devPm2Name && (
-            <span className="inline-flex items-center gap-1 bg-gray-700 px-2 py-0.5 rounded-full">
-              <FontAwesomeIcon icon={faCodeBranch as IconProp} className="w-3 h-3" />
-              PM2: {site.devPm2Name}
-            </span>
-          )}
-        </div>
-
-        {/* Authors */}
-        {authors.length > 0 && (
-          <div className="text-gray-400 text-xs mt-2">
-            <strong>Author{authors.length > 1 ? 's' : ''}: </strong>
-            {authors.map((a, i) => (
-              <a
-                key={a.url + i}
-                href={a.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-                title={a.name}
-              >
-                {a.name}
-                {i < authors.length - 1 ? ', ' : ''}
-              </a>
-            ))}
+      {/* Preview */}
+      <div className="relative w-full aspect-video bg-zinc-800 flex items-center justify-center overflow-hidden">
+        {site.deployDomain ? (
+          <iframe
+            src={site.deployDomain}
+            className="w-full h-full border-none rounded-t-2xl transition-transform duration-300 group-hover:scale-[1.02]"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+            loading="lazy"
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center text-gray-500 gap-2">
+            <FontAwesomeIcon icon={faGlobe as IconProp} className="w-8 h-8" />
+            <span className="text-xs">No Preview Available</span>
           </div>
         )}
+      </div>
 
-        {/* Footer: Status + CreatedAt */}
-        <div className="flex justify-between items-center pt-3 text-xs text-gray-400 border-t border-gray-800 mt-2">
-          <div className="flex items-center gap-1 capitalize">
+      {/* Content */}
+      <div className="p-5 flex flex-col justify-between h-[calc(100%-130px)] space-y-4">
+        <div className="space-y-2">
+          <Link
+            href={`${server}/projects/${site._id}`}
+            className="block text-xl font-semibold text-white truncate hover:underline"
+            title={site.title}
+          >
+            {site.title}
+          </Link>
+
+          {site.Pm2Name && (
+            <div className="flex items-center gap-2 text-sm text-gray-400">
+              <FontAwesomeIcon icon={faCodeBranch as IconProp} />
+              <span className="truncate" title={site.Pm2Name}>
+                {site.Pm2Name}
+              </span>
+            </div>
+          )}
+
+          {site.deployDomain && (
+            <a
+              href={site.deployDomain}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-blue-400 hover:underline mt-1"
+            >
+              <FontAwesomeIcon icon={faMicrochip as IconProp} />
+              Deploy domain
+            </a>
+          )}
+        </div>
+
+        {/* Status & Time */}
+        <div className="flex justify-between items-center text-sm text-gray-400 border-t border-white/10 pt-3">
+          <div className="flex items-center gap-2 capitalize">
             <FontAwesomeIcon
               icon={faCircle as IconProp}
               className={cn('w-3 h-3', statusColor)}

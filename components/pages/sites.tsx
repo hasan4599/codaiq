@@ -2,15 +2,15 @@
 
 import { useEffect, useState } from "react";
 import SiteCard from "../sites/SiteCard";
-import { NewSiteButton } from "../sites/NewSiteButton";
 import { ISite } from "@/model/site";
 import { Fetch } from "@/hooks/fetch";
-import { EmptyState, SiteProps } from "../sites/EmptyState";
+import { EmptyState } from "../sites/EmptyState";
 import { CreateSiteCard } from "../sites/CreateSiteCard";
-import { server } from "@/url";
+import DeleteSiteModal from "../editor/DeleteSiteModal";
 
 export default function Sites() {
     const [sites, setSites] = useState<ISite[]>([]);
+    const [selectedSite, setSelectedSite] = useState<ISite | null>(null);
 
     useEffect(() => {
         const get = async () => {
@@ -22,27 +22,20 @@ export default function Sites() {
         get();
     }, []);
 
-    const handleCreateProject = async (site: SiteProps) => {
-        const response = await Fetch({ body: site, api: 'post/site/create', method: "POST", host: 'server', loading: (v) => { } })
-        if (response) {
-
-        }
-    }
-
-
     if (!sites?.length) {
         return (
             <div className="container mx-auto p-6 w-full h-full flex items-center justify-center">
-                <EmptyState onCreate={(v) => handleCreateProject(v)} />
+                <EmptyState />
             </div>
         );
     }
     return (
         <div className="w-full h-full overflow-y-auto flex items-start justify-start flex-wrap gap-4">
             {sites.map((site, index) => (
-                <SiteCard key={index} site={site} />
+                <SiteCard key={index} site={site} onDelete={(v) => setSelectedSite(v)} />
             ))}
             <CreateSiteCard />
+            {selectedSite && <DeleteSiteModal siteTitle={selectedSite.title} id={selectedSite._id as string} onClose={() => setSelectedSite(null)} />}
         </div>
     )
 }

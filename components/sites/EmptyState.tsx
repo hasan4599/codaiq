@@ -1,95 +1,16 @@
 'use client';
 
-import { useState } from "react";
-import { useForm, useFieldArray, Controller } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faRocket } from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import { server } from "@/url";
 
-const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  keywordsText: z.string().optional(),
-  creator: z.string().min(1, "Creator is required"),
-  repoURL: z.string().url("Repo URL must be a valid HTTPS link"),
-  authors: z.array(
-    z.object({
-      name: z.string().min(1, "Author name required"),
-      url: z.string().url("Author URL must be valid"),
-    })
-  ).min(1, "At least one author is required"),
-});
-
-
-type FormData = z.infer<typeof formSchema>;
-
-export interface SiteProps {
-  title: string;
-  description: string;
-  keywords: string[];
-  authors: { name: string; url: string }[];
-  creator: string;
-  repoURL: string;
-}
-
-export function EmptyState({ onCreate }: { onCreate: (v: SiteProps) => void }) {
-  const [open, setOpen] = useState(false);
-  const {
-    control,
-    handleSubmit,
-    register,
-    reset,
-    formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      title: '',
-      description: '',
-      keywordsText: '',
-      creator: '',
-      repoURL: '',
-      authors: [{ name: '', url: '' }],
-    },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "authors",
-  });
-
-  const onSubmit = (data: FormData) => {
-    const keywords = data.keywordsText ? data.keywordsText
-      .split(',')
-      .map(k => k.trim())
-      .filter(Boolean) : [];
-
-    onCreate({
-      title: data.title,
-      description: data.description,
-      keywords,
-      authors: data.authors,
-      creator: data.creator,
-      repoURL: data.repoURL,
-    });
-    setOpen(false);
-    reset();
-  };
+export function EmptyState() {
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] text-center p-8">
+    <Link
+      href={`${server}/projects/new`}
+      className="flex flex-col items-center justify-center min-h-[400px] text-center p-8">
       <div className="w-20 h-20 bg-blue-500/10 rounded-xl flex items-center justify-center mb-6">
         <FontAwesomeIcon icon={faRocket} className="w-10 h-10 text-blue-500" />
       </div>
@@ -97,105 +18,6 @@ export function EmptyState({ onCreate }: { onCreate: (v: SiteProps) => void }) {
       <p className="text-gray-400 mb-8 max-w-md">
         Get started by creating your first website. Our AI-powered builder will help you create a professional NEXTJS site in minutes.
       </p>
-
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
-          <Button size="lg">Create New Site</Button>
-        </DialogTrigger>
-
-        <DialogContent className="sm:max-w-lg text-left space-y-6">
-          <DialogHeader>
-            <DialogTitle>Site Details</DialogTitle>
-          </DialogHeader>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-            <Controller
-              name="title"
-              control={control}
-              render={({ field }) => (
-                <Input placeholder="Site Title" {...field} />
-              )}
-            />
-            {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
-
-            <Controller
-              name="description"
-              control={control}
-              render={({ field }) => (
-                <Textarea placeholder="Site Description" {...field} />
-              )}
-            />
-            {errors.description && <p className="text-sm text-red-500">{errors.description.message}</p>}
-
-            <Controller
-              name="keywordsText"
-              control={control}
-              render={({ field }) => (
-                <Input placeholder="Keywords (comma separated)" {...field} />
-              )}
-            />
-
-            <div>
-              <label className="block font-medium mb-2">Authors</label>
-              {fields.map((field, index) => (
-                <div key={field.id} className="flex space-x-2 mb-2">
-                  <Controller
-                    name={`authors.${index}.name`}
-                    control={control}
-                    render={({ field }) => (
-                      <Input placeholder="Author Name" {...field} />
-                    )}
-                  />
-                  <Controller
-                    name={`authors.${index}.url`}
-                    control={control}
-                    render={({ field }) => (
-                      <Input placeholder="Author URL" {...field} />
-                    )}
-                  />
-                  {fields.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => remove(index)}
-                      className="text-red-500 font-bold"
-                    >
-                      &times;
-                    </button>
-                  )}
-                </div>
-              ))}
-              {errors.authors && (
-                <p className="text-sm text-red-500">{errors.authors.message as string}</p>
-              )}
-              <Button type="button" size="sm" onClick={() => append({ name: '', url: '' })}>
-                + Add Author
-              </Button>
-            </div>
-
-            <Controller
-              name="creator"
-              control={control}
-              render={({ field }) => (
-                <Input placeholder="Creator" {...field} />
-              )}
-            />
-            {errors.creator && <p className="text-sm text-red-500">{errors.creator.message}</p>}
-            <Controller
-              name="repoURL"
-              control={control}
-              render={({ field }) => (
-                <Input placeholder="Enter your Git template HTTPS link" {...field} />
-              )}
-            />
-            {errors.repoURL && (
-              <p className="text-sm text-red-500">{errors.repoURL.message}</p>
-            )}
-            <DialogFooter>
-              <Button type="submit">Create Site</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </div>
+    </Link>
   );
 }

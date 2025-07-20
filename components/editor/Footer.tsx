@@ -10,16 +10,18 @@ import {
     Monitor,
     TabletSmartphone,
 } from 'lucide-react'
+import { server } from '@/url'
 
-export default function Footer({ user, activeView, setActiveView }: {
+export default function Footer({ user, activeView, setActiveView, refresh }: {
     activeView: 'desktop' | 'mobile',
     setActiveView: (v: 'desktop' | 'mobile') => void,
     user: { email: string, name: string, image: string } | null
+    refresh: () => void
 }) {
 
 
     return (
-        <footer className="border-t border-neutral-800 bg-black text-white px-3 py-2 flex items-center justify-between sticky bottom-0 z-20">
+        <footer className="border-t border-neutral-800 bg-black text-white px-3 h-[80px] flex items-center justify-between z-20">
             <div className="flex items-center gap-2">
                 {user && <>
                     <button
@@ -37,6 +39,7 @@ export default function Footer({ user, activeView, setActiveView }: {
 
                 <button
                     type="button"
+                    onClick={() => window.location.href = `${server}/projects/new`}
                     className="inline-flex items-center justify-center gap-1.5 rounded-full bg-neutral-800 text-white text-sm font-medium px-3 py-1.5 hover:bg-white/10"
                 >
                     <Plus className="size-4" />
@@ -73,6 +76,7 @@ export default function Footer({ user, activeView, setActiveView }: {
 
                 <button
                     type="button"
+                    onClick={refresh}
                     className="inline-flex items-center justify-center gap-1.5 rounded-full bg-neutral-800 text-white text-sm font-medium px-3 py-1.5 hover:bg-white/10"
                 >
                     <RefreshCcw className="size-4" />

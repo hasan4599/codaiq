@@ -23,7 +23,7 @@ export default function MonacoEditor({
       onChange={(val) => onChange?.(val ?? '')}
       theme={theme}
       options={{
-        fontSize: 14,
+        fontSize: 16,
         minimap: { enabled: false },
         automaticLayout: true,
         wordWrap: 'on',       // Enable line wrapping here

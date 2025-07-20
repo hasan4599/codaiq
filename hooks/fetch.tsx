@@ -13,13 +13,20 @@ type API =
   | 'get/site/proxy'
   | 'get/dev/scan'
   | 'get/dev/file'
+  | 'get/ai/models'
+  | 'get/images/all'
   | 'get/site/selected'
+  | 'get/file'
   | 'post/site/create'
+  | 'post/site/update'
   | 'post/dev/file/save'
   | 'post/pm2/dev/start'
   | 'post/pm2/dev/stop'
   | 'post/cache'
   | 'post/ai/prompt'
+  | 'post/images/upload'
+  | 'post/site/delete'
+  
 
 async function Fetch({
   body,

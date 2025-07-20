@@ -8,6 +8,7 @@ export interface IUser extends Document {
     bio?: string;
     avatarUrl?: string;
     site: { id: string; name: string; role: string, environment: string }[];
+    tokens: number;
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -40,6 +41,10 @@ const UserSchema = new Schema<IUser>(
         },
         avatarUrl: {
             type: String,
+        },
+        tokens: {
+            type: Number,
+            default: 0
         },
         site: [
             {

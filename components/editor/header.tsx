@@ -30,7 +30,7 @@ export default function Header({
 
   return (
     <>
-      <header className="border-b border-neutral-800 bg-neutral-950 text-white px-4 lg:px-6 py-3 flex items-center justify-between gap-4 z-20">
+      <header className="border-b border-neutral-800 bg-neutral-950 text-white px-4 lg:px-6 h-[80px] flex items-center justify-between gap-4 z-20">
         {/* Left: Logo / Title */}
         <div className="w-[215px] flex items-center gap-2 lg:gap-3">
           <h1 className="text-lg lg:text-xl font-bold tracking-tight flex items-center">
