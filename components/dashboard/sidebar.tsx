@@ -23,42 +23,11 @@ interface DashboardSidebarProps {
 // Navigation items in the specified order
 const navigationItems = [
   {
-    id: "ai-builder",
-    label: "AI Webbuilder",
-    href: "/dashboard/builder",
-    icon: faRobot,
-    description: "Create with AI"
-  },
-  {
     id: "my-sites",
     label: "My Sites",
     href: "/dashboard",
     icon: faGlobe,
     description: "Manage your websites"
-  },
-  {
-    id: "editor",
-    label: "Editor",
-    href: "/dashboard/site/editor",
-    icon: faPencil,
-    description: "Edit your site",
-    dynamic: true
-  },
-  {
-    id: "domain",
-    label: "Domain & Hosting",
-    href: "/dashboard/site/domain",
-    icon: faServer,
-    description: "Manage domains",
-    dynamic: true
-  },
-  {
-    id: "analytics",
-    label: "Analytics",
-    href: "/dashboard/site/analytics",
-    icon: faChartLine,
-    description: "View statistics",
-    dynamic: true
   },
   {
     id: "settings",
@@ -109,29 +78,24 @@ export default function DashboardSidebar({ open, onClose }: DashboardSidebarProp
         <nav className="p-4 space-y-2">
           {navigationItems.map((item) => {
             const active = isActive(item.href);
-            const disabled = item.dynamic && !siteId;
-            const href = item.dynamic && siteId ? item.href.replace('site', siteId) : item.href;
+            const href = siteId ? item.href.replace('site', siteId) : item.href;
 
             return (
               <Link
                 key={item.id}
-                href={disabled ? "#" : href}
-                onClick={(e) => {
-                  if (disabled) e.preventDefault();
-                }}
+                href={href}
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200",
                   "hover:bg-gray-800/50",
                   {
                     "bg-blue-500/20 text-blue-500": active,
-                    "text-gray-400": !active,
-                    "opacity-50 cursor-not-allowed": disabled
+                    "text-gray-400": !active
                   }
                 )}
-                title={disabled ? "Select a site first" : item.description}
+                title={item.description}
               >
-                <FontAwesomeIcon 
-                  icon={item.icon as IconProp} 
+                <FontAwesomeIcon
+                  icon={item.icon as IconProp}
                   className={cn(
                     "w-5 h-5",
                     active ? "text-blue-500" : ""
@@ -154,9 +118,9 @@ export default function DashboardSidebar({ open, onClose }: DashboardSidebarProp
         {/* Header */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-800/50">
           <Link href="/dashboard" className="flex items-center gap-3">
-            <FontAwesomeIcon 
-              icon={faRobot as IconProp} 
-              className="text-blue-400 w-6 h-6" 
+            <FontAwesomeIcon
+              icon={faRobot as IconProp}
+              className="text-blue-400 w-6 h-6"
             />
             <span className="text-xl font-bold">Codaiq</span>
           </Link>
@@ -172,15 +136,13 @@ export default function DashboardSidebar({ open, onClose }: DashboardSidebarProp
         <nav className="p-4 space-y-2">
           {navigationItems.map((item) => {
             const active = isActive(item.href);
-            const disabled = item.dynamic && !siteId;
-            const href = item.dynamic && siteId ? item.href.replace('site', siteId) : item.href;
+            const href = siteId ? item.href.replace('site', siteId) : item.href;
 
             return (
               <Link
                 key={item.id}
-                href={disabled ? "#" : href}
+                href={href}
                 onClick={(e) => {
-                  if (disabled) e.preventDefault();
                   if (window.innerWidth < 1024) onClose();
                 }}
                 className={cn(
@@ -189,13 +151,12 @@ export default function DashboardSidebar({ open, onClose }: DashboardSidebarProp
                   {
                     "bg-blue-500/20 text-blue-500": active,
                     "text-gray-400": !active,
-                    "opacity-50 cursor-not-allowed": disabled
                   }
                 )}
-                title={disabled ? "Select a site first" : item.description}
+                title={item.description}
               >
-                <FontAwesomeIcon 
-                  icon={item.icon as IconProp} 
+                <FontAwesomeIcon
+                  icon={item.icon as IconProp}
                   className={cn(
                     "w-5 h-5",
                     active ? "text-blue-500" : ""

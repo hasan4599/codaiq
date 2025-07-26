@@ -26,6 +26,7 @@ type API =
   | 'post/ai/prompt'
   | 'post/images/upload'
   | 'post/site/delete'
+  | 'post/site/domain/change'
   
 
 async function Fetch({

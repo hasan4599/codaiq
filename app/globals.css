@@ -85,6 +85,15 @@ body {
   font-family: var(--font-poppins); /* Angepasst an Ihre Layout-Konfiguration */
 }
 
+.monaco-editor,
+.monaco-editor .overflow-guard,
+.monaco-editor.monaco-editor-focused,
+.monaco-editor.monaco-editor-bordered {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 /* Komponenten-spezifische Styles */
 @layer components {
   /* Bestehende Navbar-Styles */

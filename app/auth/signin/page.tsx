@@ -40,13 +40,13 @@ export default function SignInPage() {
     const result = await signIn('credentials', {
       email: data.email,
       password: data.password,
-      redirect: false,
+      callbackUrl: "/dashboard"
     });
 
     if (result?.error) {
       setSignInError('Invalid email or password');
     } else {
-      router.push('/');
+      router.push('/dashboard');
     }
   };
 
@@ -134,7 +134,7 @@ export default function SignInPage() {
           {/* Google Sign-In */}
           <button
             type="button"
-            onClick={() => signIn('google')}
+            onClick={() => signIn('google', { callbackUrl: "/dashboard" })}
             className="w-full mt-4 px-4 py-3 bg-gray-700/60 hover:bg-gray-600/70 border border-gray-500/50 hover:border-gray-400/60 text-gray-100 hover:text-white rounded-xl transition-all duration-200 font-medium text-sm shadow-sm hover:shadow-md flex items-center justify-center gap-3"
           >
             <FcGoogle size={20} />

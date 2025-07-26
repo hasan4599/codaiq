@@ -46,6 +46,10 @@ export async function POST(req: NextRequest) {
                     status: "offline",
                 });
 
+                user.site.push({ id: newSite._id, name: title, role: "Admin", environment: "dev" });
+                await user.save();
+
+                console.log(newSite)
                 // Create folder for the site
                 const siteFolder = path.join(project, title);
                 await fs.mkdir(siteFolder, { recursive: true });
@@ -67,8 +71,7 @@ export async function POST(req: NextRequest) {
                     deployDomain: devResult.url, // note I renamed `domain` to `url` earlier
                 });
 
-                user.site.push({ id: newSite._id, name: title, role: "Admin", environment: "dev" });
-                await user.save();
+
 
                 console.log(`[SITE INITIALIZED]: ${title}`);
             } catch (err) {

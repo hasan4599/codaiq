@@ -3,21 +3,18 @@
 import { Fetch } from '@/hooks/fetch';
 
 import {
-    Paintbrush,
-    UserPlus2,
-    Settings,
     ArrowUp,
     MousePointerClick,
     X,
     Image,
-    Loader
+    Loader,
+    Paintbrush
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 export default function ChatInput({
     submit,
-    models,
     onSelectModel,
     editMode,
     setEditMode,
@@ -26,7 +23,6 @@ export default function ChatInput({
     loading
 }: {
     submit: (e: string) => void;
-    models: { id: string; name: string; context_length: number }[];
     onSelectModel: (model: { id: string; name: string; context_length: number }) => void;
     editMode: boolean;
     setEditMode: (value: boolean) => void;
@@ -40,6 +36,7 @@ export default function ChatInput({
     const [showImageModal, setShowImageModal] = useState(false);
     const [imageTab, setImageTab] = useState<'upload' | 'view'>('upload');
     const [uploadedImages, setUploadedImages] = useState<{ id: string; filename: string; variants: string[] }[]>([]);
+    const [models, setModels] = useState<{ id: string, name: string, context_length: number }[]>([]);
 
     useEffect(() => {
         const get = async () => {
@@ -57,6 +54,22 @@ export default function ChatInput({
         get();
     }, []);
 
+    useEffect(() => {
+        const get = async () => {
+            const res = await Fetch({
+                api: 'get/ai/models',
+                loading: (v) => {},
+                method: 'GET',
+                host: 'server',
+                body: ''
+            });
+            if(res){
+                setModels(res)
+            }
+        };
+        get()
+    },[]);
+
     const onInputChange = (value: string) => {
         setInput(value);
     };
@@ -67,10 +80,6 @@ export default function ChatInput({
         submit(input);
         setInput('');
     };
-
-    const filteredModels = models.filter((model) =>
-        model.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
 
     function getTagNameFromHTML(htmlString: string): string {
         const wrapper = document.createElement('div');
@@ -108,7 +117,7 @@ export default function ChatInput({
         <>
             <form
                 onSubmit={onSubmit}
-                className="absolute bottom-5 left-[4%] bg-neutral-800 border border-neutral-700 rounded-2xl ring-[4px] focus-within:ring-neutral-500/30 focus-within:border-neutral-600 ring-transparent z-10 w-[90%] group"
+                className="bg-neutral-800 border border-neutral-700 rounded-2xl ring-[4px] focus-within:ring-neutral-500/30 focus-within:border-neutral-600 ring-transparent z-10 w-[90%] group"
             >
                 {selectedElement && (
                     <div className='px-4 py-1 text-[14px] bg-[#1d1d1d86] rounded-full inline-flex items-center justify-center border border-zinc-500 space-x-2 mx-4 mt-3'>
@@ -136,7 +145,7 @@ export default function ChatInput({
                             value={input}
                             onChange={(e) => onInputChange(e.target.value)}
                             className="w-full bg-transparent text-sm outline-none text-white placeholder:text-neutral-400 p-4"
-                            placeholder="Ask Codaiq anything..."
+                            placeholder={`${editMode ? "select an element to edit" : "Ask Codaiq anything..."}`}
                         />
                     )}
                 </div>
@@ -166,7 +175,7 @@ export default function ChatInput({
                                 />
 
                                 <div className="max-h-60 overflow-y-auto space-y-1">
-                                    {filteredModels.slice(0, 10).map((model) => (
+                                    {models.map((model: any) => (
                                         <button
                                             key={model.id}
                                             type="button"
@@ -181,7 +190,7 @@ export default function ChatInput({
                                             <span className="text-[11px] text-neutral-500">{model.context_length} tokens</span>
                                         </button>
                                     ))}
-                                    {filteredModels.length === 0 && (
+                                    {models.length === 0 && (
                                         <div className="text-xs text-neutral-500 text-center py-2">
                                             No models found
                                         </div>

@@ -22,7 +22,7 @@ export default function DashboardPage() {
             name: response.fullName,
             email: response.email,
             image: response.avatarUrl
-          })
+          });
         }
       }
       handle();
@@ -31,6 +31,7 @@ export default function DashboardPage() {
     }
   }, []);
 
+  
   if (loading) {
     return (
       <div className="container mx-auto p-6">
@@ -52,7 +53,7 @@ export default function DashboardPage() {
           open={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
         />
-        
+
         {/* Main Content */}
         <main className="h-full w-full flex items-start justify-start p-6">
           <Sites />

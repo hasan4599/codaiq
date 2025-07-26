@@ -14,7 +14,7 @@ import { useState } from 'react';
 import MobileMenu from '../mobile-menu';
 import Image from 'next/image';
 
-export default function Header({ user }: { user: { email: string, name: string, image: string } }) {
+export default function Header({ user }: { user: { email: string, name: string, image: string } | null }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -25,13 +25,9 @@ export default function Header({ user }: { user: { email: string, name: string, 
             {/* Logo */}
             <Link
               href="/"
-              className="glass-layer px-4 py-2 rounded-xl flex items-center gap-2"
+              className="w-[140px] h-[50px] flex items-center relative"
             >
-              <FontAwesomeIcon
-                icon={faRocket as IconProp}
-                className="text-blue-400 w-6 h-6 animate-pulse"
-              />
-              <span className="text-xl font-bold">Codaiq</span>
+              <Image fill src={'/logo.svg'} alt='logo'/>
             </Link>
 
             {/* Desktop Navigation */}

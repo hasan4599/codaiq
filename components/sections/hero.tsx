@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const SendIcon = () => (
@@ -144,7 +145,7 @@ export default function HeroSection() {
       <div className="relative z-10 container mx-auto px-4 sm:px-6 py-8 sm:py-12 lg:py-20">
         <div className="py-20 grid lg:grid-cols-2 gap-8 lg:gap-16 items-center min-h-screen">
           {/* Left Content */}
-          <div className="space-y-6 sm:space-y-8 text-center lg:text-left">
+          <div className="flex flex-col items-start justify-center gap-6 lg:gap-8 text-center lg:text-left">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
               <span className="bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
                 Build Websites
@@ -159,9 +160,15 @@ export default function HeroSection() {
               development powered by AI.
             </p>
 
-            <button className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold shadow-xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105">
+            <div className="w-full flex items-center justify-center">
+              <Link
+              href={'/dashboard'}
+              className="w-fit inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-base sm:text-lg font-semibold shadow-xl hover:shadow-blue-500/25 transition-all duration-300 hover:scale-105"
+            >
               Start Building
-            </button>
+            </Link>
+            </div>
+
           </div>
 
           {/* Right Preview Window */}

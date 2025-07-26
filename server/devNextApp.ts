@@ -62,8 +62,6 @@ export async function devNextApp(projectId: string) {
     console.log(`[NGINX] Reloading Nginx...`);
     await execCommand("nginx -t && systemctl reload nginx");
 
-    await createARecord(projectId, "89.117.57.53");
-
     return {
       success: true,
       url: `https://${hostname}`,

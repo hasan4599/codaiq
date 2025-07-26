@@ -4,6 +4,8 @@ import connectMongo from "@/db/mongoose";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
 import { IUser, User } from "@/model/user";
+import { removeFromNginxMap } from "@/server/nginx.conf";
+import { execCommand } from "@/server/devNextApp";
 
 export async function POST(req: NextRequest) {
     try {
@@ -41,7 +43,8 @@ export async function POST(req: NextRequest) {
         } else {
             console.warn(`No user found with email: ${session.user.email}`);
         }
-
+        await removeFromNginxMap(selectedSite.title);
+        await execCommand("nginx -t && systemctl reload nginx");
         // Now delete the site itself
         await Site.findByIdAndDelete(id);
 

@@ -54,7 +54,7 @@ export default function Home() {
   }, []);
 
   return (
-    user && <div
+    <div
       ref={ref}
       className="min-h-screen bg-[#020617] text-gray-100 font-poppins overflow-x-hidden"
     >

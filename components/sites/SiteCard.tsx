@@ -16,13 +16,15 @@ import { cn } from '@/lib/utils';
 import { ISite } from '@/model/site';
 import { server } from '@/url';
 import { useState } from 'react';
+import { Aperture } from 'lucide-react';
 
 interface SiteCardProps {
   site: ISite;
   onDelete: (v: ISite) => void;
+  changeDomain: (v: ISite) => void;
 }
 
-export default function SiteCard({ site, onDelete }: SiteCardProps) {
+export default function SiteCard({ site, onDelete, changeDomain }: SiteCardProps) {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const statusColor = {
@@ -32,7 +34,7 @@ export default function SiteCard({ site, onDelete }: SiteCardProps) {
   }[site.status];
 
   return (
-    <div className="group relative w-[250px] h-[300px] bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300">
+    <div className="group w-[250px] h-[300px] bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300">
       {/* Dropdown Trigger */}
       <div className="absolute top-2 right-2 z-10">
         <button
@@ -42,7 +44,17 @@ export default function SiteCard({ site, onDelete }: SiteCardProps) {
           <FontAwesomeIcon icon={faEllipsisV as IconProp} />
         </button>
         {showDropdown && (
-          <div className="absolute right-0 mt-2 w-32 bg-zinc-800 rounded-md shadow-lg z-20 border border-white/10">
+          <div className="absolute right-0 mt-2 w-[200px] bg-zinc-800 rounded-md shadow-lg z-20 border border-white/10">
+            <button
+              onClick={() => {
+                setShowDropdown(false);
+                changeDomain(site);
+              }}
+              className="flex items-center gap-2 w-full px-4 py-2 text-sm text-zinc-400 hover:bg-zinc-700 rounded-t-md"
+            >
+              <Aperture className='w-5'/>
+              Change domain
+            </button>
             <button
               onClick={() => {
                 setShowDropdown(false);
@@ -61,7 +73,7 @@ export default function SiteCard({ site, onDelete }: SiteCardProps) {
       <div className="relative w-full aspect-video bg-zinc-800 flex items-center justify-center overflow-hidden">
         {site.deployDomain ? (
           <iframe
-            src={site.deployDomain}
+            src={`https://${site.deployDomain}`}
             className="w-full h-full border-none rounded-t-2xl transition-transform duration-300 group-hover:scale-[1.02]"
             sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
             loading="lazy"
@@ -96,7 +108,7 @@ export default function SiteCard({ site, onDelete }: SiteCardProps) {
 
           {site.deployDomain && (
             <a
-              href={site.deployDomain}
+              href={`https://${site.deployDomain}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-blue-400 hover:underline mt-1"

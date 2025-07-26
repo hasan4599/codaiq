@@ -1,22 +1,27 @@
 'use client';
 
 import ChatInput from '@/components/editor/ChatInput';
+import Sidebar from '@/components/editor/editorSidebar';
+import SidebarMobile from '@/components/editor/editorSidebarMobile';
 import Footer from '@/components/editor/Footer';
 import Header from '@/components/editor/header';
 import { Fetch } from '@/hooks/fetch';
 import { ISite } from '@/model/site';
 import { server } from '@/url';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ChevronDown } from 'lucide-react';
 import dynamic from 'next/dynamic';
 const MonacoEditor = dynamic(() => import('@/components/editor/EditorPage'), {
     ssr: false,
 });
 
-import { useEffect, useRef, useState } from 'react';
+import { RefObject, useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 
 export default function AIPage({ params }: { params: Promise<{ id: string }> }) {
-    const [code, setCode] = useState(`<!DOCTYPE html>
+    const [code, setCode] = useState<{ html: string; think: string }>({
+        html: `<!DOCTYPE html>
 <html>
   <head>
     <title>My app</title>
@@ -34,26 +39,44 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
     </div>
     <img src="https://enzostvs-deepsite.hf.space/arrow.svg" class="absolute bottom-8 left-0 w-[100px] transform rotate-[30deg]" />
   </body>
-</html>`);
+</html>`, think: ''
+    });
+
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState<"chat" | "preview">("chat");
     const [user, setUser] = useState<{ email: string, name: string, image: string } | null>(null);
     const [activeView, setActiveView] = useState<'desktop' | 'mobile'>('desktop');
-    const [models, setModels] = useState<{ id: string, name: string, context_length: number }[]>([]);
-    const [selectedModel, setSelectedModel] = useState<{ id: string, name: string, context_length: number } | null>(null);
+    const [selectedModel, setSelectedModel] = useState<{ id: string, name: string, context_length: number }>({
+        id: 'accounts/fireworks/models/deepseek-v3-0324',
+        name: 'Deepseek V3 03-24',
+        context_length: 160000
+    });
     const [editMode, setEditMode] = useState(false);
     const [selectedElementHtml, setSelectedElementHtml] = useState<string | null>(null);
     const [selectedSite, setSelectedSite] = useState<ISite | null>(null);
     const [refreshKey, setRefreshKey] = useState(0);
+    const [mobile, setMobile] = useState(true);
+    const [mounted, setMounted] = useState(false);
 
     const iframeRef = useRef<HTMLIFrameElement>(null);
+
+    useEffect(() => {
+        if (window) {
+            setMounted(true);
+            if (window.screen.width > 767) {
+                setMobile(false)
+            } else {
+                setMobile(true)
+            }
+        }
+    }, []);
 
     useEffect(() => {
         const get = async () => {
             const id = (await params).id;
             const res = await Fetch({ body: '', api: 'get/file', method: "GET", host: 'server', loading: (v) => { }, params: `id=${id}` }) as { site: ISite, fileContent: string }
             if (res) {
-                setCode(res.fileContent);
+                setCode({ html: res.fileContent, think: '' });
                 setSelectedSite(res.site)
             }
         }
@@ -71,11 +94,6 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
                         email: response.email,
                         image: response.avatarUrl
                     })
-                }
-                const res = await Fetch({ body: '', api: 'get/ai/models', method: "GET", host: 'server', loading: (v) => { } });
-                if (res) {
-                    setModels(res);
-                    setSelectedModel(res[0])
                 }
             }
             handle();
@@ -178,97 +196,334 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
 
 
     const handleSubmit = async (e: string) => {
-        if (!selectedModel) return;
         setLoading(true);
-        setCode(""); // optionally clear previous code
 
-        try {
-            const res = await fetch(`${server}/api/post/ai/prompt`, {
+        if (!selectedElementHtml) {
+            setCode({ html: "", think: "" });
+            try {
+                const res = await fetch(`${server}/api/post/ai/prompt`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ e, code: code.html, model: selectedModel.id }),
+                });
+
+                if (!res.body) throw new Error("No response body");
+
+                const reader = res.body.getReader();
+                const decoder = new TextDecoder();
+
+                let thinkBuffer = "";
+                let htmlBuffer = "";
+                let doctypeStripped = false;
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    const chunk = decoder.decode(value, { stream: true });
+
+                    thinkBuffer += chunk;
+
+                    // Check if </think> exists in thinkBuffer
+                    const endThinkIdx = thinkBuffer.indexOf("</think>");
+
+                    if (endThinkIdx !== -1) {
+                        // Split thinkBuffer into think and html parts
+                        const newThink = thinkBuffer.slice(0, endThinkIdx + "</think>".length);
+                        let newHtml = thinkBuffer.slice(endThinkIdx + "</think>".length);
+
+                        // Clean html part: remove code block markers and optional language labels
+                        newHtml = newHtml.replace(/```(?:\w+)?/, "");
+
+                        // Strip <!DOCTYPE html> once
+                        if (!doctypeStripped && newHtml.toLowerCase().startsWith("<!doctype html")) {
+                            const firstNewline = newHtml.indexOf("\n");
+                            if (firstNewline !== -1) {
+                                newHtml = newHtml.slice(firstNewline + 1);
+                            }
+                            doctypeStripped = true;
+                        }
+
+                        // Append newHtml to htmlBuffer
+                        htmlBuffer += newHtml;
+
+                        // Update state live
+                        setCode({ think: newThink, html: htmlBuffer });
+
+                        // Keep only think part in thinkBuffer for next iteration
+                        thinkBuffer = newThink;
+                    } else {
+                        // No </think> yet, update think live
+                        setCode(prev => ({ ...prev, think: thinkBuffer }));
+                    }
+                }
+            } catch (err) {
+                console.error("Streaming error:", err);
+            } finally {
+                setLoading(false);
+            }
+        } else {
+            const res = await fetch(`${server}/api/post/ai/selected`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ e, code, model: selectedModel.id, selected: selectedElementHtml }),
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ e, code: code.html, selected: selectedElementHtml, model: selectedModel.id }),
             });
 
-            if (!res.body) {
-                throw new Error("No response body");
-            }
+            if (!res.ok) throw new Error("Selected API response not OK");
 
-            const reader = res.body.getReader();
-            const decoder = new TextDecoder();
-            let result = "";
+            const json = await res.json() as {
+                updatedHtml: string;
+                updatedLines: [number, number][];
+            };
 
-            while (true) {
-                const { done, value } = await reader.read();
-                if (done) break;
-                const chunk = decoder.decode(value);
-                result += chunk;
-                setCode(prev => prev + chunk); // live update
-            }
-        } catch (err) {
-            console.error("Streaming error:", err);
-        } finally {
+            // Split current code into lines
+            const codeLines = code.html.split("\n");
+
+            json.updatedLines.forEach(([start, end]) => {
+                const updatedLines = json.updatedHtml.split("\n"); // ✅ correct key
+                codeLines.splice(start - 1, end - start + 1, ...updatedLines);
+            });
+
+            // Join back to full updated code
+            const updatedCode = codeLines.join("\n");
+
+            setCode({ think: "", html: updatedCode });
             setLoading(false);
         }
     };
 
     const handleDeploy = async (title: string) => {
         if (selectedSite === null) {
-            const response = await Fetch({ body: { title, content: code }, api: 'post/site/create', method: "POST", host: 'server', loading: (v) => { } });
+            const response = await Fetch({ body: { title, content: code.html }, api: 'post/site/create', method: "POST", host: 'server', loading: (v) => { } });
             if (response) {
                 window.open(`https://${title}.codaiq.com/`, '_blank');
             }
         }
+    };
 
+    const handleSave = async () => {
         if (selectedSite) {
-            const response = await Fetch({ body: { id: selectedSite._id, content: code }, api: 'post/site/create', method: "POST", host: 'server', loading: (v) => { } });
+            const response = await Fetch({ body: { id: selectedSite._id, content: code.html }, api: 'post/site/update', method: "POST", host: 'server', loading: (v) => { } });
             if (response) {
                 toast.success(`Saved`);
             }
         }
-    };
+    }
 
+    console.log(mobile)
+    return (
+        mounted && (mobile ? <Mobile
+            think={code.think}
+            activeTab={activeTab}
+            code={code.html}
+            setCode={(v) => setCode({ html: v, think: '' })}
+            handleDeploy={handleDeploy}
+            handleSubmit={handleSubmit}
+            selectedElementHtml={selectedElementHtml}
+            selectedSite={selectedSite}
+            setActiveTab={setActiveTab}
+            setActiveView={setActiveView}
+            setEditMode={setEditMode}
+            setRefreshKey={() => setRefreshKey(c => c + 1)}
+            setSelectedElementHtml={setSelectedElementHtml}
+            setSelectedModel={setSelectedModel}
+            user={user}
+            editMode={editMode}
+            loading={loading}
+            refreshKey={refreshKey}
+            activeView={activeView}
+            iframeRef={iframeRef}
+            handleSave={handleSave}
+        /> : <Desktop
+            think={code.think}
+            activeTab={activeTab}
+            code={code.html}
+            setCode={(v) => setCode({ html: v, think: '' })}
+            handleDeploy={handleDeploy}
+            handleSubmit={handleSubmit}
+            selectedElementHtml={selectedElementHtml}
+            selectedSite={selectedSite}
+            setActiveTab={setActiveTab}
+            setActiveView={setActiveView}
+            setEditMode={setEditMode}
+            setRefreshKey={() => setRefreshKey(c => c + 1)}
+            setSelectedElementHtml={setSelectedElementHtml}
+            setSelectedModel={setSelectedModel}
+            user={user}
+            editMode={editMode}
+            loading={loading}
+            refreshKey={refreshKey}
+            activeView={activeView}
+            iframeRef={iframeRef}
+            handleSave={handleSave}
+        />)
+    );
+}
+
+type DesktopProp = {
+    activeTab: "chat" | "preview";
+    code?: string;
+    think: string;
+    setCode: (v: string) => void;
+    handleSubmit: (v: string) => void;
+    setSelectedModel: (v: { id: string, name: string, context_length: number }) => void;
+    editMode: boolean;
+    setEditMode: (v: boolean) => void;
+    selectedElementHtml: string | null;
+    setSelectedElementHtml: (v: string | null) => void;
+    loading: boolean;
+    refreshKey: number;
+    setRefreshKey: () => void;
+    activeView: "desktop" | "mobile";
+    iframeRef: RefObject<HTMLIFrameElement>;
+    setActiveTab: (v: "chat" | "preview") => void;
+    handleSave: () => void;
+    selectedSite: ISite | null;
+    handleDeploy: (v: string) => void;
+    setActiveView: (v: 'desktop' | 'mobile') => void;
+    user: { email: string, name: string, image: string } | null;
+}
+
+function Desktop(props: DesktopProp) {
+    const [sidebar, setSidebar] = useState(false);
+    const [open, setOpen] = useState(true);
     return (
         <div className="w-full h-screen flex flex-col bg-[#1f1f1f]">
             <Header
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                deploy={(v) => handleDeploy(v)}
+                activeTab={props.activeTab}
+                setActiveTab={props.setActiveTab}
+                menu={() => setSidebar(c => !c)}
             />
-            <div className='w-full flex' style={{ height: 'calc(100% - 160px)' }}>
-                {activeTab === 'chat' && <div className="w-[800px] bg-black h-full relative">
-                    <MonacoEditor value={code} onChange={setCode} />
-                    <ChatInput
-                        submit={handleSubmit}
-                        models={models}
-                        onSelectModel={setSelectedModel}
-                        editMode={editMode}
-                        setEditMode={setEditMode}
-                        selectedElement={selectedElementHtml}
-                        setSelectedElementHtml={() => setSelectedElementHtml(null)}
-                        loading={loading}
-                    />
+            <div className='w-full flex' style={{ height: 'calc(100% - 64px)' }}>
+                {props.activeTab === 'chat' && <div className="w-[500px] bg-black h-full relative">
+                    <MonacoEditor value={props.code} onChange={props.setCode} />
+                    <div className='bottom-10 left-0 fixed w-[500px] flex flex-col items-center justify-end gap-5'>
+                        {props.think && (
+                            <div className="bg-neutral-800 border border-neutral-700 rounded-xl overflow-hidden ring-[4px] focus-within:ring-neutral-500/30 focus-within:border-neutral-600 ring-transparent z-10 w-[90%] group">
+                                <div className='w-full p-4 bg-neutral-800 border-b border-neutral-700 flex items-center justify-between'>
+                                    <h1 className='text-zinc-400'>Codaiq is thinking</h1>
+                                    <button
+                                        onClick={() => setOpen(prev => !prev)}
+                                        className="text-zinc-400 transition-transform duration-200"
+                                        style={{ transform: open ? 'rotate(0deg)' : 'rotate(-90deg)' }}
+                                    >
+                                        <ChevronDown className="w-5 h-5" />
+                                    </button>
+                                </div>
+                                <div
+                                    className={`transition-all duration-300 overflow-y-auto px-4 text-zinc-500 ${open ? 'max-h-[300px] opacity-100 py-4' : 'max-h-0 opacity-0 py-0'
+                                        }`}
+                                >
+                                    <h1>{props.think}</h1>
+                                </div>
+                            </div>
+                        )}
+                        <ChatInput
+                            submit={props.handleSubmit}
+                            onSelectModel={props.setSelectedModel}
+                            editMode={props.editMode}
+                            setEditMode={props.setEditMode}
+                            selectedElement={props.selectedElementHtml}
+                            setSelectedElementHtml={() => props.setSelectedElementHtml(null)}
+                            loading={props.loading}
+                        />
+                    </div>
                 </div>}
-                <div key={refreshKey} className="w-full bg-black h-full p-2 flex items-center justify-center">
-                    <div className="rounded-[40px] overflow-hidden border-[8px] border-zinc-500 shadow-2xl transition-all">
-                        <div
-                            className={`transition-all duration-300 bg-white ${activeView === 'desktop'
-                                ? 'w-[1280px] h-[800px]'
-                                : 'w-[390px] h-[844px]'
-                                }`}
-                        >
-                            <iframe ref={iframeRef} className="w-full h-full" srcDoc={code} />
-                        </div>
+                <div key={props.refreshKey} className={`h-full bg-black flex items-center justify-center`} style={{ width: `${sidebar ? 'calc(100% - 900px)' : 'calc(100% - 500px)'}` }}>
+                    <div className={`rounded-[40px] h-[90%] overflow-hidden border-[8px] border-zinc-500 shadow-2xl transition-all ${props.activeView === 'desktop'
+                        ? 'max-w-[1500px] w-[90%]'
+                        : 'w-[90%] max-w-[390px]'
+                        }`}>
+                        <iframe ref={props.iframeRef} className="w-full h-full" srcDoc={props.code} />
                     </div>
                 </div>
+                {sidebar && <Sidebar
+                    handleSave={props.handleSave}
+                    selectedSite={props.selectedSite}
+                    activeTab={props.activeTab}
+                    setActiveTab={props.setActiveTab}
+                    deploy={(v) => props.handleDeploy(v)}
+                    activeView={props.activeView}
+                    setActiveView={props.setActiveView}
+                    user={props.user}
+                    refresh={props.setRefreshKey}
+                />}
             </div>
-            <Footer
-                refresh={() => setRefreshKey(prev => prev + 1)}
-                setActiveView={setActiveView}
-                activeView={activeView}
-                user={user}
-            />
         </div>
-    );
+    )
+};
+
+function Mobile(props: DesktopProp) {
+    const [sidebar, setSidebar] = useState(false);
+    const [open, setOpen] = useState(true);
+    return (
+        <div className="w-full h-screen flex flex-col bg-[#1f1f1f]">
+            <Header
+                activeTab={props.activeTab}
+                setActiveTab={props.setActiveTab}
+                menu={() => setSidebar(c => !c)}
+            />
+            <div className='w-full flex' style={{ height: 'calc(100% - 64px)' }}>
+                {props.activeTab === 'chat' && <div className="w-full bg-black h-full relative">
+                    <MonacoEditor value={props.code} onChange={props.setCode} />
+                    <div className='bottom-4 left-0 fixed w-full flex flex-col items-center justify-end gap-5'>
+                        {props.think && (
+                            <div className="bg-neutral-800 border border-neutral-700 rounded-xl overflow-hidden ring-[4px] focus-within:ring-neutral-500/30 focus-within:border-neutral-600 ring-transparent z-10 w-[90%] group">
+                                <div className='w-full p-4 bg-neutral-800 border-b border-neutral-700 flex items-center justify-between'>
+                                    <h1 className='text-zinc-400'>Codaiq is thinking</h1>
+                                    <button
+                                        onClick={() => setOpen(prev => !prev)}
+                                        className="text-zinc-400 transition-transform duration-200"
+                                        style={{ transform: open ? 'rotate(0deg)' : 'rotate(-90deg)' }}
+                                    >
+                                        <ChevronDown className="w-5 h-5" />
+                                    </button>
+                                </div>
+                                <div
+                                    className={`transition-all duration-300 overflow-y-auto px-4 text-zinc-500 ${open ? 'max-h-[300px] opacity-100 py-4' : 'max-h-0 opacity-0 py-0'
+                                        }`}
+                                >
+                                    <h1>{props.think}</h1>
+                                </div>
+                            </div>
+                        )}
+                        <ChatInput
+                            submit={props.handleSubmit}
+                            onSelectModel={props.setSelectedModel}
+                            editMode={props.editMode}
+                            setEditMode={props.setEditMode}
+                            selectedElement={props.selectedElementHtml}
+                            setSelectedElementHtml={() => props.setSelectedElementHtml(null)}
+                            loading={props.loading}
+                        />
+                    </div>
+                </div>}
+                {props.activeTab === 'preview' && <div key={props.refreshKey} className="w-full h-full bg-black flex items-center justify-center">
+                    <div className={`rounded-[40px] h-[90%] overflow-hidden border-[8px] border-zinc-500 shadow-2xl transition-all ${props.activeView === 'desktop'
+                        ? 'max-w-[1500px] w-[90%]'
+                        : 'w-[90%] max-w-[390px]'
+                        }`}>
+                        <iframe ref={props.iframeRef} className="w-full h-full" srcDoc={props.code} />
+                    </div>
+                </div>}
+            </div>
+            <AnimatePresence>
+                {sidebar && (
+                    <SidebarMobile
+                        menu={() => setSidebar(false)}
+                        handleSave={props.handleSave}
+                        selectedSite={props.selectedSite}
+                        activeTab={props.activeTab}
+                        setActiveTab={props.setActiveTab}
+                        deploy={(v) => props.handleDeploy(v)}
+                        activeView={props.activeView}
+                        setActiveView={props.setActiveView}
+                        user={props.user}
+                        refresh={props.setRefreshKey}
+                    />
+                )}
+            </AnimatePresence>
+
+        </div>
+    )
 }

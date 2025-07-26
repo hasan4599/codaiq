@@ -87,8 +87,8 @@ export const config = {
       };
     },
 
-    async redirect({ baseUrl }) {
-      return baseUrl;
+    async redirect({ url, baseUrl }) {
+      return `${baseUrl}/dashboard`;
     },
   },
 

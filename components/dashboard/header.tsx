@@ -1,7 +1,7 @@
 'use client';
 
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { faBars, faBell, faUser } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faBell, faRocket, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { Mail, MailOpen } from "lucide-react";
 import { Fetch } from "@/hooks/fetch";
+import Link from "next/link";
 
 interface DashboardHeaderProps {
   onMenuClick: () => void;
@@ -78,9 +79,9 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
   }, []);
 
   return (
-    <header className="w-full border-b border-gray-800/50 bg-gray-900/50 backdrop-blur-xl">
+    <header className="w-full border-b border-gray-800/50 bg-gray-900/50 backdrop-blur-xl h-[64px]">
       <div className="px-4 w-full">
-        <div className="flex h-16 items-center justify-between gap-4 w-full">
+        <div className="flex h-16 items-center justify-between w-full">
           {/* Left section - Mobile Menu */}
           <button
             onClick={onMenuClick}
@@ -88,11 +89,24 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
           >
             <FontAwesomeIcon icon={faBars as IconProp} className="w-5 h-5" />
           </button>
-
+          <Link
+            href="/"
+            className="w-[140px] h-[50px] flex items-center relative"
+          >
+            <Image fill src={'/logo.svg'} alt='logo' />
+          </Link>
           {/* Right section */}
           <div className="flex items-center gap-4 w-full justify-end">
             {/* Notification Button */}
-            <div className="relative" ref={notifDropdownRef}>
+
+            <Link
+              href={'/projects/new'}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-md transition"
+            >
+              New Site
+            </Link>
+
+            {/* <div className="relative" ref={notifDropdownRef}>
               <button
                 onClick={() => setShowNotificationDropdown((prev) => !prev)}
                 className="p-2 hover:bg-gray-800/50 rounded-lg transition-colors relative"
@@ -104,7 +118,7 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
                 )}
               </button>
               {showNotificationDropdown && (
-                <div className="absolute right-0 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-3 text-sm text-white z-50 min-w-[350px] w-full max-w-sm">
+                <div className="absolute right-0 top-16 mt-2 bg-gray-800 border border-gray-700 rounded-lg shadow-lg p-3 text-sm text-white z-[999] min-w-[280px] w-full max-w-sm">
                   <p className="text-sm text-gray-300 mb-2 font-semibold">Notifications</p>
                   <div className="space-y-2 max-h-64 overflow-y-auto">
                     {mockNotifications.length > 0 ? (
@@ -133,7 +147,7 @@ export default function DashboardHeader({ onMenuClick }: DashboardHeaderProps) {
                   </div>
                 </div>
               )}
-            </div>
+            </div> */}
 
             {user ? (
               <div className="relative" ref={userDropdownRef}>

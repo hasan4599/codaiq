@@ -5,7 +5,7 @@ const SiteSchema = new Schema(
         title: { type: String, required: true },
         status: {
             type: String,
-            enum: ['online', 'offline', 'deploying'],
+            enum: ['online', 'offline', 'deploying', 'error'],
             required: true,
             default: 'offline',
         },

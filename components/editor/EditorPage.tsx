@@ -3,7 +3,7 @@
 import Editor from '@monaco-editor/react';
 
 type Props = {
-  value: string;
+  value?: string;
   onChange?: (val: string) => void;
   language?: string;
   theme?: 'vs-dark' | 'light';
@@ -18,16 +18,18 @@ export default function MonacoEditor({
   return (
     <Editor
       height="100%"
+      width="100%"
       defaultLanguage={language}
       value={value}
       onChange={(val) => onChange?.(val ?? '')}
       theme={theme}
       options={{
-        fontSize: 16,
+        fontSize: 14,
         minimap: { enabled: false },
         automaticLayout: true,
-        wordWrap: 'on',       // Enable line wrapping here
-        wrappingIndent: 'indent', // Optional: indent wrapped lines
+        wordWrap: 'on',
+        wrappingIndent: 'indent',
+        accessibilitySupport: 'off'
       }}
     />
   );
