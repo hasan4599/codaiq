@@ -10,6 +10,7 @@ export interface IUser extends Document {
     site: { id: string; name: string; role: string, environment: string }[];
     tokens: number;
     isActive: boolean;
+    stripeCustomerId: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -61,6 +62,9 @@ const UserSchema = new Schema<IUser>(
             type: Boolean,
             default: true,
         },
+        stripeCustomerId: {
+            type: String
+        }
     },
     {
         timestamps: true, // Automatically manages createdAt and updatedAt

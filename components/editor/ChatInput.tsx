@@ -36,7 +36,18 @@ export default function ChatInput({
     const [showImageModal, setShowImageModal] = useState(false);
     const [imageTab, setImageTab] = useState<'upload' | 'view'>('upload');
     const [uploadedImages, setUploadedImages] = useState<{ id: string; filename: string; variants: string[] }[]>([]);
-    const [models, setModels] = useState<{ id: string, name: string, context_length: number }[]>([]);
+    const [models, setModels] = useState<{ id: string, name: string, context_length: number }[]>([
+        {
+            id: 'accounts/fireworks/models/deepseek-v3-0324',
+            name: 'Deepseek V3 03-24',
+            context_length: 160000
+        },
+        {
+            id: 'accounts/fireworks/models/deepseek-r1-0528',
+            name: 'Deepseek R1 05/28',
+            context_length: 160000
+        }
+    ]);
 
     useEffect(() => {
         const get = async () => {
@@ -54,21 +65,21 @@ export default function ChatInput({
         get();
     }, []);
 
-    useEffect(() => {
-        const get = async () => {
-            const res = await Fetch({
-                api: 'get/ai/models',
-                loading: (v) => {},
-                method: 'GET',
-                host: 'server',
-                body: ''
-            });
-            if(res){
-                setModels(res)
-            }
-        };
-        get()
-    },[]);
+    // useEffect(() => {
+    //     const get = async () => {
+    //         const res = await Fetch({
+    //             api: 'get/ai/models',
+    //             loading: (v) => {},
+    //             method: 'GET',
+    //             host: 'server',
+    //             body: ''
+    //         });
+    //         if(res){
+    //             setModels(res)
+    //         }
+    //     };
+    //     get()
+    // },[]);
 
     const onInputChange = (value: string) => {
         setInput(value);
@@ -121,7 +132,7 @@ export default function ChatInput({
             >
                 {selectedElement && (
                     <div className='px-4 py-1 text-[14px] bg-[#1d1d1d86] rounded-full inline-flex items-center justify-center border border-zinc-500 space-x-2 mx-4 mt-3'>
-                        <h1>{getTagNameFromHTML(selectedElement)}</h1>
+                        <h1>{selectedElement}</h1>
                         <X
                             className="cursor-pointer hover:text-red-500"
                             size={14}
@@ -144,7 +155,7 @@ export default function ChatInput({
                             type="text"
                             value={input}
                             onChange={(e) => onInputChange(e.target.value)}
-                            className="w-full bg-transparent text-sm outline-none text-white placeholder:text-neutral-400 p-4"
+                            className="w-full bg-transparent text-base outline-none text-white placeholder:text-neutral-400 p-4"
                             placeholder={`${editMode ? "select an element to edit" : "Ask Codaiq anything..."}`}
                         />
                     )}

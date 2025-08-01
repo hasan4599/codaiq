@@ -8,8 +8,9 @@ type Props = {
 };
 
 export async function POST(req: NextRequest) {
+    let fullText = "";
     try {
-        const { e, code, selected , model}: Props = await req.json();
+        const { e, code, selected, model }: Props = await req.json();
 
         if (!e || !code || !selected) {
             return NextResponse.json(
@@ -21,26 +22,13 @@ export async function POST(req: NextRequest) {
         const systemPrompt = `
 You are a strict AI code editor assistant.
 
-Rules:
-- The user provides the full code of a single-page app (HTML, Tailwind CSS, JS), a specific HTML element string "selected" to target, and an instruction.
-- Modify ONLY the provided selected element string according to the instruction.
-- Return a valid JSON object with two keys, exactly in this order:
-  1. "updatedHtml": the full updated selected element HTML string.
-  2. "updatedLines": an array of [startLine, endLine] pairs indicating the line ranges updated in the original code.
-- Do NOT change the keys or their order.
-- Do NOT return extra fields, messages, explanations, or formatting.
-- Do NOT include any comments or surrounding markdown.
-- ONLY return valid JSON.
+Modify ONLY the provided selected HTML element string based on the instruction inside of the full code.
+Leave the rest of the code unchanged.
 
-Example output:
-
-{
-  "updatedHtml": "<div class='updated'>Updated content</div>",
-  "updatedLines": [[10, 12]]
-}
+Return the full updated code as a raw string.
+Do NOT return JSON, keys, or any extra text.
+Output MUST be exactly the updated full code, no explanations, no comments.
 `.trim();
-
-
 
         const userMessage = `Full code:\n${code}\nSelected element:\n${selected}\nInstruction:\n${e}`;
 
@@ -69,7 +57,6 @@ Example output:
 
         const decoder = new TextDecoder();
         const reader = response.body.getReader();
-        let fullText = "";
 
         while (true) {
             const { done, value } = await reader.read();
@@ -86,29 +73,22 @@ Example output:
                     const json = JSON.parse(data);
                     const content = json?.choices?.[0]?.delta?.content;
                     if (content) fullText += content;
-                } catch (err) {
-                    console.warn("Skipping invalid JSON chunk:", err);
+                } catch {
+                    // ignore parse errors for partial chunks
                 }
             }
         }
-        console.log(fullText)
-        const jsonStart = fullText.indexOf("{");
-        const jsonEnd = fullText.lastIndexOf("}");
 
-        if (jsonStart === -1 || jsonEnd === -1) {
-            throw new Error("Failed to extract valid JSON from AI output");
-        }
+        // fullText now contains only the raw updated full code string
 
-        const jsonSubstring = fullText.slice(jsonStart, jsonEnd + 1);
-        const parsed = JSON.parse(jsonSubstring);
-
-        return NextResponse.json(parsed);
+        return NextResponse.json(fullText);
 
     } catch (err: any) {
         console.error("❌ Fireworks fetch failed:", err);
         return NextResponse.json(
-            { error: "Internal Server Error", details: err.message },
+            { error: "Internal Server Error", details: err.message, response: fullText },
             { status: 500 }
         );
     }
 }
+

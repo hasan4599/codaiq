@@ -53,29 +53,34 @@ export async function removeFromNginxMap(projectId: string) {
 export async function replaceNginxMapDomain(newProjectId: string, projectPath: string) {
   backupMapFile();
 
+  // Normalize newProjectId to full domain (if only subdomain given)
+  const newDomain = newProjectId.includes('.') ? newProjectId.toLowerCase() : `${newProjectId.toLowerCase()}.codaiq.com`;
+
   let mapContent = fs.readFileSync(MAP_FILE, "utf-8");
   const lines = mapContent.split("\n");
 
   const updatedLines = lines.map((line) => {
     const trimmed = line.trim();
 
-    // Match lines like: some.domain.com /some/path;
+    // Match lines like: domain /path;
     const match = trimmed.match(/^([^\s]+)\s+([^\s]+);$/);
     if (!match) return line;
 
-    const [_, domain, path] = match;
+    const [fullMatch, domain, path] = match;
 
-    if (path === projectPath && domain !== newProjectId) {
-      console.log(`[NGINX] Replacing domain ${domain} → ${newProjectId} for path ${projectPath}`);
-      return line.replace(domain, newProjectId);
+    // Only replace the domain if the path matches AND domain differs
+    if (path === projectPath && domain.toLowerCase() !== newDomain) {
+      console.log(`[NGINX] Replacing domain ${domain} → ${newDomain} for path ${projectPath}`);
+      // Replace only the domain part (not the path)
+      return line.replace(domain, newDomain);
     }
 
     return line;
   });
 
-  const updated = updatedLines.join("\n");
-  fs.writeFileSync(MAP_FILE, updated, "utf-8");
+  const updatedContent = updatedLines.join("\n");
+  fs.writeFileSync(MAP_FILE, updatedContent, "utf-8");
 
-  console.log(`[NGINX] Map updated with new domain: ${newProjectId} → ${projectPath}`);
-  // execSync("nginx -s reload");
+  console.log(`[NGINX] Map updated with new domain: ${newDomain} → ${projectPath}`);
 }
+

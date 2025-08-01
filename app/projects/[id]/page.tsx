@@ -1,45 +1,19 @@
 'use client';
 
-import ChatInput from '@/components/editor/ChatInput';
-import Sidebar from '@/components/editor/editorSidebar';
-import SidebarMobile from '@/components/editor/editorSidebarMobile';
-import Footer from '@/components/editor/Footer';
-import Header from '@/components/editor/header';
+import { htmlcode } from '@/components/project/code';
+import Desktop from '@/components/project/desktop';
+import { addUniqueIdsToHtml } from '@/components/project/id';
+import Mobile from '@/components/project/mobile';
 import { Fetch } from '@/hooks/fetch';
 import { ISite } from '@/model/site';
 import { server } from '@/url';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
-import dynamic from 'next/dynamic';
-const MonacoEditor = dynamic(() => import('@/components/editor/EditorPage'), {
-    ssr: false,
-});
-
-import { RefObject, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 
 
 export default function AIPage({ params }: { params: Promise<{ id: string }> }) {
     const [code, setCode] = useState<{ html: string; think: string }>({
-        html: `<!DOCTYPE html>
-<html>
-  <head>
-    <title>My app</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta charset="utf-8">
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="flex justify-center items-center h-screen overflow-hidden bg-white font-sans text-center px-6">
-    <div class="w-full">
-      <span class="text-xs rounded-full mb-2 inline-block px-2 py-1 border border-amber-500/15 bg-amber-500/15 text-amber-500">🔥 New version dropped!</span>
-      <h1 class="text-4xl lg:text-6xl font-bold font-sans">
-        <span class="text-2xl lg:text-4xl text-gray-400 block font-medium">I'm ready to work,</span>
-        Ask me anything.
-      </h1>
-    </div>
-    <img src="https://enzostvs-deepsite.hf.space/arrow.svg" class="absolute bottom-8 left-0 w-[100px] transform rotate-[30deg]" />
-  </body>
-</html>`, think: ''
+        html: htmlcode, think: ''
     });
 
     const [loading, setLoading] = useState(false);
@@ -57,7 +31,7 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
     const [refreshKey, setRefreshKey] = useState(0);
     const [mobile, setMobile] = useState(true);
     const [mounted, setMounted] = useState(false);
-
+    const [completed, setCompleted] = useState(false);
     const iframeRef = useRef<HTMLIFrameElement>(null);
 
     useEffect(() => {
@@ -137,18 +111,15 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
 
             target.classList.add('hovered-element');
             selectedElement = target;
-            setSelectedElementHtml(target.outerHTML);
+
+            const uid = target.getAttribute('data-uid');
+            if (!uid) {
+                console.warn("Selected element has no data-uid");
+                return;
+            }
+
+            setSelectedElementHtml(uid); // Store the UID string, not full outerHTML
         };
-
-        if (!editMode) {
-            // Cleanup if edit mode is off
-            const oldStyle = doc.getElementById('select-style');
-            if (oldStyle) oldStyle.remove();
-
-            doc.removeEventListener('mouseover', mouseOverHandler);
-            doc.removeEventListener('click', clickHandler);
-            return;
-        }
 
         const tryInject = () => {
             if (!doc.body || doc.readyState !== 'complete') {
@@ -194,103 +165,107 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
         };
     }, [editMode, code]);
 
+    useEffect(() => {
+        if (code.html) {
+            const htmlWithUIDs = addUniqueIdsToHtml(code.html);
+            setCode(prev => ({ ...prev, html: htmlWithUIDs }));
+        }
+    }, [completed]);
+
 
     const handleSubmit = async (e: string) => {
         setLoading(true);
+        
 
-        if (!selectedElementHtml) {
-            setCode({ html: "", think: "" });
-            try {
-                const res = await fetch(`${server}/api/post/ai/prompt`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ e, code: code.html, model: selectedModel.id }),
-                });
-
-                if (!res.body) throw new Error("No response body");
-
-                const reader = res.body.getReader();
-                const decoder = new TextDecoder();
-
-                let thinkBuffer = "";
-                let htmlBuffer = "";
-                let doctypeStripped = false;
-
-                while (true) {
-                    const { done, value } = await reader.read();
-                    if (done) break;
-
-                    const chunk = decoder.decode(value, { stream: true });
-
-                    thinkBuffer += chunk;
-
-                    // Check if </think> exists in thinkBuffer
-                    const endThinkIdx = thinkBuffer.indexOf("</think>");
-
-                    if (endThinkIdx !== -1) {
-                        // Split thinkBuffer into think and html parts
-                        const newThink = thinkBuffer.slice(0, endThinkIdx + "</think>".length);
-                        let newHtml = thinkBuffer.slice(endThinkIdx + "</think>".length);
-
-                        // Clean html part: remove code block markers and optional language labels
-                        newHtml = newHtml.replace(/```(?:\w+)?/, "");
-
-                        // Strip <!DOCTYPE html> once
-                        if (!doctypeStripped && newHtml.toLowerCase().startsWith("<!doctype html")) {
-                            const firstNewline = newHtml.indexOf("\n");
-                            if (firstNewline !== -1) {
-                                newHtml = newHtml.slice(firstNewline + 1);
-                            }
-                            doctypeStripped = true;
-                        }
-
-                        // Append newHtml to htmlBuffer
-                        htmlBuffer += newHtml;
-
-                        // Update state live
-                        setCode({ think: newThink, html: htmlBuffer });
-
-                        // Keep only think part in thinkBuffer for next iteration
-                        thinkBuffer = newThink;
-                    } else {
-                        // No </think> yet, update think live
-                        setCode(prev => ({ ...prev, think: thinkBuffer }));
-                    }
-                }
-            } catch (err) {
-                console.error("Streaming error:", err);
-            } finally {
-                setLoading(false);
-            }
-        } else {
-            const res = await fetch(`${server}/api/post/ai/selected`, {
+        try {
+            const res = await fetch(`${server}/api/post/ai/prompt`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ e, code: code.html, selected: selectedElementHtml, model: selectedModel.id }),
+                body: JSON.stringify({
+                    e,
+                    code: code.html,
+                    model: selectedModel.id,
+                    selected: selectedElementHtml,
+                }),
             });
 
-            if (!res.ok) throw new Error("Selected API response not OK");
+            if (!res.ok || !res.body) throw new Error("Failed to fetch response from server");
 
-            const json = await res.json() as {
-                updatedHtml: string;
-                updatedLines: [number, number][];
-            };
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder();
 
-            // Split current code into lines
-            const codeLines = code.html.split("\n");
+            let thinkBuffer = "";
+            let contentBuffer = "";
+            let htmlBuffer = "";
+            let thinkCaptured = false;
 
-            json.updatedLines.forEach(([start, end]) => {
-                const updatedLines = json.updatedHtml.split("\n"); // ✅ correct key
-                codeLines.splice(start - 1, end - start + 1, ...updatedLines);
-            });
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(code.html, "text/html");
+            
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
 
-            // Join back to full updated code
-            const updatedCode = codeLines.join("\n");
+                const chunk = decoder.decode(value, { stream: true });
 
-            setCode({ think: "", html: updatedCode });
+                // 📌 Case 1: selectedElementHtml is defined → collect all output
+                if (selectedElementHtml) {
+                    contentBuffer += chunk;
+                    continue;
+                }
+
+                // 📌 Case 2: stream live (no selection)
+                
+                if (!thinkCaptured) {
+                    thinkBuffer += chunk;
+                    const endThink = thinkBuffer.indexOf("</think>");
+                    if (endThink !== -1) {
+                        const think = thinkBuffer.slice(0, endThink + 8);
+                        const remainder = thinkBuffer.slice(endThink + 8);
+                        thinkCaptured = true;
+                        setCode(prev => ({ ...prev, think }));
+                        htmlBuffer += remainder;
+                    }
+                } else {
+                    htmlBuffer += chunk;
+                }
+
+                // stream live HTML update
+                if (!selectedElementHtml) {
+                    let partialHtml = htmlBuffer.trim();
+                    partialHtml = partialHtml.replace(/<\/body>\s*<\/html>\s*$/i, "").trim();
+                    partialHtml += "\n</body>\n</html>";
+                    setCode(prev => ({ ...prev, html: partialHtml }));
+                }
+            }
+
+            // ✅ Done: if selectedElementHtml, process the full update
+            if (selectedElementHtml) {
+                const thinkMatch = contentBuffer.match(/<think>[\s\S]*?<\/think>/i);
+                const think = thinkMatch?.[0] || "";
+                const htmlOnly = contentBuffer.replace(think, "").trim();
+
+                const elementToReplace = doc.querySelector(`[data-uid="${selectedElementHtml}"]`);
+                if (!elementToReplace) throw new Error("Selected element UID not found in code");
+
+                const updatedDoc = parser.parseFromString(htmlOnly, "text/html");
+                const updatedElement = updatedDoc.body.firstElementChild;
+                if (!updatedElement) throw new Error("Invalid updated element HTML");
+
+                elementToReplace.replaceWith(updatedElement);
+                const finalHtml = "<!DOCTYPE html>\n" + doc.documentElement.outerHTML;
+
+                setCode({ think, html: finalHtml });
+            }
+
+            setCompleted(c => !c);
+        } catch (err) {
+            console.error("Streaming error:", err);
+        } finally {
             setLoading(false);
         }
     };
+
 
     const handleDeploy = async (title: string) => {
         if (selectedSite === null) {
@@ -310,7 +285,7 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
         }
     }
 
-    console.log(mobile)
+    
     return (
         mounted && (mobile ? <Mobile
             think={code.think}
@@ -360,170 +335,3 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
     );
 }
 
-type DesktopProp = {
-    activeTab: "chat" | "preview";
-    code?: string;
-    think: string;
-    setCode: (v: string) => void;
-    handleSubmit: (v: string) => void;
-    setSelectedModel: (v: { id: string, name: string, context_length: number }) => void;
-    editMode: boolean;
-    setEditMode: (v: boolean) => void;
-    selectedElementHtml: string | null;
-    setSelectedElementHtml: (v: string | null) => void;
-    loading: boolean;
-    refreshKey: number;
-    setRefreshKey: () => void;
-    activeView: "desktop" | "mobile";
-    iframeRef: RefObject<HTMLIFrameElement>;
-    setActiveTab: (v: "chat" | "preview") => void;
-    handleSave: () => void;
-    selectedSite: ISite | null;
-    handleDeploy: (v: string) => void;
-    setActiveView: (v: 'desktop' | 'mobile') => void;
-    user: { email: string, name: string, image: string } | null;
-}
-
-function Desktop(props: DesktopProp) {
-    const [sidebar, setSidebar] = useState(false);
-    const [open, setOpen] = useState(true);
-    return (
-        <div className="w-full h-screen flex flex-col bg-[#1f1f1f]">
-            <Header
-                activeTab={props.activeTab}
-                setActiveTab={props.setActiveTab}
-                menu={() => setSidebar(c => !c)}
-            />
-            <div className='w-full flex' style={{ height: 'calc(100% - 64px)' }}>
-                {props.activeTab === 'chat' && <div className="w-[500px] bg-black h-full relative">
-                    <MonacoEditor value={props.code} onChange={props.setCode} />
-                    <div className='bottom-10 left-0 fixed w-[500px] flex flex-col items-center justify-end gap-5'>
-                        {props.think && (
-                            <div className="bg-neutral-800 border border-neutral-700 rounded-xl overflow-hidden ring-[4px] focus-within:ring-neutral-500/30 focus-within:border-neutral-600 ring-transparent z-10 w-[90%] group">
-                                <div className='w-full p-4 bg-neutral-800 border-b border-neutral-700 flex items-center justify-between'>
-                                    <h1 className='text-zinc-400'>Codaiq is thinking</h1>
-                                    <button
-                                        onClick={() => setOpen(prev => !prev)}
-                                        className="text-zinc-400 transition-transform duration-200"
-                                        style={{ transform: open ? 'rotate(0deg)' : 'rotate(-90deg)' }}
-                                    >
-                                        <ChevronDown className="w-5 h-5" />
-                                    </button>
-                                </div>
-                                <div
-                                    className={`transition-all duration-300 overflow-y-auto px-4 text-zinc-500 ${open ? 'max-h-[300px] opacity-100 py-4' : 'max-h-0 opacity-0 py-0'
-                                        }`}
-                                >
-                                    <h1>{props.think}</h1>
-                                </div>
-                            </div>
-                        )}
-                        <ChatInput
-                            submit={props.handleSubmit}
-                            onSelectModel={props.setSelectedModel}
-                            editMode={props.editMode}
-                            setEditMode={props.setEditMode}
-                            selectedElement={props.selectedElementHtml}
-                            setSelectedElementHtml={() => props.setSelectedElementHtml(null)}
-                            loading={props.loading}
-                        />
-                    </div>
-                </div>}
-                <div key={props.refreshKey} className={`h-full bg-black flex items-center justify-center`} style={{ width: `${sidebar ? 'calc(100% - 900px)' : 'calc(100% - 500px)'}` }}>
-                    <div className={`rounded-[40px] h-[90%] overflow-hidden border-[8px] border-zinc-500 shadow-2xl transition-all ${props.activeView === 'desktop'
-                        ? 'max-w-[1500px] w-[90%]'
-                        : 'w-[90%] max-w-[390px]'
-                        }`}>
-                        <iframe ref={props.iframeRef} className="w-full h-full" srcDoc={props.code} />
-                    </div>
-                </div>
-                {sidebar && <Sidebar
-                    handleSave={props.handleSave}
-                    selectedSite={props.selectedSite}
-                    activeTab={props.activeTab}
-                    setActiveTab={props.setActiveTab}
-                    deploy={(v) => props.handleDeploy(v)}
-                    activeView={props.activeView}
-                    setActiveView={props.setActiveView}
-                    user={props.user}
-                    refresh={props.setRefreshKey}
-                />}
-            </div>
-        </div>
-    )
-};
-
-function Mobile(props: DesktopProp) {
-    const [sidebar, setSidebar] = useState(false);
-    const [open, setOpen] = useState(true);
-    return (
-        <div className="w-full h-screen flex flex-col bg-[#1f1f1f]">
-            <Header
-                activeTab={props.activeTab}
-                setActiveTab={props.setActiveTab}
-                menu={() => setSidebar(c => !c)}
-            />
-            <div className='w-full flex' style={{ height: 'calc(100% - 64px)' }}>
-                {props.activeTab === 'chat' && <div className="w-full bg-black h-full relative">
-                    <MonacoEditor value={props.code} onChange={props.setCode} />
-                    <div className='bottom-4 left-0 fixed w-full flex flex-col items-center justify-end gap-5'>
-                        {props.think && (
-                            <div className="bg-neutral-800 border border-neutral-700 rounded-xl overflow-hidden ring-[4px] focus-within:ring-neutral-500/30 focus-within:border-neutral-600 ring-transparent z-10 w-[90%] group">
-                                <div className='w-full p-4 bg-neutral-800 border-b border-neutral-700 flex items-center justify-between'>
-                                    <h1 className='text-zinc-400'>Codaiq is thinking</h1>
-                                    <button
-                                        onClick={() => setOpen(prev => !prev)}
-                                        className="text-zinc-400 transition-transform duration-200"
-                                        style={{ transform: open ? 'rotate(0deg)' : 'rotate(-90deg)' }}
-                                    >
-                                        <ChevronDown className="w-5 h-5" />
-                                    </button>
-                                </div>
-                                <div
-                                    className={`transition-all duration-300 overflow-y-auto px-4 text-zinc-500 ${open ? 'max-h-[300px] opacity-100 py-4' : 'max-h-0 opacity-0 py-0'
-                                        }`}
-                                >
-                                    <h1>{props.think}</h1>
-                                </div>
-                            </div>
-                        )}
-                        <ChatInput
-                            submit={props.handleSubmit}
-                            onSelectModel={props.setSelectedModel}
-                            editMode={props.editMode}
-                            setEditMode={props.setEditMode}
-                            selectedElement={props.selectedElementHtml}
-                            setSelectedElementHtml={() => props.setSelectedElementHtml(null)}
-                            loading={props.loading}
-                        />
-                    </div>
-                </div>}
-                {props.activeTab === 'preview' && <div key={props.refreshKey} className="w-full h-full bg-black flex items-center justify-center">
-                    <div className={`rounded-[40px] h-[90%] overflow-hidden border-[8px] border-zinc-500 shadow-2xl transition-all ${props.activeView === 'desktop'
-                        ? 'max-w-[1500px] w-[90%]'
-                        : 'w-[90%] max-w-[390px]'
-                        }`}>
-                        <iframe ref={props.iframeRef} className="w-full h-full" srcDoc={props.code} />
-                    </div>
-                </div>}
-            </div>
-            <AnimatePresence>
-                {sidebar && (
-                    <SidebarMobile
-                        menu={() => setSidebar(false)}
-                        handleSave={props.handleSave}
-                        selectedSite={props.selectedSite}
-                        activeTab={props.activeTab}
-                        setActiveTab={props.setActiveTab}
-                        deploy={(v) => props.handleDeploy(v)}
-                        activeView={props.activeView}
-                        setActiveView={props.setActiveView}
-                        user={props.user}
-                        refresh={props.setRefreshKey}
-                    />
-                )}
-            </AnimatePresence>
-
-        </div>
-    )
-}

@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from "next/server";
 import connectMongo from "@/db/mongoose";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/auth-options";
-import { IUser, User } from "@/model/user";
 import { replaceNginxMapDomain } from "@/server/nginx.conf";
 import { execCommand } from "@/server/devNextApp";
 import { project } from "@/url";
@@ -22,37 +21,23 @@ export async function POST(req: NextRequest) {
         const { id, title } = await req.json();
         await connectMongo();
 
+        const hostname = isCustomDomain(title) ? title : `${title}.codaiq.com`;
+
         const selectedSite: ISite | null = await Site.findById(id);
         if (!selectedSite) {
             console.warn(`Site not found with id: ${id}`);
             return NextResponse.json({ error: "Site not found" }, { status: 404 });
         }
 
-        const existingSite = await Site.findOne({ title });
+        const existingSite = await Site.findOne({ deployDomain: hostname });
         if (existingSite && existingSite._id.toString() !== id) {
             return NextResponse.json({ error: "A site with that title already exists." }, { status: 409 });
         }
 
+        const projectPath = path.join(DEV_DIR, selectedSite.title);
+        
 
-        const selectedUser: IUser | null = await User.findOne({ email: session.user.email });
-        const siteTitle = isCustomDomain(title)
-            ? title.trim().split(".")[0].toLowerCase()
-            : title.trim().toLowerCase();
-
-        if (selectedUser && selectedSite) {
-            const selectedSiteInUserIndex = selectedUser.site.findIndex((i) => i.name === selectedSite.title);
-            
-            selectedUser.site[selectedSiteInUserIndex].name = siteTitle
-            await selectedUser.save();
-        } else {
-            console.warn(`No user found with email: ${session.user.email}`);
-        }
-
-        const projectPath = path.join(DEV_DIR, title);
-        const hostname = isCustomDomain(title) ? title : `${title}.codaiq.com`;
-
-        selectedSite.title = siteTitle;
-        selectedSite.deployDomain = hostname;
+        selectedSite.deployDomain = `https://${hostname}`;
 
         await selectedSite.save();
 

@@ -31,7 +31,7 @@ export default function Sites() {
         );
     }
     return (
-        <div className="w-full h-full overflow-y-auto flex items-start justify-start flex-wrap gap-4">
+        <div className="w-full overflow-y-auto flex items-start justify-start flex-wrap gap-4">
             {sites.map((site, index) => (
                 <SiteCard key={index} site={site} onDelete={(v) => { setSelectedSite(v); setOption('delete') }} changeDomain={(v) => { setSelectedSite(v); setOption('domain') }} />
             ))}

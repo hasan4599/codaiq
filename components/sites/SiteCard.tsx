@@ -34,7 +34,7 @@ export default function SiteCard({ site, onDelete, changeDomain }: SiteCardProps
   }[site.status];
 
   return (
-    <div className="group w-[250px] h-[300px] bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300">
+    <div className="group w-full md:w-[250px] h-[350px] md:h-[300px] bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl overflow-hidden shadow-md hover:shadow-xl transition duration-300">
       {/* Dropdown Trigger */}
       <div className="absolute top-2 right-2 z-10">
         <button
@@ -73,7 +73,7 @@ export default function SiteCard({ site, onDelete, changeDomain }: SiteCardProps
       <div className="relative w-full aspect-video bg-zinc-800 flex items-center justify-center overflow-hidden">
         {site.deployDomain ? (
           <iframe
-            src={`https://${site.deployDomain}`}
+            src={`${site.deployDomain}`}
             className="w-full h-full border-none rounded-t-2xl transition-transform duration-300 group-hover:scale-[1.02]"
             sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
             loading="lazy"
@@ -108,7 +108,7 @@ export default function SiteCard({ site, onDelete, changeDomain }: SiteCardProps
 
           {site.deployDomain && (
             <a
-              href={`https://${site.deployDomain}`}
+              href={`${site.deployDomain}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-sm text-blue-400 hover:underline mt-1"

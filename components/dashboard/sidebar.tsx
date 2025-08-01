@@ -7,27 +7,43 @@ import {
   faChartLine,
   faCog,
   faLifeRing,
-  faXmark
+  faXmark,
+  faCube
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Link from "next/link";
 import { usePathname, useParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { server } from "@/url";
 
 interface DashboardSidebarProps {
   open: boolean;
   onClose: () => void;
 }
 
-// Navigation items in the specified order
 const navigationItems = [
+  {
+    id: "ai-builder",
+    label: "AI Webbuilder",
+    href: `${server}/projects/new`,
+    icon: faRobot,
+    description: "Create with AI"
+  },
   {
     id: "my-sites",
     label: "My Sites",
     href: "/dashboard",
     icon: faGlobe,
     description: "Manage your websites"
+  },
+  {
+    id: "domain",
+    label: "Domain & Hosting",
+    href: "/dashboard/site/domain",
+    icon: faServer,
+    description: "Manage domains",
+    dynamic: true
   },
   {
     id: "settings",

@@ -24,9 +24,64 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { useSession } from "next-auth/react";
 import { useEffect, useRef, useState } from "react";
 
+export type StripePrice = {
+  id: string;
+  object: "price";
+  active: boolean;
+  billing_scheme: string;
+  created: number;
+  currency: string;
+  custom_unit_amount: any; // can refine later if needed
+  livemode: boolean;
+  lookup_key: string | null;
+  metadata: Record<string, string>;
+  nickname: string | null;
+  product: string;
+  recurring: {
+    interval: string;
+    interval_count: number;
+    meter: null;
+    trial_period_days: number | null;
+    usage_type: string;
+  } | null;
+  tax_behavior: string;
+  tiers_mode: string | null;
+  transform_quantity: null;
+  type: string;
+  unit_amount: number | null;
+  unit_amount_decimal: string | null;
+};
+
+export type StripeProduct = {
+  id: string;
+  object: "product";
+  active: boolean;
+  attributes: string[];
+  created: number;
+  default_price: string; // It's just an ID string here, not a full price object
+  description: string | null;
+  images: string[];
+  livemode: boolean;
+  marketing_features: { name: string }[];
+  metadata: Record<string, string>;
+  name: string;
+  package_dimensions: null;
+  shippable: boolean | null;
+  statement_descriptor: string | null;
+  tax_code: string | null;
+  type: "good" | "service";
+  unit_label: string | null;
+  updated: number;
+  url: string | null;
+  prices: StripePrice[]; // this is new and includes all associated prices
+};
+
+
+
 export default function Home() {
   const [user, setUser] = useState<{ email: string, name: string, image: string } | null>(null);
   const [loading, setLoading] = useState(false);
+  const [packages, setPackages] = useState<StripeProduct[]>([]);
   const ref = useRef(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -39,12 +94,22 @@ export default function Home() {
       setLoading(true)
       const handle = async () => {
         const response = await Fetch({ body: '', api: 'get/user/selected', method: "GET", host: 'server', loading: (v) => { } })
-        if (response !== null) {
+        if (response) {
           setUser({
             name: response.fullName,
             email: response.email,
             image: response.avatarUrl
           })
+          const res = await Fetch({
+            body: '',
+            method: 'GET',
+            api: 'stripe/packages',
+            host: 'server',
+            loading: (v) => { }
+          });
+          if (res) {
+            setPackages(res)
+          }
         }
       }
       handle();
@@ -52,6 +117,8 @@ export default function Home() {
       setLoading(false)
     }
   }, []);
+
+  
 
   return (
     <div
@@ -71,7 +138,7 @@ export default function Home() {
       {/* Features Section */}
       <section
         id="features"
-        className="py-32 px-4 lg:px-8 bg-gradient-to-b from-[#0a101f]/60 to-[#020617]/80"
+        className="py-32 px-4 lg:px- bg-gradient-to-b from-[#0a101f]/60 to-[#020617]/80"
       >
         <div className="container mx-auto">
           <h2 className="text-4xl lg:text-6xl font-bold text-center mb-20">
@@ -168,7 +235,7 @@ export default function Home() {
       {/* How It Works Section */}
       <HowItWorks />
       {/* Pricing Section */}
-      <PricingSection />
+      <PricingSection pricingPlans={packages}/>
 
       {/* Testimonials Section */}
       <Testimonials />

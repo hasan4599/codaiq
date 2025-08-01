@@ -27,6 +27,8 @@ type API =
   | 'post/images/upload'
   | 'post/site/delete'
   | 'post/site/domain/change'
+  | 'stripe/packages'
+  | 'stripe/checkout'
   
 
 async function Fetch({
