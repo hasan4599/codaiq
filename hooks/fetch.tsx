@@ -10,11 +10,13 @@ const hosts = [
 type API =
   | 'get/user/all'
   | 'get/user/selected'
+  | 'get/user/stripe'
   | 'get/site/proxy'
   | 'get/dev/scan'
   | 'get/dev/file'
   | 'get/ai/models'
   | 'get/images/all'
+  | 'get/domain/all'
   | 'get/site/selected'
   | 'get/file'
   | 'post/site/create'
@@ -24,12 +26,16 @@ type API =
   | 'post/pm2/dev/stop'
   | 'post/cache'
   | 'post/ai/prompt'
+  | "post/domain/register"
   | 'post/images/upload'
   | 'post/site/delete'
   | 'post/site/domain/change'
+  | 'post/domain/check'
   | 'stripe/packages'
   | 'stripe/checkout'
-  
+  | 'stripe/cancel-subscription'
+
+
 
 async function Fetch({
   body,

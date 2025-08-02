@@ -40,7 +40,7 @@ const navigationItems = [
   {
     id: "domain",
     label: "Domain & Hosting",
-    href: "/dashboard/site/domain",
+    href: "/domain",
     icon: faServer,
     description: "Manage domains",
     dynamic: true

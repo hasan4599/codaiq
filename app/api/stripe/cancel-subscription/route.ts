@@ -1,9 +1,9 @@
-import { stripe } from "@/components/tools/stripe";
 import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/auth-options";
 import connectMongo from "@/db/mongoose";
-import User, { IUser } from "@/model/user";
+import { stripe } from "@/lib/stripe";
+import { IUser, User } from "@/model/user";
 
 export async function POST(req: Request) {
     const body = await req.json();
@@ -33,17 +33,9 @@ export async function POST(req: Request) {
     }
 
     try {
-        const selectedCrate = selectedUser.crates.find(
-            (item) => item.stripeSubscriptionId === subscriptionId
-        );
-
-        if (selectedCrate) {
-            // Cancel the subscription at period end on Stripe
-            await stripe.subscriptions.update(subscriptionId, {
-                cancel_at_period_end: true,
-            });
-            
-        }
+        await stripe.subscriptions.update(subscriptionId, {
+            cancel_at_period_end: true,
+        });
 
         return NextResponse.json('done', { status: 200 });
     } catch (error: any) {

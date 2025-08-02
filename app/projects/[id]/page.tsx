@@ -172,10 +172,9 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
         }
     }, [completed]);
 
-
     const handleSubmit = async (e: string) => {
         setLoading(true);
-        
+        toast.loading('Generating code...');
 
         try {
             const res = await fetch(`${server}/api/post/ai/prompt`, {
@@ -201,21 +200,18 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
 
             const parser = new DOMParser();
             const doc = parser.parseFromString(code.html, "text/html");
-            
+
             while (true) {
                 const { done, value } = await reader.read();
                 if (done) break;
 
                 const chunk = decoder.decode(value, { stream: true });
 
-                // 📌 Case 1: selectedElementHtml is defined → collect all output
                 if (selectedElementHtml) {
                     contentBuffer += chunk;
                     continue;
                 }
 
-                // 📌 Case 2: stream live (no selection)
-                
                 if (!thinkCaptured) {
                     thinkBuffer += chunk;
                     const endThink = thinkBuffer.indexOf("</think>");
@@ -230,7 +226,6 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
                     htmlBuffer += chunk;
                 }
 
-                // stream live HTML update
                 if (!selectedElementHtml) {
                     let partialHtml = htmlBuffer.trim();
                     partialHtml = partialHtml.replace(/<\/body>\s*<\/html>\s*$/i, "").trim();
@@ -239,7 +234,6 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
                 }
             }
 
-            // ✅ Done: if selectedElementHtml, process the full update
             if (selectedElementHtml) {
                 const thinkMatch = contentBuffer.match(/<think>[\s\S]*?<\/think>/i);
                 const think = thinkMatch?.[0] || "";
@@ -259,33 +253,59 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
             }
 
             setCompleted(c => !c);
+            toast.success("Code generated successfully");
         } catch (err) {
             console.error("Streaming error:", err);
+            toast.error("Failed to generate code");
         } finally {
             setLoading(false);
         }
     };
 
 
+
     const handleDeploy = async (title: string) => {
         if (selectedSite === null) {
-            const response = await Fetch({ body: { title, content: code.html }, api: 'post/site/create', method: "POST", host: 'server', loading: (v) => { } });
+            toast.loading("Deploying site...");
+            const response = await Fetch({
+                body: { title, content: code.html },
+                api: 'post/site/create',
+                method: "POST",
+                host: 'server',
+                loading: (v) => { },
+            });
+
             if (response) {
-                window.open(`https://${title}.codaiq.com/`, '_blank');
+                toast.success("Site deployed successfully!");
+                window.location.replace(`https://${title}.codaiq.com/`);
+            } else {
+                toast.error("Failed to deploy site");
             }
         }
     };
 
+
     const handleSave = async () => {
         if (selectedSite) {
-            const response = await Fetch({ body: { id: selectedSite._id, content: code.html }, api: 'post/site/update', method: "POST", host: 'server', loading: (v) => { } });
+            const toastId = toast.loading("Saving site...");
+            const response = await Fetch({
+                body: { id: selectedSite._id, content: code.html },
+                api: 'post/site/update',
+                method: "POST",
+                host: 'server',
+                loading: (v) => { },
+            });
+            toast.dismiss(toastId);
             if (response) {
                 toast.success(`Saved`);
+            } else {
+                toast.error("Failed to save site");
             }
         }
-    }
+    };
 
-    
+
+
     return (
         mounted && (mobile ? <Mobile
             think={code.think}

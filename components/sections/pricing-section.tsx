@@ -7,6 +7,7 @@ import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { motion } from "framer-motion";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function PricingSection({ pricingPlans }: { pricingPlans: StripeProduct[] }) {
   const [isYearly, setIsYearly] = useState(false);
@@ -19,8 +20,10 @@ export default function PricingSection({ pricingPlans }: { pricingPlans: StripeP
       method: "POST",
       loading: () => { },
     });
-    if (response) {
+    if (typeof response === "string" && response.startsWith("http")) {
       window.location.href = response;
+    } else {
+      toast.error(response);
     }
   };
 
@@ -116,7 +119,7 @@ export default function PricingSection({ pricingPlans }: { pricingPlans: StripeP
                         </ul>
                       </div>
                       <button
-                        onClick={() => handleCheckout({ priceId: oneTimePrice.id , type: 'payment'})}
+                        onClick={() => handleCheckout({ priceId: oneTimePrice.id, type: 'payment' })}
                         className="w-full py-4 rounded-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 hover:shadow-purple-400/30 hover:shadow-xl text-gray-900 transition-all"
                       >
                         Buy Now

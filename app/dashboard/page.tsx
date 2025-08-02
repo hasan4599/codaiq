@@ -9,7 +9,7 @@ import Sites from "@/components/pages/sites";
 
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<{ email: string, name: string, image: string }>();
+  const [user, setUser] = useState<{ email: string, name: string, image: string, stripeCustomerId: string }>();
   const [loading, setLoading] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
@@ -22,7 +22,8 @@ export default function DashboardPage() {
           setUser({
             name: response.fullName,
             email: response.email,
-            image: response.avatarUrl
+            image: response.avatarUrl,
+            stripeCustomerId: response.stripeCustomerId
           });
         }
       }
@@ -41,6 +42,11 @@ export default function DashboardPage() {
     );
   }
 
+  if (user && !user.stripeCustomerId) {
+    if (user.email !== '') {
+      window.location.href = '/'
+    }
+  }
 
 
   return (
