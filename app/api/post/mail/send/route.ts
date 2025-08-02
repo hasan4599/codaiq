@@ -3,7 +3,7 @@ import nodemailer from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
     const { email, message, subject } = await req.json();
 
     const transport = nodemailer.createTransport({
@@ -43,16 +43,4 @@ export async function POST(req: NextRequest, res: NextResponse) {
     }
 
 
-}
-
-function generateCode(length: any) {
-    const characters = '0123456789';
-    let token = '';
-
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        token += characters.charAt(randomIndex);
-    }
-
-    return token;
 }

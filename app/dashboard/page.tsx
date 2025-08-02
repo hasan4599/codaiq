@@ -42,10 +42,18 @@ export default function DashboardPage() {
     );
   }
 
-  if (user && !user.stripeCustomerId) {
-    if (user.email !== '') {
-      window.location.href = '/'
-    }
+  const lifetimeEmails = [
+    "nidalstar1000@gmail.com",
+    "99hasan45@gmail.com"
+  ];
+
+  if (
+    user &&
+    !user.stripeCustomerId &&
+    user.email &&
+    !lifetimeEmails.includes(user.email)
+  ) {
+    window.location.href = '/';
   }
 
 
