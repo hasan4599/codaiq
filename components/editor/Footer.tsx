@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { server } from '@/url'
 import Image from 'next/image'
+import { IUser } from '@/model/user'
 
 export default function Footer({
     user,
@@ -20,7 +21,7 @@ export default function Footer({
 }: {
     activeView: 'desktop' | 'mobile',
     setActiveView: (v: 'desktop' | 'mobile') => void,
-    user: { email: string, name: string, image: string } | null
+    user: IUser | null
     refresh: () => void
 }) {
     return (
@@ -35,11 +36,11 @@ export default function Footer({
                             <div className="rounded-full bg-zinc-900 text-zinc-200 size-8 flex items-center justify-center font-semibold relative overflow-hidden">
                                 <Image
                                     fill
-                                    src={user.image}
-                                    alt={user.name}
+                                    src={user.avatarUrl}
+                                    alt={user.fullName}
                                 />
                             </div>
-                            <span className='hidden md:block'>{user.name}</span>
+                            <span className='hidden md:block'>{user.fullName}</span>
                         </button>
                         <span className="text-neutral-400">|</span>
                     </>

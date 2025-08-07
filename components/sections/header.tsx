@@ -6,6 +6,7 @@ import {
   faBars,
   faChevronRight,
   faRocket,
+  faSignOutAlt,
   faTachometerAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -27,7 +28,7 @@ export default function Header({ user }: { user: { email: string, name: string, 
               href="/"
               className="w-[140px] h-[50px] flex items-center relative"
             >
-              <Image fill src={'/logo.svg'} alt='logo'/>
+              <Image fill src={'/logo.svg'} alt='logo' />
             </Link>
 
             {/* Desktop Navigation */}
@@ -81,6 +82,13 @@ export default function Header({ user }: { user: { email: string, name: string, 
                         <span>Dashboard</span>
                       </button>
                     </Link>
+                    <button
+                      onClick={() => signOut()}
+                      className="bg-gradient-to-r from-red-500 to-pink-500 px-6 py-2 rounded-full hover:shadow-2xl hover:shadow-red-400/30 transition-all duration-300 hover:-translate-y-0.5 flex items-center gap-2 text-white"
+                    >
+                      <FontAwesomeIcon icon={faSignOutAlt as IconProp} className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </button>
                   </>
                 )}
               </div>

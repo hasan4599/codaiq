@@ -6,6 +6,7 @@ import { addUniqueIdsToHtml } from '@/components/project/id';
 import Mobile from '@/components/project/mobile';
 import { Fetch } from '@/hooks/fetch';
 import { ISite } from '@/model/site';
+import { IUser } from '@/model/user';
 import { server } from '@/url';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
@@ -18,7 +19,7 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
 
     const [loading, setLoading] = useState(false);
     const [activeTab, setActiveTab] = useState<"chat" | "preview">("chat");
-    const [user, setUser] = useState<{ email: string, name: string, image: string } | null>(null);
+    const [user, setUser] = useState<IUser | null>(null);
     const [activeView, setActiveView] = useState<'desktop' | 'mobile'>('desktop');
     const [selectedModel, setSelectedModel] = useState<{ id: string, name: string, context_length: number }>({
         id: 'accounts/fireworks/models/deepseek-v3-0324',
@@ -63,11 +64,7 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
             const handle = async () => {
                 const response = await Fetch({ body: '', api: 'get/user/selected', method: "GET", host: 'server', loading: (v) => { } })
                 if (response !== null) {
-                    setUser({
-                        name: response.fullName,
-                        email: response.email,
-                        image: response.avatarUrl
-                    })
+                    setUser(response)
                 }
             }
             handle();
@@ -262,8 +259,6 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
         }
     };
 
-
-
     const handleDeploy = async (title: string) => {
         if (selectedSite === null) {
             toast.loading("Deploying site...");
@@ -307,7 +302,7 @@ export default function AIPage({ params }: { params: Promise<{ id: string }> }) 
 
 
     return (
-        mounted && (mobile ? <Mobile
+        user && mounted && (mobile ? <Mobile
             think={code.think}
             activeTab={activeTab}
             code={code.html}

@@ -1,6 +1,7 @@
 'use client';
 
 import { Fetch } from '@/hooks/fetch';
+import { IUser } from '@/model/user';
 
 import {
     ArrowUp,
@@ -20,7 +21,8 @@ export default function ChatInput({
     setEditMode,
     selectedElement,
     setSelectedElementHtml,
-    loading
+    loading,
+    user
 }: {
     submit: (e: string) => void;
     onSelectModel: (model: { id: string; name: string; context_length: number }) => void;
@@ -29,13 +31,14 @@ export default function ChatInput({
     selectedElement: string | null;
     setSelectedElementHtml: () => void;
     loading: boolean;
+    user:IUser
 }) {
     const [input, setInput] = useState('');
     const [showModelMenu, setShowModelMenu] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [showImageModal, setShowImageModal] = useState(false);
     const [imageTab, setImageTab] = useState<'upload' | 'view'>('upload');
-    const [uploadedImages, setUploadedImages] = useState<{ id: string; filename: string; variants: string[] }[]>([]);
+    const [uploadedImages, setUploadedImages] = useState<string[]>(user.images);
     const [models, setModels] = useState<{ id: string, name: string, context_length: number }[]>([
         {
             id: 'accounts/fireworks/models/deepseek-v3-0324',
@@ -48,22 +51,6 @@ export default function ChatInput({
             context_length: 160000
         }
     ]);
-
-    useEffect(() => {
-        const get = async () => {
-            const res = await Fetch({
-                body: '',
-                api: 'get/images/all',
-                method: 'GET',
-                loading: (v) => { },
-                host: 'server'
-            });
-            if (res) {
-                setUploadedImages(res.images)
-            }
-        }
-        get();
-    }, []);
 
     // useEffect(() => {
     //     const get = async () => {
@@ -92,12 +79,6 @@ export default function ChatInput({
         setInput('');
     };
 
-    function getTagNameFromHTML(htmlString: string): string {
-        const wrapper = document.createElement('div');
-        wrapper.innerHTML = htmlString.trim();
-        return wrapper.firstElementChild?.tagName.toLowerCase() || 'unknown';
-    }
-
     async function ImageUpload(file: File) {
         const formData = new FormData();
         formData.append('file', file);
@@ -112,7 +93,7 @@ export default function ChatInput({
                 host: 'server'
             });
 
-            if (res?.success && res.result?.variants?.length > 0) {
+            if (res && res.result?.variants?.length > 0) {
                 setUploadedImages((prev) => [...prev, res.result.variants[0]]);
                 toast.success(`Uploaded: ${file.name}`);
             } else {
@@ -312,10 +293,10 @@ export default function ChatInput({
                                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-[400px] overflow-y-auto pr-2">
                                             {uploadedImages.map((img, i) => (
                                                 <div
-                                                    key={img.id}
+                                                    key={i}
                                                     className="relative group rounded-lg overflow-hidden border border-neutral-700 cursor-pointer"
                                                     onClick={async () => {
-                                                        const url = img.variants?.[0];
+                                                        const url = img;
                                                         if (url) {
                                                             await navigator.clipboard.writeText(url);
                                                             import('sonner').then(({ toast }) => {
@@ -325,13 +306,10 @@ export default function ChatInput({
                                                     }}
                                                 >
                                                     <img
-                                                        src={img.variants?.[0] || ''}
-                                                        alt={img.filename || `Image ${i + 1}`}
+                                                        src={img}
+                                                        alt={img}
                                                         className="w-full h-full object-cover transition-transform duration-200 group-hover:scale-105"
                                                     />
-                                                    <div className="absolute bottom-0 left-0 right-0 px-2 py-1 bg-black/60 text-xs text-white truncate">
-                                                        {img.filename}
-                                                    </div>
                                                 </div>
                                             ))}
                                         </div>

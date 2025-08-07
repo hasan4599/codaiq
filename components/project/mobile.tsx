@@ -10,6 +10,7 @@ import { ChevronDown } from "lucide-react";
 import ChatInput from "../editor/ChatInput";
 import Footer from "../editor/Footer";
 import dynamic from "next/dynamic";
+import { IUser } from "@/model/user";
 
 export type DesktopProp = {
     activeTab: "chat" | "preview";
@@ -32,7 +33,7 @@ export type DesktopProp = {
     selectedSite: ISite | null;
     handleDeploy: (v: string) => void;
     setActiveView: (v: 'desktop' | 'mobile') => void;
-    user: { email: string, name: string, image: string } | null;
+    user: IUser;
 }
 
 export default function Mobile(props: DesktopProp) {
@@ -81,6 +82,7 @@ export default function Mobile(props: DesktopProp) {
                             selectedElement={props.selectedElementHtml}
                             setSelectedElementHtml={() => props.setSelectedElementHtml(null)}
                             loading={props.loading}
+                            user={props.user}
                         />
                     </div>
                 </div>

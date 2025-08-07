@@ -9,7 +9,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import connectMongo from "./db/mongoose";
 import { User } from "./model/user";
-import bcrypt from "bcryptjs";
 
 export const config = {
   providers: [
@@ -18,22 +17,25 @@ export const config = {
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
         await connectMongo();
-        if (!credentials?.email || !credentials.password) return null;
+
+        if (!credentials?.email) return null;
 
         const user = await User.findOne({ email: credentials.email });
-        if (user && await bcrypt.compare(credentials.password, user.password)) {
+
+        if (user) {
           return {
             id: user._id.toString(),
             email: user.email,
           };
         }
+
         return null;
       },
     }),
+
 
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID ?? "",

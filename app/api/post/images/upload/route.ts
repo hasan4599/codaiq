@@ -1,3 +1,7 @@
+import { authOptions } from '@/app/api/auth/[...nextauth]/auth-options';
+import connectMongo from '@/db/mongoose';
+import { User } from '@/model/user';
+import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 
 export const config = {
@@ -17,6 +21,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Missing file' }, { status: 400 });
   }
 
+  const session: any = await getServerSession(authOptions);
+  if (!session || !session.user?.email) {
+    return NextResponse.json('Unauthorized', { status: 401 });
+  };
+
+  await connectMongo();
+  const id = session.user.id;
+
+
   const upstreamForm = new FormData();
   upstreamForm.append('file', file as Blob);
   upstreamForm.append('requireSignedURLs', 'false');
@@ -33,5 +46,16 @@ export async function POST(req: NextRequest) {
   );
 
   const result = await res.json();
+
+  const imagePath = result.result.variants[0];
+  
+  const user = await User.findByIdAndUpdate(
+    id,
+    {
+      $push: { images: imagePath }
+    },
+    { new: true }
+  );
+
   return NextResponse.json(result, { status: res.status });
 }

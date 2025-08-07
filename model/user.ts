@@ -3,14 +3,16 @@ import mongoose, { Schema, Document } from 'mongoose'
 export interface IUser extends Document {
     fullName: string;
     email: string;
-    password?: string;
+    password: string;
     role: string;
     bio?: string;
-    avatarUrl?: string;
+    avatarUrl: string;
+    images: string[];
     site: { id: string; name: string; role: string, environment: string }[];
-    tokens: number;
+    tokens: string;
     isActive: boolean;
     stripeCustomerId: string;
+    token: string;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -19,7 +21,6 @@ const UserSchema = new Schema<IUser>(
     {
         fullName: {
             type: String,
-            required: true,
             trim: true,
         },
         email: {
@@ -44,8 +45,7 @@ const UserSchema = new Schema<IUser>(
             type: String,
         },
         tokens: {
-            type: Number,
-            default: 0
+            type: String
         },
         site: [
             {
@@ -64,7 +64,11 @@ const UserSchema = new Schema<IUser>(
         },
         stripeCustomerId: {
             type: String
-        }
+        },
+        token: {
+            type: String
+        },
+        images: [String]
     },
     {
         timestamps: true, // Automatically manages createdAt and updatedAt

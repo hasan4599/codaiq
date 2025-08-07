@@ -19,7 +19,7 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export default function SignInPage() {
+export default function SignIn() {
   const router = useRouter();
   const [signInError, setSignInError] = useState('');
 
@@ -146,7 +146,7 @@ export default function SignInPage() {
         <div className="mt-8 text-center">
           <p className="text-gray-300 text-sm font-medium">
             Don’t have an account?{' '}
-            <a href="/sign-up" className="text-blue-400 hover:text-blue-300 font-bold transition-colors hover:underline">
+            <a href="/auth/signup" className="text-blue-400 hover:text-blue-300 font-bold transition-colors hover:underline">
               Create one here
             </a>
           </p>

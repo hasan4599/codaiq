@@ -27,6 +27,12 @@ type API =
   | 'post/cache'
   | 'post/ai/prompt'
   | "post/domain/register"
+  | "post/auth/email"
+  | "post/auth/verification"
+  | "post/auth/clean"
+  | "post/auth/verify"
+  | "post/auth/createUser"
+  | "post/auth/signup"
   | 'post/images/upload'
   | 'post/site/delete'
   | 'post/site/domain/change'

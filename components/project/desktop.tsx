@@ -57,6 +57,7 @@ export default function Desktop(props: DesktopProp) {
                             selectedElement={props.selectedElementHtml}
                             setSelectedElementHtml={() => props.setSelectedElementHtml(null)}
                             loading={props.loading}
+                            user={props.user}
                         />
                     </div>
                 </div>}

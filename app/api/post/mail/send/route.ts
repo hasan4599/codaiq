@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
 
         const mailOptions: Mail.Options = {
             from: process.env.MAIL_USER,
-            to: 'nidalstar1000@gmail.com',
+            to: 'info@codaiq.com',
             subject: subject,
             html: emailText
         };
